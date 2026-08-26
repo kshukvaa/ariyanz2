@@ -35,9 +35,13 @@ export const myAgent = {
   quick: [
     { label: 'کدام درخواست نیاز به اقدام من دارد؟', icon: 'lucide:circle-alert', fg: T.accent, bg: T.tintOrange },
     { label: 'آخرین پیام مشاور چیست؟', icon: 'lucide:message-circle', fg: T.primary, bg: T.tintPurple },
-    { label: 'کدام جلسه نزدیک است؟', icon: 'lucide:calendar', fg: T.infoStrong, bg: T.tintBlue },
+    { label: 'جلسه بعدی من چه زمانی است؟', icon: 'lucide:calendar', fg: T.infoStrong, bg: T.tintBlue },
+    { label: 'کدام پرونده‌ها هنوز باز هستند؟', icon: 'lucide:folder', fg: T.primary, bg: T.tintPurple },
+    { label: 'پاسخ‌های جدیدم را نشان بده', icon: 'lucide:circle-check', fg: T.successStrong, bg: T.tintGreen },
+    { label: 'این هفته چه کارهایی دارم؟', icon: 'lucide:list', fg: T.ink, bg: T.border },
   ],
   placeholder: 'سوال خود را بنویسید.',
+  note: 'پاسخ‌ها توسط هوش مصنوعی ارائه می‌شود.',
 };
 
 export const myAlerts = {
@@ -78,17 +82,39 @@ export const myToolbar = {
   sort: 'آخرین فعالیت',
 };
 
+export interface ConsultStep {
+  date: string;
+  label: string;
+  state: 'done' | 'current' | 'todo';
+}
+
+export interface ConsultMeta {
+  icon: string;
+  label: string;
+  /* Rendered as a link-coloured action rather than plain meta. */
+  action?: boolean;
+}
+
 export interface ConsultItem {
   id: string;
   kind: 'case' | 'session' | 'question';
+  /* The label printed under the type icon — «جلسه آنلاین» and
+     «جلسه حضوری» are both kind: 'session', so this cannot be
+     derived from kind alone. */
+  kindLabel: string;
   title: string;
   expert: string;
   field: string;
+  rating: string;
   avatar: string;
   status: { label: string; fg: string; bg: string };
   progress?: number;
   progressLabel?: string;
   activity: string;
+  note?: string;
+  meta?: ConsultMeta[];
+  steps: ConsultStep[];
+  cta: string;
   icon: string;
   fg: string;
   bg: string;
@@ -98,71 +124,116 @@ export const myItems: ConsultItem[] = [
   {
     id: 'ar-204r',
     kind: 'case',
+    kindLabel: 'پرونده تخصصی',
     title: 'بررسی شرایط خاتمه همکاری مدیر فروش',
     expert: 'دکتر امیر حسینی',
     field: 'روابط کار و قانون کار',
+    rating: '۴.۹',
     avatar: `${A}/expert-01-lawyer.png`,
     status: { label: 'در حال بررسی', fg: T.infoStrong, bg: T.tintBlue },
     progress: 65,
     progressLabel: 'پیشرفت پرونده',
     activity: 'آخرین فعالیت: امروز ۱۵:۴۰',
+    note: 'مشاور در حال بررسی مدارک پرونده است.',
+    steps: [
+      { date: '۲۴ مرداد', label: 'ثبت درخواست', state: 'done' },
+      { date: '۲۴ مرداد', label: 'پرداخت تأیید شد', state: 'done' },
+      { date: '۲۵ مرداد', label: 'پرونده به مشاور ارجاع شد', state: 'done' },
+      { date: '۲۷ مرداد', label: 'در حال بررسی مدارک', state: 'current' },
+    ],
+    cta: 'ورود به پرونده',
     icon: 'lucide:folder',
     fg: T.primary,
     bg: T.tintPurple,
   },
   {
-    id: 'ses-118',
-    kind: 'session',
-    title: 'جلسه بررسی ساختار جبران خدمات',
-    expert: 'دکتر نرگس کریمی',
-    field: 'منابع انسانی و توسعه سازمانی',
-    avatar: `${A}/expert-02-hr.png`,
-    status: { label: 'نیازمند اقدام من', fg: T.accent, bg: T.tintOrange },
-    activity: 'فردا ۱۴:۳۰',
-    icon: 'lucide:calendar',
-    fg: T.danger,
-    bg: T.tintRed,
-  },
-  {
     id: 'q-441',
     kind: 'question',
-    title: 'محاسبه سنوات کارکنان با قرارداد موقت',
-    expert: 'مهندس علی رشایی',
-    field: 'تأمین اجتماعی',
-    avatar: `${A}/expert-03-attorney.png`,
-    status: { label: 'در انتظار مشاور', fg: T.warning, bg: T.tintOrange },
-    activity: 'آخرین فعالیت: دیروز ۱۰:۱۲',
+    kindLabel: 'سؤال تخصصی',
+    title: 'شرایط فسخ قرارداد مدت‌معین چیست؟',
+    expert: 'دکتر امیر حسینی',
+    field: 'روابط کار و قانون کار',
+    rating: '۴.۹',
+    avatar: `${A}/expert-01-lawyer.png`,
+    status: { label: 'پاسخ آماده است', fg: T.successStrong, bg: T.tintGreen },
+    activity: 'پاسخ دریافت‌شده: امروز ۰۶:۴۰',
+    note: 'مشاور پاسخ نهایی را ارسال کرده است.',
+    steps: [
+      { date: '۲۴ مرداد', label: 'ثبت درخواست', state: 'done' },
+      { date: '۲۴ مرداد', label: 'پرداخت تأیید شد', state: 'done' },
+      { date: '۲۵ مرداد', label: 'پاسخ‌دهی توسط مشاور', state: 'done' },
+      { date: '۲۶ مرداد', label: 'پاسخ تحویل داده شد', state: 'done' },
+    ],
+    cta: 'مشاهده پاسخ',
     icon: 'lucide:message-circle',
     fg: T.successStrong,
     bg: T.tintGreen,
   },
   {
-    id: 'q-437',
-    kind: 'question',
-    title: 'الزامات قانونی آیین‌نامه انضباطی',
+    id: 'ses-118',
+    kind: 'session',
+    kindLabel: 'جلسه آنلاین',
+    title: 'جلسه بررسی ساختار جبران خدمات',
     expert: 'دکتر امیر حسینی',
     field: 'روابط کار و قانون کار',
+    rating: '۴.۹',
     avatar: `${A}/expert-01-lawyer.png`,
-    status: { label: 'تکمیل شده', fg: T.successStrong, bg: T.tintGreen },
-    activity: 'آخرین فعالیت: ۳ روز پیش',
-    icon: 'lucide:message-circle',
-    fg: T.successStrong,
-    bg: T.tintGreen,
+    status: { label: 'جلسه برنامه‌ریزی شده', fg: T.accent, bg: T.tintOrange },
+    activity: 'فردا ۱۴:۳۰',
+    meta: [
+      { icon: 'lucide:calendar', label: '۲۹ مرداد' },
+      { icon: 'lucide:clock', label: '۱۴:۳۰ - ۱۵:۳۰' },
+      { icon: 'lucide:calendar-plus', label: 'افزودن به تقویم', action: true },
+    ],
+    steps: [
+      { date: '۲۴ مرداد', label: 'ثبت درخواست', state: 'done' },
+      { date: '۲۴ مرداد', label: 'پرداخت تأیید شد', state: 'done' },
+      { date: '۲۵ مرداد', label: 'تأیید و زمان‌بندی شد', state: 'done' },
+      { date: '۲۹ مرداد', label: 'برگزاری جلسه', state: 'current' },
+    ],
+    cta: 'مشاهده جلسه',
+    icon: 'lucide:video',
+    fg: T.infoStrong,
+    bg: T.tintBlue,
   },
   {
     id: 'ses-102',
     kind: 'session',
-    title: 'مشاوره طراحی مسیر شغلی کارکنان کلیدی',
+    kindLabel: 'جلسه حضوری',
+    title: 'جلسه حضوری بررسی پرونده اداره کار',
     expert: 'دکتر سارا محمدی',
     field: 'مناطق آزاد و قوانین کار',
+    rating: '۴.۸',
     avatar: `${A}/mbti-reviewer-01.png`,
-    status: { label: 'تکمیل شده', fg: T.successStrong, bg: T.tintGreen },
-    activity: 'آخرین فعالیت: ۱ هفته پیش',
-    icon: 'lucide:calendar',
-    fg: T.infoStrong,
-    bg: T.tintBlue,
+    status: { label: 'تأیید شده', fg: T.infoStrong, bg: T.tintBlue },
+    activity: '۳ شهریور | ساعت ۱۴:۰۰',
+    meta: [
+      { icon: 'lucide:map-pin', label: 'دفتر آریاز — تهران، سعادت‌آباد' },
+      { icon: 'lucide:navigation', label: 'مشاهده مسیر', action: true },
+    ],
+    steps: [
+      { date: '۲۱ مرداد', label: 'ثبت درخواست', state: 'done' },
+      { date: '۲۲ مرداد', label: 'پرداخت تأیید شد', state: 'done' },
+      { date: '۲۴ مرداد', label: 'تأیید و زمان‌بندی شد', state: 'done' },
+      { date: '۳ شهریور', label: 'برگزاری جلسه حضوری', state: 'todo' },
+    ],
+    cta: 'مشاهده جزئیات',
+    icon: 'lucide:map-pin',
+    fg: T.primary,
+    bg: T.tintPurple,
   },
 ];
+
+/* The mockup's footer reads «نمایش ۱ تا ۴ از ۱۳ مورد» — the list
+   is a page of a longer history, so the pager is part of the
+   design rather than an afterthought. */
+export const myPager = {
+  summary: 'نمایش ۱ تا ۴ از ۱۳ مورد',
+  prev: 'قبلی',
+  next: 'بعدی',
+  pages: ['۱', '۲', '۳', '…', '۹'],
+  active: '۱',
+};
 
 export const myEmpty = {
   title: 'در این دسته درخواستی ندارید',

@@ -10,6 +10,7 @@ import {
   myTabs,
   myToolbar,
   myItems,
+  myPager,
   myEmpty,
 } from '@/data/counseling/my-consultations';
 
@@ -93,6 +94,10 @@ export default function MyConsultationsClient() {
                   style={{ color: T.ink }}
                 />
               </label>
+
+              <p className="mt-2 text-center text-[9px]" style={{ color: T.muted }}>
+                {myAgent.note}
+              </p>
             </section>
 
             <div>
@@ -315,11 +320,17 @@ export default function MyConsultationsClient() {
                       style={{ borderRadius: R.md, border: `1px solid ${T.border}` }}
                     >
                       <div className="flex items-start gap-3 flex-wrap">
-                        <span
-                          className="w-11 h-11 flex items-center justify-center shrink-0 order-1"
-                          style={{ borderRadius: R.md, backgroundColor: it.bg }}
-                        >
-                          <Icon name={it.icon} size={19} style={{ backgroundColor: it.fg }} />
+                        {/* Type badge first → right. */}
+                        <span className="shrink-0 order-1 w-[74px] text-center">
+                          <span
+                            className="w-11 h-11 mx-auto flex items-center justify-center"
+                            style={{ borderRadius: R.md, backgroundColor: it.bg }}
+                          >
+                            <Icon name={it.icon} size={19} style={{ backgroundColor: it.fg }} />
+                          </span>
+                          <span className="mt-1.5 block text-[9px]" style={{ color: T.muted }}>
+                            {it.kindLabel}
+                          </span>
                         </span>
 
                         <div className="flex-1 min-w-[200px] text-right order-2">
@@ -334,12 +345,19 @@ export default function MyConsultationsClient() {
                               <span className="block text-[9px]" style={{ color: T.muted }}>
                                 {it.field}
                               </span>
+                              <span
+                                className="mt-0.5 flex items-center justify-end gap-1 text-[9px] font-bold"
+                                style={{ color: '#f5a524' }}
+                              >
+                                {it.rating}
+                                <Icon name="lucide:star" size={10} style={{ backgroundColor: '#f5a524' }} />
+                              </span>
                             </span>
                             <img src={it.avatar} alt="" className="w-8 h-8 rounded-full object-cover shrink-0" />
                           </span>
                         </div>
 
-                        <div className="order-3 min-w-[170px]">
+                        <div className="order-3 min-w-[190px]">
                           <span
                             className="inline-block px-3 py-1 text-[9.5px] font-bold"
                             style={{ borderRadius: R.pill, backgroundColor: it.status.bg, color: it.status.fg }}
@@ -369,11 +387,139 @@ export default function MyConsultationsClient() {
                           <span className="mt-2 block text-[9px]" style={{ color: T.muted }}>
                             {it.activity}
                           </span>
+
+                          {it.note && (
+                            <span className="mt-1 block text-[9.5px]" style={{ color: T.ink }}>
+                              {it.note}
+                            </span>
+                          )}
+
+                          {it.meta && (
+                            <span className="mt-1.5 flex items-center justify-end gap-2.5 flex-wrap">
+                              {it.meta.map((m) => (
+                                <span
+                                  key={m.label}
+                                  className="flex items-center gap-1 text-[9px]"
+                                  style={{ color: m.action ? T.primary : T.muted }}
+                                >
+                                  {m.label}
+                                  <Icon
+                                    name={m.icon}
+                                    size={10}
+                                    style={{ backgroundColor: m.action ? T.primary : T.muted }}
+                                  />
+                                </span>
+                              ))}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Progress rail + the row's primary action. */}
+                      <div
+                        className="mt-3.5 pt-3.5 flex items-end gap-4 flex-wrap"
+                        style={{ borderTop: `1px solid ${T.border}` }}
+                      >
+                        <ol className="flex-1 min-w-[260px] flex items-start">
+                          {it.steps.map((st, i) => {
+                            const fg =
+                              st.state === 'done'
+                                ? T.successStrong
+                                : st.state === 'current'
+                                  ? T.accent
+                                  : '#c9c3ea';
+                            return (
+                              <li key={st.label} className="flex-1 text-center relative">
+                                {i > 0 && (
+                                  <span
+                                    className="absolute top-[5px] right-1/2 w-full h-[2px]"
+                                    style={{
+                                      backgroundColor:
+                                        it.steps[i - 1].state === 'done' ? T.successStrong : '#e6e2f5',
+                                    }}
+                                  />
+                                )}
+                                <span
+                                  className="relative w-3 h-3 mx-auto block rounded-full"
+                                  style={{
+                                    backgroundColor: st.state === 'todo' ? '#ffffff' : fg,
+                                    border: `2px solid ${fg}`,
+                                  }}
+                                />
+                                <span className="mt-1.5 block text-[9px] font-bold" style={{ color: fg }}>
+                                  {st.date}
+                                </span>
+                                <span className="block text-[8.5px] leading-4" style={{ color: T.muted }}>
+                                  {st.label}
+                                </span>
+                              </li>
+                            );
+                          })}
+                        </ol>
+
+                        <div className="flex items-center gap-2 shrink-0">
+                          <button
+                            aria-label="گزینه‌های بیشتر"
+                            className="w-9 h-9 flex items-center justify-center"
+                            style={{ borderRadius: R.md, border: `1px solid ${T.border}` }}
+                          >
+                            <Icon name="lucide:ellipsis" size={15} style={{ backgroundColor: T.muted }} />
+                          </button>
+                          <button
+                            className="px-5 py-2.5 text-[11px] font-extrabold text-white transition-opacity hover:opacity-90"
+                            style={{ borderRadius: R.md, backgroundColor: T.primary }}
+                          >
+                            {it.cta}
+                          </button>
                         </div>
                       </div>
                     </li>
                   ))}
                 </ul>
+              )}
+
+              {shown.length > 0 && (
+                <div className="mt-5 flex items-center justify-between gap-3 flex-wrap">
+                  <span className="text-[10px]" style={{ color: T.muted }}>
+                    {myPager.summary}
+                  </span>
+
+                  <nav className="flex items-center gap-1.5" aria-label="صفحه‌بندی">
+                    <button
+                      className="px-3 py-1.5 text-[10px] font-bold"
+                      style={{ borderRadius: R.sm, border: `1px solid ${T.border}`, color: T.muted }}
+                    >
+                      {myPager.prev}
+                    </button>
+                    {myPager.pages.map((pg, i) =>
+                      pg === '…' ? (
+                        <span key={`gap-${i}`} className="px-1.5 text-[10px]" style={{ color: T.muted }}>
+                          {pg}
+                        </span>
+                      ) : (
+                        <button
+                          key={pg}
+                          aria-current={pg === myPager.active ? 'page' : undefined}
+                          className="w-7 h-7 text-[10px] font-bold"
+                          style={{
+                            borderRadius: R.sm,
+                            backgroundColor: pg === myPager.active ? T.primary : 'transparent',
+                            border: `1px solid ${pg === myPager.active ? T.primary : T.border}`,
+                            color: pg === myPager.active ? '#ffffff' : T.ink,
+                          }}
+                        >
+                          {pg}
+                        </button>
+                      ),
+                    )}
+                    <button
+                      className="px-3 py-1.5 text-[10px] font-bold"
+                      style={{ borderRadius: R.sm, border: `1px solid ${T.border}`, color: T.ink }}
+                    >
+                      {myPager.next}
+                    </button>
+                  </nav>
+                </div>
               )}
             </Card>
           </main>
