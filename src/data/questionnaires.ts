@@ -335,7 +335,7 @@ export const questAiBand = {
     'پرسشنامه درگیری شغلی اولدهام',
   ],
   points: [
-    { title: 'پیشنهاد ابزارهای مکمل', desc: 'برای تحلیل بهتر نتایج', icon: 'lucide:thumbs-up', color: '#5B34D6' },
+    { title: 'پیشنهاد ابزارهای مکمل', desc: 'برای تحلیل بهتر نتایج', icon: 'lucide:star', color: '#5B34D6' },
     { title: 'توضیح کاربرد ابزار', desc: 'با راهنمایی هوشمند', icon: 'lucide:star', color: '#F26A21' },
     { title: 'پیشنهاد پرسشنامه مناسب', desc: 'برای تحلیل بهتر نتایج', icon: 'lucide:clipboard-check', color: '#0E8A4F' },
   ],

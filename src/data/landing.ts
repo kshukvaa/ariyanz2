@@ -705,7 +705,7 @@ export const heroSlides = [
     tiles: [
       { title: 'دوره‌های\nتخصصی', icon: 'lucide:graduation-cap' },
       { title: 'مهارت‌های\nنرم', icon: 'lucide:users-round' },
-      { title: 'رهبری و\nمدیریت', icon: 'lucide:bar-chart-3' },
+      { title: 'رهبری و\nمدیریت', icon: 'lucide:chart-column' },
       { title: 'کوچینگ و\nمنتورینگ', icon: 'lucide:messages-square' },
     ],
     ctas: [
@@ -1003,7 +1003,7 @@ export const expertiseHeading = 'تخصص ما، ارزش پایدار برای 
 export const expertiseStrip = [
   { text: 'تعهد به محرمانگی', desc: 'و حفظ اطلاعات سازمان', icon: 'lucide:lock' },
   { text: 'همراهی در تمام مراحل', desc: 'از طراحی تا استقرار و ارزیابی', icon: 'lucide:refresh-cw' },
-  { text: 'رویکرد داده‌محور و علمی', desc: 'برای تصمیم‌گیری‌های بهتر', icon: 'lucide:bar-chart-3' },
+  { text: 'رویکرد داده‌محور و علمی', desc: 'برای تصمیم‌گیری‌های بهتر', icon: 'lucide:chart-column' },
   { text: 'تیم متخصص با تجربه', desc: 'با دانش روز و تجربه متنوع', icon: 'lucide:user-round' },
   { text: 'راهکارهای عملی و قابل اجرا', desc: 'متناسب با نیاز سازمان شما', icon: 'lucide:shield-check' },
 ];
@@ -1225,7 +1225,7 @@ export const pathFeatures = [
   {
     title: 'پیگیری پیشرفت',
     desc: 'پیشرفت خود را در هر مرحله\nمشاهده و تحلیل کنید',
-    icon: 'lucide:bar-chart-3',
+    icon: 'lucide:chart-column',
   },
   {
     title: 'یادگیری هدفمند',
@@ -1303,7 +1303,7 @@ export const miniOffers = [
     badge: 'پرفروش هفته',
     badgeIcon: 'lucide:flame',
     tone: 'orange' as const,
-    icon: 'lucide:bar-chart-3',
+    icon: 'lucide:chart-column',
     title: 'دوره مدیریت عملکرد',
     desc: 'از طراحی تا ارزیابی موثر عملکرد',
     discount: '۲۵% تخفیف',

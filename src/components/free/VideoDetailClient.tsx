@@ -149,7 +149,7 @@ function Header({ video }: { video: FreeVideoDetail }) {
               </button>
               <Icon name="lucide:skip-forward" size={15} />
               <Icon name="lucide:volume-2" size={15} />
-              <Icon name="lucide:volume-1" size={15} />
+              <Icon name="lucide:volume-2" size={15} />
               <span className="text-[11px] tabular-nums">00:00 / {video.duration}</span>
               <span className="flex-1" />
               <Icon name="lucide:settings" size={15} />

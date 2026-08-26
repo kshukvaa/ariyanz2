@@ -399,7 +399,7 @@ export const testDetailTabs = [
   { id: 'goal', label: 'هدف تست', icon: 'lucide:target' },
   { id: 'structure', label: 'ساختار سوالات', icon: 'lucide:list-checks' },
   { id: 'notes', label: 'نکات کلیدی', icon: 'lucide:lightbulb' },
-  { id: 'sample', label: 'نمونه گزارش', icon: 'lucide:file-chart-column' },
+  { id: 'sample', label: 'نمونه گزارش', icon: 'lucide:file-spreadsheet' },
 ] as const;
 
 export type TestDetailTab = (typeof testDetailTabs)[number]['id'];
@@ -821,7 +821,7 @@ export const testResult = {
   },
   assurances: [
     { text: 'اطلاعات شما امن و محرمانه است', icon: 'lucide:shield-check' },
-    { text: 'نتایج فقط برای شما مشاهده است', icon: 'lucide:eye-off' },
+    { text: 'نتایج فقط برای شما مشاهده است', icon: 'lucide:scan-eye' },
     { text: 'توسط متخصصان منابع انسانی طراحی شده', icon: 'lucide:badge-check' },
   ],
 };

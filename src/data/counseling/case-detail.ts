@@ -53,9 +53,9 @@ export const caseRail: { steps: CaseRailStep[]; note: string } = {
 export const caseTabs = [
   { id: 'chat', label: 'گفتگو', icon: 'lucide:message-circle' },
   { id: 'summary', label: 'خلاصه پرونده', icon: 'lucide:layout-grid' },
-  { id: 'timeline', label: 'Timeline', icon: 'lucide:git-commit-horizontal' },
+  { id: 'timeline', label: 'Timeline', icon: 'lucide:workflow' },
   { id: 'docs', label: 'مدارک', icon: 'lucide:file-text' },
-  { id: 'outputs', label: 'پاسخ‌ها و خروجی‌ها', icon: 'lucide:file-check' },
+  { id: 'outputs', label: 'پاسخ‌ها و خروجی‌ها', icon: 'lucide:file-check-2' },
   { id: 'sessions', label: 'جلسات مرتبط', icon: 'lucide:calendar' },
 ];
 
@@ -191,7 +191,7 @@ export const caseSummary = {
     tiles: [
       { label: 'پرونده برای ارجاع به مشاور', value: 'آماده است', icon: 'lucide:circle-check', fg: '#1c8a4e' },
       { label: 'ریسک‌های اصلی شناسایی‌شده', value: '۴ مورد', icon: 'lucide:triangle-alert', fg: T.warning },
-      { label: 'احتمال موفقیت کارفرما مشروط‌ها', value: '۴۵٪', icon: 'lucide:shield', fg: T.primary },
+      { label: 'احتمال موفقیت کارفرما مشروط‌ها', value: '۴۵٪', icon: 'lucide:shield-check', fg: T.primary },
       { label: 'ریسک کلی پرونده', value: 'متوسط', icon: 'lucide:scale', fg: T.accent },
     ],
     cta: 'مشاهده جزئیات تحلیل',
@@ -202,7 +202,7 @@ export const caseSummary = {
 
 export const caseTimeline = {
   title: 'Timeline پرونده',
-  icon: 'lucide:git-commit-horizontal',
+  icon: 'lucide:workflow',
   all: 'مشاهده همه رویدادها',
   items: [
     {
@@ -211,7 +211,7 @@ export const caseTimeline = {
       day: 'دوشنبه',
       title: 'پرونده ایجاد شد',
       body: 'پرونده مشاوره با عنوان «بررسی شرایط خاتمه همکاری مدیر فروش» ایجاد شد.',
-      icon: 'lucide:folder-plus',
+      icon: 'lucide:folder-check',
       state: 'done' as const,
     },
     {
@@ -291,7 +291,7 @@ export const caseDocs = {
 
 export const caseOutputs = {
   title: 'پاسخ‌ها و خروجی‌های مشاور',
-  icon: 'lucide:file-check',
+  icon: 'lucide:file-check-2',
   desc: 'تمامی خروجی‌ها، تحلیل‌ها و پاسخ‌های بررسی مشاور شما در این بخش قرار می‌گیرند.',
   note: 'پس از تکمیل بررسی، پاسخ نهایی پرونده در این قسمت قرار خواهند گرفت.',
   columns: ['عنوان خروجی', 'نوع فایل', 'ارسال‌کننده', 'تاریخ ارسال', 'نسخه', 'وضعیت', 'عملیات'],

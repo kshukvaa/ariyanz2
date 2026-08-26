@@ -235,7 +235,7 @@ function TabsPanel({ doc }: { doc: DocDetail }) {
               {/* The sheet */}
               <article className="flex-1 bg-white rounded-sm p-6 sm:p-8 min-h-[320px]">
                 <header className="text-center mb-6">
-                  <Icon name="lucide:hexagon" size={26} className="mx-auto mb-2 text-gray-400" />
+                  <Icon name="lucide:shapes" size={26} className="mx-auto mb-2 text-gray-400" />
                   <p className="text-[11.5px] font-bold" style={{ color: freeTheme.navy }}>
                     {doc.authority}
                   </p>

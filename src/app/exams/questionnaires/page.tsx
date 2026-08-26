@@ -376,7 +376,7 @@ export default function QuestionnaireArchivePage() {
                 className="w-full mt-5 flex items-center justify-center gap-2 rounded-xl border py-3 text-[12.5px] font-bold transition-colors hover:bg-gray-50"
                 style={{ borderColor: testTheme.border, color: testTheme.navy }}
               >
-                <Icon name="lucide:rotate-ccw" size={14} />
+                <Icon name="lucide:undo-2" size={14} />
                 <span>پاک کردن فیلترها</span>
               </button>
             </div>

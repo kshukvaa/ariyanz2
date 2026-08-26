@@ -151,7 +151,7 @@ function ScoreCard() {
           { icon: 'lucide:mail', label: 'ایمیل' },
           { icon: 'lucide:message-circle', label: 'واتساپ' },
           { icon: 'lucide:send', label: 'تلگرام' },
-          { icon: 'lucide:linkedin', label: 'لینکدین' },
+          { icon: 'mdi:linkedin', label: 'لینکدین' },
         ].map((s) => (
           <li key={s.label}>
             <button
@@ -457,7 +457,7 @@ function CtaBand({ test }: { test: TestDetail }) {
           className="flex items-center justify-center gap-2 rounded-xl border bg-white px-6 py-3.5 text-[12.5px] font-bold transition-colors hover:border-violet-300"
           style={{ borderColor: '#CDBEF5', color: testTheme.violet }}
         >
-          <Icon name="lucide:rotate-ccw" size={15} />
+          <Icon name="lucide:undo-2" size={15} />
           <span>{cta.secondary.label}</span>
         </Link>
       </div>

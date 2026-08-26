@@ -162,7 +162,7 @@ export const dashActions: DashAction[] = [
     text: 'گزارش ارزیابی مدیران آماده شده است.',
     cta: 'مشاهده گزارش',
     href: '#results',
-    icon: 'lucide:file-chart-column',
+    icon: 'lucide:file-spreadsheet',
     tint: '#EFEBFE',
     color: '#5B34D6',
   },
@@ -272,7 +272,7 @@ export const dashActivity: DashActivity[] = [
     id: 'a3',
     text: 'گزارش ارزیابی تیم منابع انسانی آماده شد.',
     when: 'دیروز',
-    icon: 'lucide:file-chart-column',
+    icon: 'lucide:file-spreadsheet',
     color: '#3B4FD8',
   },
   {
@@ -516,7 +516,7 @@ export const employeeBulkActions = [
   { id: 'assign', label: 'اختصاص ارزیابی', icon: 'lucide:clipboard-check', color: '#5B34D6' },
   { id: 'group', label: 'افزودن به گروه', icon: 'lucide:users-round', color: '#3B4FD8' },
   { id: 'invite', label: 'ارسال دعوت', icon: 'lucide:send', color: '#16A34A' },
-  { id: 'deactivate', label: 'غیرفعال‌سازی', icon: 'lucide:user-round-x', color: '#E11D48' },
+  { id: 'deactivate', label: 'غیرفعال‌سازی', icon: 'lucide:user-round', color: '#E11D48' },
 ];
 
 export const employeeRowMenu = [
@@ -525,7 +525,7 @@ export const employeeRowMenu = [
   { id: 'group', label: 'افزودن به گروه', icon: 'lucide:users-round' },
   { id: 'edit', label: 'ویرایش اطلاعات', icon: 'lucide:pencil-line' },
   { id: 'invite', label: 'ارسال دعوت', icon: 'lucide:send' },
-  { id: 'deactivate', label: 'غیرفعال‌سازی', icon: 'lucide:user-round-x', danger: true },
+  { id: 'deactivate', label: 'غیرفعال‌سازی', icon: 'lucide:user-round', danger: true },
 ];
 
 /* ── Structure tab ──────────────────────────────────────────── */
@@ -550,7 +550,7 @@ export const orgTree: OrgNode = {
       id: 'sales',
       label: 'مدیریت فروش',
       people: '۹۲ نفر',
-      icon: 'lucide:store',
+      icon: 'lucide:shopping-cart',
       color: '#16A34A',
       children: [
         {
@@ -570,7 +570,7 @@ export const orgTree: OrgNode = {
     },
     { id: 'hr', label: 'منابع انسانی', people: '۱۸ نفر', icon: 'lucide:users-round', color: '#5B34D6' },
     { id: 'finance', label: 'مالی', people: '۳۲ نفر', icon: 'lucide:chart-column', color: '#F26A21' },
-    { id: 'it', label: 'فناوری اطلاعات', people: '۲۱ نفر', icon: 'lucide:cpu', color: '#3B4FD8' },
+    { id: 'it', label: 'فناوری اطلاعات', people: '۲۱ نفر', icon: 'lucide:brain-circuit', color: '#3B4FD8' },
     { id: 'ops', label: 'عملیات', people: '۸۵ نفر', icon: 'lucide:users', color: '#7A819A' },
   ],
 };
@@ -622,7 +622,7 @@ export const evalGroups: EvalGroup[] = [
     activeEvaluations: '۱ ارزیابی فعال',
     percent: 89,
     color: '#16A34A',
-    icon: 'lucide:store',
+    icon: 'lucide:shopping-cart',
     tint: '#E7F7EF',
     updated: 'آخرین بروزرسانی: امروز',
   },

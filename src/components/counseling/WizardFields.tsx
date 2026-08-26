@@ -144,7 +144,7 @@ export function Field({ spec }: { spec: FieldSpec }) {
                 }}
               >
                 <Icon
-                  name={o.icon ?? 'lucide:circle'}
+                  name={o.icon ?? 'lucide:circle-dot'}
                   size={16}
                   style={{ backgroundColor: o.checked ? T.primary : T.muted }}
                 />

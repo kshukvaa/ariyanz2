@@ -215,7 +215,7 @@ function StaffTable({
           className="flex items-center gap-2 rounded-xl border px-3.5 py-2.5 text-[11.5px] font-bold shrink-0 transition-colors hover:bg-gray-50"
           style={{ borderColor: panelTheme.border, color: panelTheme.navy }}
         >
-          <Icon name="lucide:filter-x" size={14} style={{ backgroundColor: panelTheme.muted }} />
+          <Icon name="lucide:funnel" size={14} style={{ backgroundColor: panelTheme.muted }} />
           <span>پاک کردن فیلترها</span>
         </button>
       </div>
@@ -463,7 +463,7 @@ function Structure({ unit, setUnit }: { unit: string | null; setUnit: (v: string
             className="flex items-center gap-2 rounded-xl border px-3.5 py-2.5 text-[11.5px] font-bold"
             style={{ borderColor: panelTheme.violet, color: panelTheme.violet }}
           >
-            <Icon name="lucide:git-fork" size={14} style={{ backgroundColor: panelTheme.violet }} />
+            <Icon name="lucide:workflow" size={14} style={{ backgroundColor: panelTheme.violet }} />
             <span>نمای درختی</span>
           </span>
           <span
@@ -489,7 +489,7 @@ function Structure({ unit, setUnit }: { unit: string | null; setUnit: (v: string
             />
           </div>
 
-          {['lucide:maximize-2', 'lucide:sliders-horizontal'].map((i) => (
+          {['lucide:maximize', 'lucide:sliders-horizontal'].map((i) => (
             <button
               key={i}
               aria-label="ابزار نمودار"
@@ -618,7 +618,7 @@ function UnitPanel({ onClose, visible }: { onClose: () => void; visible: boolean
           className="w-14 h-14 rounded-2xl mx-auto mb-3 flex items-center justify-center"
           style={{ backgroundColor: '#E7F7EF' }}
         >
-          <Icon name="lucide:store" size={24} style={{ backgroundColor: panelTheme.green }} />
+          <Icon name="lucide:shopping-cart" size={24} style={{ backgroundColor: panelTheme.green }} />
         </span>
         <p className="text-[12.5px] font-bold" style={{ color: panelTheme.navy }}>
           {unitPanel.unitLabel}

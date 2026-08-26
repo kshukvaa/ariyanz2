@@ -770,7 +770,7 @@ function Results() {
                       style={{ color: row.up ? panelTheme.green : panelTheme.red }}
                     >
                       <Icon
-                        name={row.up ? 'lucide:triangle' : 'lucide:triangle'}
+                        name={row.up ? 'lucide:triangle-alert' : 'lucide:triangle-alert'}
                         size={9}
                         className={row.up ? '' : 'rotate-180'}
                         style={{ backgroundColor: row.up ? panelTheme.green : panelTheme.red }}

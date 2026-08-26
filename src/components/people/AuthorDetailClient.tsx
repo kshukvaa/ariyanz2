@@ -196,7 +196,7 @@ function AuthorInterviewsPanel() {
               <span className="mt-1 flex items-center justify-end gap-3 flex-wrap">
                 <AMeta icon="lucide:clock">{i.length}</AMeta>
                 <AMeta icon="lucide:calendar">{i.date}</AMeta>
-                <AMeta icon="lucide:radio">{i.outlet}</AMeta>
+                <AMeta icon="lucide:megaphone">{i.outlet}</AMeta>
               </span>
             </span>
             <span

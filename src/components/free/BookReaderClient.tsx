@@ -97,7 +97,7 @@ export default function BookReaderClient({ book }: { book: BookDetail }) {
           className="flex items-center gap-2 rounded-xl border px-4 py-2.5 text-[12px] font-bold transition-colors"
           style={{ borderColor: skin.border, color: skin.text }}
         >
-          <Icon name={night ? 'lucide:sun' : 'lucide:moon'} size={15} />
+          <Icon name={night ? 'lucide:lightbulb' : 'lucide:circle-minus'} size={15} />
           <span>نمایش</span>
         </button>
 
@@ -439,7 +439,7 @@ export default function BookReaderClient({ book }: { book: BookDetail }) {
           className="w-10 h-10 rounded-xl border flex items-center justify-center"
           style={{ borderColor: skin.border }}
         >
-          <Icon name="lucide:chevrons-right" size={16} style={{ backgroundColor: muted }} />
+          <Icon name="lucide:chevron-right" size={16} style={{ backgroundColor: muted }} />
         </button>
 
         <span
@@ -456,7 +456,7 @@ export default function BookReaderClient({ book }: { book: BookDetail }) {
           className="w-10 h-10 rounded-xl border flex items-center justify-center"
           style={{ borderColor: skin.border }}
         >
-          <Icon name="lucide:chevrons-left" size={16} style={{ backgroundColor: muted }} />
+          <Icon name="lucide:chevron-left" size={16} style={{ backgroundColor: muted }} />
         </button>
 
         <span className="text-[12px] tabular-nums" style={{ color: muted }}>

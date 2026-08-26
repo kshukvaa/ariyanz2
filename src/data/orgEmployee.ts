@@ -26,7 +26,7 @@ export const employeeHeadActions = {
   menu: [
     { id: 'edit', label: 'ویرایش اطلاعات', icon: 'lucide:pencil-line' },
     { id: 'invite', label: 'ارسال دعوت', icon: 'lucide:send' },
-    { id: 'deactivate', label: 'غیرفعال‌سازی', icon: 'lucide:user-round-x' },
+    { id: 'deactivate', label: 'غیرفعال‌سازی', icon: 'lucide:user-round' },
   ],
 };
 
@@ -37,7 +37,7 @@ export const employeeProfile = {
   status: 'فعال',
   avatar: `${P}/people/emp-ali-ahmadi-large.png`,
   facts: [
-    { label: 'کد پرسنلی', value: '۱۰۲۴۵', icon: 'lucide:hash' },
+    { label: 'کد پرسنلی', value: '۱۰۲۴۵', icon: 'lucide:tag' },
     { label: 'واحد سازمانی', value: 'فروش تهران', icon: 'lucide:building-2' },
     { label: 'مدیر مستقیم', value: 'محمد رضایی', icon: 'lucide:user-round' },
     { label: 'عضو سازمان از', value: '۱۴۰۲', icon: 'lucide:calendar' },
@@ -294,9 +294,9 @@ export const employeeResults = {
     { title: 'شایستگی مدیریتی', value: '۸۱ / ۱۰۰', level: 'سطح: خوب', date: 'آخرین ارزیابی: ۱۴۰۵/۰۵/۲۲', icon: 'lucide:shield-check', color: '#16A34A', bar: 81 },
     { title: 'سبک رهبری', value: 'مشارکتی', level: 'سبک غالب', date: 'آخرین ارزیابی: ۱۴۰۵/۰۵/۲۰', icon: 'lucide:users-round', color: '#5B34D6', bar: 0 },
     { title: 'هوش هیجانی', value: '۷۸ / ۱۰۰', level: 'سطح: بالا', date: 'آخرین ارزیابی: ۱۴۰۵/۰۵/۱۸', icon: 'lucide:brain', color: '#5B34D6', bar: 78 },
-    { title: 'انعطاف‌پذیری', value: '۶۸ / ۱۰۰', level: 'سطح: متوسط', date: 'آخرین ارزیابی: ۱۴۰۵/۰۴/۱۰', icon: 'lucide:repeat', color: '#E11D48', bar: 68 },
+    { title: 'انعطاف‌پذیری', value: '۶۸ / ۱۰۰', level: 'سطح: متوسط', date: 'آخرین ارزیابی: ۱۴۰۵/۰۴/۱۰', icon: 'lucide:refresh-cw', color: '#E11D48', bar: 68 },
     { title: 'حل مسئله', value: '۸۸ / ۱۰۰', level: 'سطح: عالی', date: 'آخرین ارزیابی: ۱۴۰۵/۰۴/۲۰', icon: 'lucide:puzzle', color: '#5B34D6', bar: 88 },
-    { title: 'تفکر سیستمی', value: '۷۶ / ۱۰۰', level: 'سطح: بالا', date: 'آخرین ارزیابی: ۱۴۰۵/۰۴/۲۰', icon: 'lucide:network', color: '#16A34A', bar: 76 },
+    { title: 'تفکر سیستمی', value: '۷۶ / ۱۰۰', level: 'سطح: بالا', date: 'آخرین ارزیابی: ۱۴۰۵/۰۴/۲۰', icon: 'lucide:workflow', color: '#16A34A', bar: 76 },
     { title: 'توانمندی‌های ارتباطی', value: '۷۲ / ۱۰۰', level: 'سطح: متوسط', date: 'آخرین ارزیابی: ۱۴۰۵/۰۴/۲۵', icon: 'lucide:message-circle', color: '#F26A21', bar: 72 },
   ],
   table: {
@@ -327,7 +327,7 @@ export const employeeResults = {
   headActions: [
     { id: 'download', label: 'دانلود گزارش کامل PDF', icon: 'lucide:download', kind: 'primary' as const },
     { id: 'share', label: 'اشتراک‌گذاری گزارش', icon: 'lucide:share-2', kind: 'outline' as const },
-    { id: 'compare', label: 'مقایسه با دوره قبل', icon: 'lucide:git-compare', kind: 'outline' as const },
+    { id: 'compare', label: 'مقایسه با دوره قبل', icon: 'lucide:arrow-down-up', kind: 'outline' as const },
   ],
 };
 

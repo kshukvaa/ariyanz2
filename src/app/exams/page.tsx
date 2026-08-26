@@ -82,7 +82,7 @@ export default function TestsLandingPage() {
                   className="flex items-center gap-2 rounded-xl border bg-white px-6 py-3.5 text-[13px] font-bold transition-colors hover:border-violet-300"
                   style={{ borderColor: testTheme.border, color: testTheme.navy }}
                 >
-                  <Icon name="lucide:file-chart-column" size={15} />
+                  <Icon name="lucide:file-spreadsheet" size={15} />
                   <span>{testsHero.secondary.label}</span>
                 </Link>
               </div>

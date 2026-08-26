@@ -430,7 +430,7 @@ export const step5 = {
 
   changeTitle: 'می‌توانید پیشنهاد را تغییر دهید',
   changes: [
-    { label: 'پیشنهاد دیگری انتخاب کنم', icon: 'lucide:shuffle' },
+    { label: 'پیشنهاد دیگری انتخاب کنم', icon: 'lucide:arrow-down-up' },
     { label: 'با متخصص صحبت کنم', icon: 'lucide:users-round' },
     { label: 'گزارش تحلیل را دریافت کنم', icon: 'lucide:file-down' },
   ],

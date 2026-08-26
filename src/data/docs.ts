@@ -81,7 +81,7 @@ export const docFacets: DocFacet[] = [
   {
     id: 'authority',
     title: 'مرجع صادرکننده',
-    icon: 'lucide:landmark',
+    icon: 'lucide:building',
     open: true,
     items: [
       { id: 'labor-office', label: 'اداره کار' },
@@ -93,7 +93,7 @@ export const docFacets: DocFacet[] = [
   {
     id: 'subject',
     title: 'نوع موضوع',
-    icon: 'lucide:tags',
+    icon: 'lucide:tag',
     open: true,
     items: [
       { id: 'wage', label: 'حقوق و دستمزد' },
@@ -263,7 +263,7 @@ export const docFileMeta: Record<DocFile, { label: string; color: string; icon: 
 ══════════════════════════════════════════════════════════════ */
 
 export const docDetailTabs = [
-  { id: 'scan', label: 'اسکن بخشنامه', icon: 'lucide:scan-line' },
+  { id: 'scan', label: 'اسکن بخشنامه', icon: 'lucide:scan-eye' },
   { id: 'points', label: 'نکات کلیدی بخشنامه', icon: 'lucide:list-checks' },
   { id: 'analysis', label: 'تحلیل و خلاصه کاربردی آریاز', icon: 'lucide:sparkles' },
 ] as const;
@@ -403,10 +403,10 @@ export function getDoc(id: string): DocDetail | undefined {
     lead: 'آخرین دستورالعمل سازمان تأمین اجتماعی درباره نحوه محاسبه و اعمال حق بیمه سهم کارفرما و کارکنان در سال ۱۴۰۴.',
     heroArt: `${D}/doc-detail-hero.png`,
     specs: [
-      { label: `شماره ${doc.numberLabel}`, value: '۹۹۹/۷۳۳', icon: 'lucide:hash' },
-      { label: 'مرجع صادرکننده', value: doc.authority, icon: 'lucide:landmark' },
+      { label: `شماره ${doc.numberLabel}`, value: '۹۹۹/۷۳۳', icon: 'lucide:tag' },
+      { label: 'مرجع صادرکننده', value: doc.authority, icon: 'lucide:building' },
       { label: 'تاریخ انتشار', value: doc.date, icon: 'lucide:calendar' },
-      { label: 'موضوع', value: 'حقوق و دستمزد / بیمه', icon: 'lucide:tags' },
+      { label: 'موضوع', value: 'حقوق و دستمزد / بیمه', icon: 'lucide:tag' },
     ],
     scanPages: [
       {

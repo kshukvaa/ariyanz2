@@ -212,7 +212,7 @@ export const myItems: ConsultItem[] = [
     activity: '۳ شهریور | ساعت ۱۴:۰۰',
     meta: [
       { icon: 'lucide:map-pin', label: 'دفتر آریاز — تهران، سعادت‌آباد' },
-      { icon: 'lucide:navigation', label: 'مشاهده مسیر', action: true },
+      { icon: 'lucide:compass', label: 'مشاهده مسیر', action: true },
     ],
     steps: [
       { date: '۲۱ مرداد', label: 'ثبت درخواست', state: 'done' },

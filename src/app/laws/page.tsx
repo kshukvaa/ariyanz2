@@ -373,7 +373,7 @@ function Pager() {
       aria-label="صفحه‌بندی"
     >
       <button aria-label="اولین صفحه" className={`${cell} bg-white`} style={{ borderColor: freeTheme.border }}>
-        <Icon name="lucide:chevrons-left" size={15} style={{ backgroundColor: NAVY }} />
+        <Icon name="lucide:chevron-left" size={15} style={{ backgroundColor: NAVY }} />
       </button>
 
       {['1', '2', '3', '4', '5', '…', '13'].map((n, i) =>
@@ -398,7 +398,7 @@ function Pager() {
       )}
 
       <button aria-label="آخرین صفحه" className={`${cell} bg-white`} style={{ borderColor: freeTheme.border }}>
-        <Icon name="lucide:chevrons-right" size={15} style={{ backgroundColor: NAVY }} />
+        <Icon name="lucide:chevron-right" size={15} style={{ backgroundColor: NAVY }} />
       </button>
     </nav>
   );

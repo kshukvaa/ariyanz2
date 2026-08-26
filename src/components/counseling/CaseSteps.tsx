@@ -205,7 +205,7 @@ export function CaseStep2() {
             className="order-2 p-6 text-center"
             style={{ borderRadius: R.md, border: `1.5px dashed #c9c3ea`, backgroundColor: '#fcfbff' }}
           >
-            <Icon name="lucide:upload-cloud" size={30} style={{ backgroundColor: T.primary }} />
+            <Icon name="lucide:cloud-upload" size={30} style={{ backgroundColor: T.primary }} />
             <p className="mt-2.5 text-[11.5px] font-extrabold" style={{ color: T.ink }}>
               {s.docs.drop.title}
             </p>

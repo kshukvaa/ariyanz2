@@ -80,7 +80,7 @@ function RowActions({ name, extra }: { name: string; extra?: React.ReactNode }) 
   return (
     <span className="flex items-center gap-2">
       <button aria-label={`گزینه‌های ${name}`}>
-        <Icon name="lucide:ellipsis-vertical" size={13} style={{ backgroundColor: T.muted }} />
+        <Icon name="lucide:ellipsis" size={13} style={{ backgroundColor: T.muted }} />
       </button>
       <button aria-label={`دانلود ${name}`}>
         <Icon name="lucide:download" size={13} style={{ backgroundColor: T.primary }} />

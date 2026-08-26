@@ -553,10 +553,10 @@ export const readerRail: ReaderTool[] = [
   { id: 'contents', label: 'فهرست', icon: 'lucide:list' },
   { id: 'note', label: 'یادداشت', icon: 'lucide:pencil-line' },
   { id: 'bookmark', label: 'نشان‌ها', icon: 'lucide:bookmark' },
-  { id: 'highlight', label: 'هایلایت', icon: 'lucide:highlighter' },
+  { id: 'highlight', label: 'هایلایت', icon: 'lucide:pen-line' },
   { id: 'search', label: 'جستجو', icon: 'lucide:search' },
   { id: 'settings', label: 'تنظیمات', icon: 'lucide:settings' },
-  { id: 'night', label: 'حالت شب', icon: 'lucide:moon' },
+  { id: 'night', label: 'حالت شب', icon: 'lucide:circle-minus' },
   { id: 'help', label: 'راهنما', icon: 'lucide:circle-help' },
 ];
 

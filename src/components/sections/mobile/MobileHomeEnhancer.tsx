@@ -375,7 +375,7 @@ export default function MobileHomeEnhancer() {
       {toast && (
         <div className="md:hidden fixed bottom-24 left-1/2 -translate-x-1/2 z-50 pointer-events-none">
           <div className="flex items-center gap-2 bg-[#1C1816] text-white text-[12.5px] font-bold px-4 py-2.5 rounded-full">
-            <Icon name="lucide:check-circle-2" size={15} className="text-orange-400" />
+            <Icon name="lucide:circle-check" size={15} className="text-orange-400" />
             <span>{toast}</span>
           </div>
         </div>

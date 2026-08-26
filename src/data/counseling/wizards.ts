@@ -444,7 +444,7 @@ export const caseWizard = {
           { label: 'خاتمه اداره کار', icon: 'lucide:file-text' },
           { label: 'دعاوی اداره کار', icon: 'lucide:scale' },
           { label: 'آیین‌نامه‌ها', icon: 'lucide:book-open' },
-          { label: 'بیمه و تأمین اجتماعی', icon: 'lucide:shield' },
+          { label: 'بیمه و تأمین اجتماعی', icon: 'lucide:shield-check' },
           { label: 'سایر', icon: 'lucide:ellipsis' },
         ],
       },
@@ -535,7 +535,7 @@ export const caseWizard = {
     },
     events: {
       title: '۲. رویدادهای مهم پرونده',
-      icon: 'lucide:git-commit-horizontal',
+      icon: 'lucide:workflow',
       columns: ['ردیف', 'تاریخ', 'عنوان اتفاق', 'توضیح کوتاه', 'مدرک مرتبط', 'عملیات'],
       add: 'افزودن رویداد',
       rows: [
@@ -583,7 +583,7 @@ export const caseWizard = {
     },
     tips: {
       title: 'نکات مهم',
-      icon: 'lucide:shield',
+      icon: 'lucide:shield-check',
       items: [
         'هرچه اطلاعات دقیق‌تر باشد، تحلیل بهتر و سریع‌تر انجام می‌شود.',
         'مدارک با کیفیت و خوانا بارگذاری کنید.',
