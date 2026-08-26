@@ -115,6 +115,8 @@ export interface ConsultItem {
   meta?: ConsultMeta[];
   steps: ConsultStep[];
   cta: string;
+  /* Only the case row has a detail page so far. */
+  href?: string;
   icon: string;
   fg: string;
   bg: string;
@@ -142,6 +144,7 @@ export const myItems: ConsultItem[] = [
       { date: '۲۷ مرداد', label: 'در حال بررسی مدارک', state: 'current' },
     ],
     cta: 'ورود به پرونده',
+    href: '/counseling/case/AR-2048',
     icon: 'lucide:folder',
     fg: T.primary,
     bg: T.tintPurple,

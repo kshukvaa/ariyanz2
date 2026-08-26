@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import Icon from '@/components/Icon';
 import { T, R } from '@/data/panelTokens';
 import {
@@ -465,12 +466,22 @@ export default function MyConsultationsClient() {
                           >
                             <Icon name="lucide:ellipsis" size={15} style={{ backgroundColor: T.muted }} />
                           </button>
-                          <button
-                            className="px-5 py-2.5 text-[11px] font-extrabold text-white transition-opacity hover:opacity-90"
-                            style={{ borderRadius: R.md, backgroundColor: T.primary }}
-                          >
-                            {it.cta}
-                          </button>
+                          {it.href ? (
+                            <Link
+                              href={it.href}
+                              className="px-5 py-2.5 text-[11px] font-extrabold text-white transition-opacity hover:opacity-90"
+                              style={{ borderRadius: R.md, backgroundColor: T.primary }}
+                            >
+                              {it.cta}
+                            </Link>
+                          ) : (
+                            <button
+                              className="px-5 py-2.5 text-[11px] font-extrabold text-white transition-opacity hover:opacity-90"
+                              style={{ borderRadius: R.md, backgroundColor: T.primary }}
+                            >
+                              {it.cta}
+                            </button>
+                          )}
                         </div>
                       </div>
                     </li>
