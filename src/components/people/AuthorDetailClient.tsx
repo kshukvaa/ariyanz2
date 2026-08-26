@@ -19,6 +19,11 @@ import {
   authorPosts,
   authorBooks,
   authorReviews,
+  authorArticlesPanel,
+  authorBooksPanel,
+  authorNotes,
+  authorInterviews,
+  authorRelatedCourses,
 } from '@/data/people/author-detail';
 
 /* ──────────────────────────────────────────────────────────────
@@ -62,6 +67,181 @@ function Stars({ n }: { n: number }) {
         />
       ))}
     </span>
+  );
+}
+
+
+/* Panels behind the five non-About tabs. */
+function AMeta({ icon, children }: { icon: string; children: React.ReactNode }) {
+  return (
+    <span className="flex items-center gap-1.5 text-[10.5px]" style={{ color: T.muted }}>
+      {children}
+      <Icon name={icon} size={12} style={{ backgroundColor: T.muted }} />
+    </span>
+  );
+}
+
+function AuthorArticlesPanel() {
+  return (
+    <Card>
+      <SectionTitle>{authorArticlesPanel.title}</SectionTitle>
+      <ul className="mt-4 grid gap-3.5 sm:grid-cols-2">
+        {authorArticlesPanel.items.map((a) => (
+          <li
+            key={a.title}
+            className="flex items-center gap-3 p-3"
+            style={{ borderRadius: R.md, backgroundColor: '#f8f7fd' }}
+          >
+            <img src={a.image} alt="" className="w-16 h-14 object-cover shrink-0" style={{ borderRadius: R.sm }} />
+            <span className="flex-1 min-w-0 text-right">
+              <span className="block text-[11.5px] font-extrabold leading-6" style={{ color: T.ink }}>
+                {a.title}
+              </span>
+              <span className="mt-1 flex items-center justify-end gap-3">
+                <AMeta icon="lucide:clock">{a.meta}</AMeta>
+                <AMeta icon="lucide:calendar">{a.date}</AMeta>
+              </span>
+            </span>
+          </li>
+        ))}
+      </ul>
+    </Card>
+  );
+}
+
+function AuthorBooksPanel() {
+  return (
+    <Card>
+      <SectionTitle>{authorBooksPanel.title}</SectionTitle>
+      <ul className="mt-4 grid gap-3.5 sm:grid-cols-2">
+        {authorBooksPanel.items.map((b) => (
+          <li
+            key={b.title}
+            className="flex items-start gap-3.5 p-3.5"
+            style={{ borderRadius: R.md, border: `1px solid ${T.border}` }}
+          >
+            <img src={b.cover} alt="" className="w-16 h-24 object-cover shrink-0" style={{ borderRadius: R.sm }} />
+            <span className="flex-1 min-w-0 text-right">
+              <span className="block text-[12px] font-extrabold" style={{ color: T.ink }}>
+                {b.title}
+              </span>
+              <span className="mt-0.5 block text-[10px]" style={{ color: T.muted }}>
+                {b.meta}
+              </span>
+              <span className="mt-2 block text-[10.5px] leading-6" style={{ color: T.ink }}>
+                {b.desc}
+              </span>
+              <button
+                className="mt-2.5 px-3.5 py-1.5 text-[10.5px] font-bold"
+                style={{ borderRadius: R.md, border: `1px solid ${T.primary}`, color: T.primary }}
+              >
+                {authorBooksPanel.cta}
+              </button>
+            </span>
+          </li>
+        ))}
+      </ul>
+    </Card>
+  );
+}
+
+function AuthorNotesPanel() {
+  return (
+    <Card>
+      <SectionTitle>{authorNotes.title}</SectionTitle>
+      <ul className="mt-4 grid gap-3.5 sm:grid-cols-2">
+        {authorNotes.items.map((n) => (
+          <li
+            key={n.title}
+            className="p-4 text-right"
+            style={{ borderRadius: R.md, backgroundColor: '#f8f7fd', borderRight: `3px solid ${T.primary}` }}
+          >
+            <span className="block text-[12px] font-extrabold" style={{ color: T.ink }}>
+              {n.title}
+            </span>
+            <span className="mt-1 block text-[9.5px]" style={{ color: T.muted }}>
+              {n.date}
+            </span>
+            <p className="mt-2.5 text-[10.5px] leading-7" style={{ color: T.ink }}>
+              {n.body}
+            </p>
+          </li>
+        ))}
+      </ul>
+    </Card>
+  );
+}
+
+function AuthorInterviewsPanel() {
+  return (
+    <Card>
+      <SectionTitle>{authorInterviews.title}</SectionTitle>
+      <ul className="mt-4 space-y-3">
+        {authorInterviews.items.map((i) => (
+          <li
+            key={i.title}
+            className="flex items-center gap-3.5 p-3.5"
+            style={{ borderRadius: R.md, border: `1px solid ${T.border}` }}
+          >
+            <span
+              className="w-10 h-10 flex items-center justify-center shrink-0"
+              style={{ borderRadius: R.sm, backgroundColor: T.tintPurple }}
+            >
+              <Icon name={i.icon} size={17} style={{ backgroundColor: T.primary }} />
+            </span>
+            <span className="flex-1 min-w-0 text-right">
+              <span className="block text-[12px] font-extrabold" style={{ color: T.ink }}>
+                {i.title}
+              </span>
+              <span className="mt-1 flex items-center justify-end gap-3 flex-wrap">
+                <AMeta icon="lucide:clock">{i.length}</AMeta>
+                <AMeta icon="lucide:calendar">{i.date}</AMeta>
+                <AMeta icon="lucide:radio">{i.outlet}</AMeta>
+              </span>
+            </span>
+            <span
+              className="px-2.5 py-1 text-[9.5px] font-bold shrink-0"
+              style={{ borderRadius: R.pill, backgroundColor: T.tintOrange, color: T.accent }}
+            >
+              {i.kind}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </Card>
+  );
+}
+
+function AuthorCoursesPanel() {
+  return (
+    <Card>
+      <SectionTitle>{authorRelatedCourses.title}</SectionTitle>
+      <ul className="mt-4 grid gap-3.5 sm:grid-cols-3">
+        {authorRelatedCourses.items.map((c) => (
+          <li
+            key={c.title}
+            className="overflow-hidden"
+            style={{ borderRadius: R.md, border: `1px solid ${T.border}` }}
+          >
+            <img src={c.image} alt="" className="w-full h-24 object-cover" />
+            <div className="p-3 text-right">
+              <span className="block text-[11.5px] font-extrabold leading-6" style={{ color: T.ink }}>
+                {c.title}
+              </span>
+              <span className="mt-1 block text-[10px]" style={{ color: T.muted }}>
+                {c.meta}
+              </span>
+              <button
+                className="mt-2.5 w-full py-2 text-[10.5px] font-extrabold text-white transition-opacity hover:opacity-90"
+                style={{ borderRadius: R.md, backgroundColor: T.primary }}
+              >
+                {authorRelatedCourses.cta}
+              </button>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </Card>
   );
 }
 
@@ -372,6 +552,14 @@ export default function AuthorDetailClient() {
               </div>
             </div>
 
+            {tab === 'articles' && <AuthorArticlesPanel />}
+            {tab === 'books' && <AuthorBooksPanel />}
+            {tab === 'notes' && <AuthorNotesPanel />}
+            {tab === 'interviews' && <AuthorInterviewsPanel />}
+            {tab === 'courses' && <AuthorCoursesPanel />}
+
+            {tab === 'about' && (
+              <>
             {/* Themes (right) + about (left). */}
             <div className="grid gap-4 lg:grid-cols-[300px_1fr]">
               <Card>
@@ -566,6 +754,8 @@ export default function AuthorDetailClient() {
                 </ul>
               </div>
             </Card>
+              </>
+            )}
           </main>
         </div>
       </div>

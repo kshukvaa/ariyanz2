@@ -169,7 +169,7 @@ export const holderPanel = {
 
 export const aboutCourse = {
   title: 'درباره دوره',
-  art: '/images/aryaz/illustrations/learning-path-illus.png',
+  art: '/images/slots/ar-ins-band.png',
 };
 
 export const security = {

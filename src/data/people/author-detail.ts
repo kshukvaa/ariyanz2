@@ -213,3 +213,165 @@ export const authorReviews = {
     },
   ],
 };
+
+/* ──────────────────────────────────────────────────────────────
+   Tab panels.
+
+   «single writer.png» only draws «درباره نویسنده», so the other
+   five tabs moved the underline over unchanged content. مقالات
+   and کتاب‌ها reuse the sidebar's own rails as full listings;
+   the remaining three are new.
+────────────────────────────────────────────────────────────── */
+
+export const authorArticlesPanel = {
+  title: 'مقالات نویسنده',
+  cta: 'مطالعه مقاله',
+  items: [
+    {
+      title: 'چرا بسیاری از سیستم‌های ارزیابی عملکرد شکست می‌خورند؟',
+      meta: '۵ دقیقه مطالعه',
+      date: '۱۸ مرداد ۱۴۰۵',
+      image: `${TH}/kpi-article-01-design-guide.png`,
+    },
+    {
+      title: 'آینده HRBP در سازمان‌های ایرانی',
+      meta: '۶ دقیقه مطالعه',
+      date: '۰۲ مرداد ۱۴۰۵',
+      image: `${TH}/article-05-competency-hiring.png`,
+    },
+    {
+      title: 'نقش داده و تحلیل در تصمیم‌گیری‌های منابع انسانی',
+      meta: '۱۰ دقیقه مطالعه',
+      date: '۲۱ تیر ۱۴۰۵',
+      image: `${TH}/article-07-data-decisions.png`,
+    },
+    {
+      title: 'چگونه فرهنگ سازمانی را واقعاً می‌توان تغییر داد؟',
+      meta: '۷ دقیقه مطالعه',
+      date: '۰۹ تیر ۱۴۰۵',
+      image: `${TH}/article-08-positive-culture.png`,
+    },
+    {
+      title: 'مهارت‌های آینده؛ سازمان‌ها به چه چیزی نیاز دارند؟',
+      meta: '۸ دقیقه مطالعه',
+      date: '۲۵ خرداد ۱۴۰۵',
+      image: `${TH}/article-10-future-skills.png`,
+    },
+    {
+      title: 'تحلیل روند خروج کارکنان در صنایع ایران',
+      meta: '۱۱ دقیقه مطالعه',
+      date: '۱۲ خرداد ۱۴۰۵',
+      image: `${TH}/article-12-attrition-trends.png`,
+    },
+  ],
+};
+
+export const authorBooksPanel = {
+  title: 'کتاب‌ها و آثار تخصصی',
+  cta: 'مشاهده کتاب',
+  items: [
+    {
+      title: 'راهبردهای نوین جبران خدمات',
+      meta: 'چاپ ۱۴۰۰ | ۳۴۰ صفحه',
+      desc: 'چارچوبی عملی برای طراحی نظام حقوق و مزایای منصفانه و قابل دفاع.',
+      cover: `${TH}/book-article-01-hr-strategy.png`,
+    },
+    {
+      title: 'تحول دیجیتال در منابع انسانی',
+      meta: '۱۴۰۱ | ۲۹۰ صفحه',
+      desc: 'از خودکارسازی فرآیندها تا تصمیم‌گیری داده‌محور در منابع انسانی.',
+      cover: `${TH}/book-article-03-hr-sources.png`,
+    },
+    {
+      title: 'مدیریت منابع انسانی استراتژیک',
+      meta: '۱۴۰۲ | ۳۸۰ صفحه',
+      desc: 'پیوند میان استراتژی کسب‌وکار و تصمیم‌های سرمایه انسانی.',
+      cover: `${TH}/book-article-04-talent-attract.png`,
+    },
+    {
+      title: 'شطرنج کسب‌وکار؛ تفکر استراتژیک برای مدیران',
+      meta: '۱۴۰۳ | ۲۶۰ صفحه',
+      desc: 'تمرین‌هایی برای تقویت تفکر چندگامی در تصمیم‌های سازمانی.',
+      cover: `${TH}/book-article-02-chess-business.png`,
+    },
+  ],
+};
+
+export const authorNotes = {
+  title: 'یادداشت‌ها',
+  items: [
+    {
+      title: 'ارزیابی عملکرد، ابزار قضاوت نیست',
+      date: '۲۰ مرداد ۱۴۰۵',
+      body: 'هر بار که ارزیابی به جای گفت‌وگو به پرونده‌سازی تبدیل می‌شود، سازمان یک فرصت یادگیری را از دست می‌دهد.',
+    },
+    {
+      title: 'درباره شتاب‌زدگی در تحول سازمانی',
+      date: '۰۷ مرداد ۱۴۰۵',
+      body: 'تحول سازمانی پروژه نیست؛ عادت است. آنچه در سه ماه ساخته شود، در سه ماه هم فرو می‌ریزد.',
+    },
+    {
+      title: 'سه پرسشی که پیش از هر استخدام باید پرسید',
+      date: '۲۴ تیر ۱۴۰۵',
+      body: 'این نقش چه مشکلی را حل می‌کند؟ موفقیت در آن چگونه دیده می‌شود؟ و شش ماه بعد چه تغییری باید رخ داده باشد؟',
+    },
+    {
+      title: 'داده بدون زمینه، تصمیم بدتری می‌سازد',
+      date: '۰۹ تیر ۱۴۰۵',
+      body: 'نرخ خروج ۱۸٪ بدون دانستن اینکه چه کسانی رفته‌اند، عددی بی‌معناست.',
+    },
+  ],
+};
+
+export const authorInterviews = {
+  title: 'مصاحبه‌ها',
+  cta: 'مشاهده مصاحبه',
+  items: [
+    {
+      title: 'منابع انسانی در دوران عدم قطعیت',
+      outlet: 'پادکست رادیو مدیریت',
+      date: '۱۵ مرداد ۱۴۰۵',
+      length: '۴۲ دقیقه',
+      kind: 'پادکست',
+      icon: 'lucide:mic',
+    },
+    {
+      title: 'گفت‌وگو درباره آینده کار در ایران',
+      outlet: 'ماهنامه تدبیر',
+      date: '۳۰ تیر ۱۴۰۵',
+      length: '۸ صفحه',
+      kind: 'مکتوب',
+      icon: 'lucide:newspaper',
+    },
+    {
+      title: 'چرا سازمان‌ها استعدادها را از دست می‌دهند؟',
+      outlet: 'وبینار آریاز',
+      date: '۱۱ تیر ۱۴۰۵',
+      length: '۶۵ دقیقه',
+      kind: 'ویدیو',
+      icon: 'lucide:video',
+    },
+  ],
+};
+
+export const authorRelatedCourses = {
+  title: 'دوره‌های مرتبط',
+  cta: 'مشاهده دوره',
+  items: [
+    {
+      title: 'دوره جامع HRBP حرفه‌ای',
+      meta: '۴۰ ساعت | آنلاین',
+      image: `${TH}/article-05-competency-hiring.png`,
+    },
+    {
+      title: 'کارگاه عملی طراحی KPI',
+      meta: '۸ ساعت | حضوری',
+      image: `${TH}/kpi-article-01-design-guide.png`,
+    },
+    {
+      title: 'دوره تحول دیجیتال در منابع انسانی',
+      meta: '۱۲ ساعت | آنلاین',
+      image: `${TH}/article-01-ai-future.png`,
+    },
+  ],
+};

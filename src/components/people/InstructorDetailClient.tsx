@@ -16,6 +16,11 @@ import {
   instructorSocial,
   instructorResume,
   instructorCareer,
+  instructorCourses,
+  instructorArticles,
+  instructorProjects,
+  instructorReviews,
+  instructorCerts,
 } from '@/data/people/instructor-detail';
 
 /* ──────────────────────────────────────────────────────────────
@@ -44,6 +49,257 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
       {children}
       <span className="w-[3px] h-4 rounded-full" style={{ backgroundColor: T.primary }} />
     </h2>
+  );
+}
+
+
+/* Small shared bits for the non-About panels. */
+function Meta({ icon, children }: { icon: string; children: React.ReactNode }) {
+  return (
+    <span className="flex items-center gap-1.5 text-[10.5px]" style={{ color: T.muted }}>
+      {children}
+      <Icon name={icon} size={12} style={{ backgroundColor: T.muted }} />
+    </span>
+  );
+}
+
+function Stars({ n }: { n: number }) {
+  return (
+    <span className="flex items-center gap-0.5" aria-label={`${n} از ۵`}>
+      {[0, 1, 2, 3, 4].map((i) => (
+        <Icon
+          key={i}
+          name="lucide:star"
+          size={11}
+          style={{ backgroundColor: i < n ? '#f5a524' : '#dcdae8' }}
+        />
+      ))}
+    </span>
+  );
+}
+
+function CoursesPanel() {
+  return (
+    <Card>
+      <SectionTitle>{instructorCourses.title}</SectionTitle>
+      <ul className="mt-4 grid gap-3.5 sm:grid-cols-2">
+        {instructorCourses.items.map((c) => (
+          <li
+            key={c.title}
+            className="overflow-hidden flex flex-col"
+            style={{ borderRadius: R.md, border: `1px solid ${T.border}` }}
+          >
+            <img src={c.image} alt="" className="w-full h-28 object-cover" />
+            <div className="p-3.5 text-right flex-1 flex flex-col">
+              <span className="block text-[12.5px] font-extrabold" style={{ color: T.ink }}>
+                {c.title}
+              </span>
+              <span className="mt-1 block text-[10.5px] leading-6" style={{ color: T.muted }}>
+                {c.desc}
+              </span>
+
+              <div className="mt-3 flex items-center justify-end gap-3 flex-wrap">
+                <Meta icon="lucide:users-round">{c.students}</Meta>
+                <Meta icon="lucide:clock">{c.duration}</Meta>
+                <Meta icon="lucide:monitor-play">{c.mode}</Meta>
+              </div>
+
+              <div
+                className="mt-3 pt-3 flex items-center justify-between gap-2"
+                style={{ borderTop: `1px solid ${T.border}` }}
+              >
+                <button
+                  className="px-4 py-2 text-[11px] font-extrabold text-white transition-opacity hover:opacity-90"
+                  style={{ borderRadius: R.md, backgroundColor: T.primary }}
+                >
+                  مشاهده دوره
+                </button>
+                <span className="flex items-center gap-2">
+                  <span className="text-[11.5px] font-extrabold" style={{ color: T.ink }}>
+                    {c.price}
+                  </span>
+                  <span className="flex items-center gap-1 text-[10.5px] font-bold" style={{ color: '#f5a524' }}>
+                    {c.rating}
+                    <Icon name="lucide:star" size={11} style={{ backgroundColor: '#f5a524' }} />
+                  </span>
+                </span>
+              </div>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </Card>
+  );
+}
+
+function ArticlesPanel() {
+  return (
+    <Card>
+      <SectionTitle>{instructorArticles.title}</SectionTitle>
+      <ul className="mt-4 space-y-3">
+        {instructorArticles.items.map((a) => (
+          <li
+            key={a.title}
+            className="flex items-center gap-3.5 p-3"
+            style={{ borderRadius: R.md, backgroundColor: '#f8f7fd' }}
+          >
+            <img src={a.image} alt="" className="w-20 h-16 object-cover shrink-0" style={{ borderRadius: R.sm }} />
+            <div className="flex-1 min-w-0 text-right">
+              <span className="block text-[12.5px] font-extrabold" style={{ color: T.ink }}>
+                {a.title}
+              </span>
+              <div className="mt-1.5 flex items-center justify-end gap-3">
+                <Meta icon="lucide:clock">{a.meta}</Meta>
+                <Meta icon="lucide:calendar">{a.date}</Meta>
+              </div>
+            </div>
+            <button
+              className="px-3.5 py-2 text-[10.5px] font-bold shrink-0"
+              style={{ borderRadius: R.md, border: `1px solid ${T.primary}`, color: T.primary }}
+            >
+              {instructorArticles.cta}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </Card>
+  );
+}
+
+function ProjectsPanel() {
+  return (
+    <Card>
+      <SectionTitle>{instructorProjects.title}</SectionTitle>
+      <ul className="mt-4 grid gap-3.5 sm:grid-cols-2">
+        {instructorProjects.items.map((p) => (
+          <li key={p.name} className="p-4 text-right" style={{ borderRadius: R.md, backgroundColor: '#f8f7fd' }}>
+            <div className="flex items-start gap-2.5">
+              <span className="flex-1 min-w-0">
+                <span className="block text-[12.5px] font-extrabold" style={{ color: T.ink }}>
+                  {p.name}
+                </span>
+                <span className="mt-0.5 block text-[10.5px]" style={{ color: T.muted }}>
+                  {p.org} — {p.year}
+                </span>
+              </span>
+              <span
+                className="w-9 h-9 flex items-center justify-center shrink-0"
+                style={{ borderRadius: R.sm, backgroundColor: T.tintPurple }}
+              >
+                <Icon name={p.icon} size={16} style={{ backgroundColor: T.primary }} />
+              </span>
+            </div>
+
+            <p className="mt-3 text-[10.5px] leading-6" style={{ color: T.ink }}>
+              {p.scope}
+            </p>
+            <p
+              className="mt-2 px-3 py-2 text-[10.5px] leading-6"
+              style={{ borderRadius: R.sm, backgroundColor: T.tintGreen, color: '#1c7a35' }}
+            >
+              {p.result}
+            </p>
+          </li>
+        ))}
+      </ul>
+    </Card>
+  );
+}
+
+function ReviewsPanel() {
+  const r = instructorReviews;
+  return (
+    <Card>
+      <SectionTitle>{r.title}</SectionTitle>
+
+      <div className="mt-4 grid gap-5 sm:grid-cols-[150px_1fr] items-center">
+        {/* Score first → right. */}
+        <div className="text-center">
+          <span className="block text-[34px] font-extrabold leading-none" style={{ color: T.primary }}>
+            {r.score}
+          </span>
+          <span className="mt-1 block text-[10.5px]" style={{ color: T.muted }}>
+            {r.outOf}
+          </span>
+          <span className="mt-2 block text-[10px]" style={{ color: T.muted }}>
+            {r.basis.join(' · ')}
+          </span>
+        </div>
+
+        <ul className="space-y-1.5">
+          {r.bars.map((b) => (
+            <li key={b.label} className="flex items-center gap-2.5">
+              <span className="text-[10px] w-14 text-right shrink-0" style={{ color: T.muted }}>
+                {b.label}
+              </span>
+              <span className="flex-1 h-2 rounded-full overflow-hidden" style={{ backgroundColor: '#eeecf7' }}>
+                <span
+                  className="block h-full rounded-full"
+                  style={{ width: `${b.pct}%`, backgroundColor: '#f5a524' }}
+                />
+              </span>
+              <span className="text-[10px] w-12 shrink-0" style={{ color: T.muted }}>
+                {b.count}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <ul className="mt-5 grid gap-3.5 sm:grid-cols-3">
+        {r.items.map((i) => (
+          <li key={i.name} className="p-3.5 text-right" style={{ borderRadius: R.md, backgroundColor: '#f8f7fd' }}>
+            <p className="text-[10.5px] leading-6" style={{ color: T.ink }}>
+              {i.text}
+            </p>
+            <div className="mt-3 pt-3 flex items-center gap-2.5" style={{ borderTop: `1px solid ${T.border}` }}>
+              <img src={i.avatar} alt="" className="w-8 h-8 rounded-full object-cover shrink-0" />
+              <span className="flex-1 min-w-0 text-right">
+                <span className="block text-[11px] font-extrabold truncate" style={{ color: T.ink }}>
+                  {i.name}
+                </span>
+                <span className="block text-[9.5px]" style={{ color: T.muted }}>
+                  {i.role}
+                </span>
+              </span>
+              <Stars n={i.stars} />
+            </div>
+          </li>
+        ))}
+      </ul>
+    </Card>
+  );
+}
+
+function CertsPanel() {
+  return (
+    <Card>
+      <SectionTitle>{instructorCerts.title}</SectionTitle>
+      <ul className="mt-4 grid gap-3.5 sm:grid-cols-2">
+        {instructorCerts.items.map((c) => (
+          <li
+            key={c.name}
+            className="flex items-center gap-3 p-3.5"
+            style={{ borderRadius: R.md, border: `1px solid ${T.border}` }}
+          >
+            <span
+              className="w-10 h-10 flex items-center justify-center shrink-0"
+              style={{ borderRadius: R.sm, backgroundColor: T.tintOrange }}
+            >
+              <Icon name="lucide:award" size={18} style={{ backgroundColor: T.accent }} />
+            </span>
+            <span className="flex-1 min-w-0 text-right">
+              <span className="block text-[12px] font-extrabold" style={{ color: T.ink }}>
+                {c.name}
+              </span>
+              <span className="mt-0.5 block text-[10px]" style={{ color: T.muted }}>
+                {c.issuer} — {c.year}
+              </span>
+            </span>
+          </li>
+        ))}
+      </ul>
+    </Card>
   );
 }
 
@@ -226,10 +482,18 @@ export default function InstructorDetailClient() {
           </div>
         </div>
 
-        {/* ── About ──────────────────────────────────────────── */}
+        {/* ── Tab panel ──────────────────────────────────────── */}
         <div className="mt-4 grid gap-4 lg:grid-cols-[1fr_290px] items-start">
           {/* Main first → right. */}
           <div className="min-w-0 space-y-4">
+            {tab === 'courses' && <CoursesPanel />}
+            {tab === 'articles' && <ArticlesPanel />}
+            {tab === 'projects' && <ProjectsPanel />}
+            {tab === 'reviews' && <ReviewsPanel />}
+            {tab === 'certs' && <CertsPanel />}
+
+            {tab === 'about' && (
+              <>
             <Card>
               <SectionTitle>{instructorAbout.title}</SectionTitle>
 
@@ -313,6 +577,8 @@ export default function InstructorDetailClient() {
                 {instructorCareer.more}
               </button>
             </Card>
+              </>
+            )}
           </div>
 
           {/* Aside declared last → left. */}

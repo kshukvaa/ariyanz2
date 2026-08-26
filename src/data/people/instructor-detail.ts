@@ -120,3 +120,179 @@ export const instructorCareer = {
     },
   ],
 };
+
+/* ──────────────────────────────────────────────────────────────
+   Tab panels.
+
+   «single teacher page.png» only draws the «درباره مدرس» tab, so
+   the other five had no panel behind them and the tab bar moved
+   its underline over unchanged content. The panels below follow
+   the mockup's own card language — Card + SectionTitle, the pale
+   #f8f7fd row fill, purple rules — so the tabs read as one page.
+────────────────────────────────────────────────────────────── */
+
+const TH = '/images/aryaz/thumbnails';
+const AV = '/images/aryaz/avatars';
+
+export const instructorCourses = {
+  title: 'دوره‌های مدرس',
+  empty: 'دوره‌ای برای نمایش وجود ندارد.',
+  items: [
+    {
+      title: 'دوره جامع HRBP حرفه‌ای',
+      desc: 'تربیت شریک استراتژیک منابع انسانی برای همراهی با کسب‌وکار',
+      image: `${TH}/article-05-competency-hiring.png`,
+      mode: 'آنلاین',
+      duration: '۴۰ ساعت',
+      students: '۳۲۰ فراگیر',
+      rating: '۴.۹',
+      price: '۸,۹۰۰,۰۰۰ تومان',
+    },
+    {
+      title: 'کارگاه عملی طراحی KPI',
+      desc: 'طراحی شاخص‌های کلیدی عملکرد بر پایه اهداف استراتژیک سازمان',
+      image: `${TH}/kpi-article-01-design-guide.png`,
+      mode: 'حضوری',
+      duration: '۸ ساعت',
+      students: '۱۴۵ فراگیر',
+      rating: '۴.۸',
+      price: '۸۵۰,۰۰۰ تومان',
+    },
+    {
+      title: 'دوره جامع مدیریت عملکرد',
+      desc: 'استقرار چرخه کامل ارزیابی، بازخورد و بهبود عملکرد کارکنان',
+      image: `${TH}/article-09-performance-kpi.png`,
+      mode: 'ترکیبی',
+      duration: '۲۴ ساعت',
+      students: '۲۱۰ فراگیر',
+      rating: '۴.۷',
+      price: '۴,۲۰۰,۰۰۰ تومان',
+    },
+    {
+      title: 'طراحی نظام جبران خدمات',
+      desc: 'ساخت ساختار حقوق و مزایای منصفانه و قابل دفاع در سازمان',
+      image: `${TH}/doc-article-03-wage-impact.png`,
+      mode: 'آنلاین',
+      duration: '۱۶ ساعت',
+      students: '۱۸۶ فراگیر',
+      rating: '۴.۸',
+      price: '۳,۵۰۰,۰۰۰ تومان',
+    },
+  ],
+};
+
+export const instructorArticles = {
+  title: 'مقالات مدرس',
+  cta: 'مطالعه مقاله',
+  items: [
+    {
+      title: 'چرا HRBP در سازمان‌های ایرانی شکست می‌خورد؟',
+      meta: '۸ دقیقه مطالعه',
+      date: '۱۲ مرداد ۱۴۰۵',
+      image: `${TH}/article-05-competency-hiring.png`,
+    },
+    {
+      title: 'شاخص‌هایی که واقعاً عملکرد را می‌سنجند',
+      meta: '۶ دقیقه مطالعه',
+      date: '۲۸ تیر ۱۴۰۵',
+      image: `${TH}/kpi-article-04-smart-criteria.png`,
+    },
+    {
+      title: 'از ارزیابی سالانه تا بازخورد مستمر',
+      meta: '۷ دقیقه مطالعه',
+      date: '۰۵ تیر ۱۴۰۵',
+      image: `${TH}/related-02-effective-feedback.png`,
+    },
+    {
+      title: 'ساختار سازمانی چابک؛ افسانه یا ضرورت؟',
+      meta: '۹ دقیقه مطالعه',
+      date: '۱۹ خرداد ۱۴۰۵',
+      image: `${TH}/article-02-leadership-strat.png`,
+    },
+  ],
+};
+
+export const instructorProjects = {
+  title: 'پروژه‌ها و تجربیات',
+  items: [
+    {
+      name: 'استقرار نظام ارزیابی عملکرد',
+      org: 'گروه صنعتی پارس‌خودرو',
+      year: '۱۴۰۴',
+      scope: 'بیش از ۱٬۲۰۰ کارمند در ۶ واحد عملیاتی',
+      result: 'کاهش ۳۴٪ اختلافات ارزیابی و افزایش رضایت مدیران میانی',
+      icon: 'lucide:target',
+    },
+    {
+      name: 'بازطراحی ساختار سازمانی',
+      org: 'شرکت توسعه تجارت بهین',
+      year: '۱۴۰۳',
+      scope: 'بازنگری ۴۸ عنوان شغلی و مسیرهای پیشرفت',
+      result: 'کوتاه شدن زنجیره تصمیم‌گیری از ۵ به ۳ سطح',
+      icon: 'lucide:workflow',
+    },
+    {
+      name: 'طراحی نظام جبران خدمات',
+      org: 'شرکت صنایع غذایی پارس',
+      year: '۱۴۰۲',
+      scope: 'ارزیابی مشاغل و طراحی جدول حقوق و مزایا',
+      result: 'کاهش ۲۱٪ نرخ خروج کارکنان کلیدی طی یک سال',
+      icon: 'lucide:briefcase',
+    },
+    {
+      name: 'برنامه توسعه مدیران',
+      org: 'بانک ملت',
+      year: '۱۴۰۱',
+      scope: 'توسعه شایستگی ۹۰ مدیر شعبه در ۸ ماه',
+      result: 'ارتقای ۴۰٪ شرکت‌کنندگان به سطوح بالاتر مدیریتی',
+      icon: 'lucide:users-round',
+    },
+  ],
+};
+
+export const instructorReviews = {
+  title: 'نظرات فراگیران',
+  score: '۴.۹',
+  outOf: 'از ۵',
+  basis: ['۱٬۳۸۰ ارزیابی', '۴۶۲ دیدگاه'],
+  bars: [
+    { label: '۵ ستاره', pct: 84, count: '۱٬۱۵۹' },
+    { label: '۴ ستاره', pct: 11, count: '۱۵۲' },
+    { label: '۳ ستاره', pct: 3, count: '۴۱' },
+    { label: '۲ ستاره', pct: 1, count: '۱۴' },
+    { label: '۱ ستاره', pct: 1, count: '۱۴' },
+  ],
+  items: [
+    {
+      name: 'سارا نادری',
+      role: 'مشاور سازمانی',
+      avatar: `${AV}/mbti-reviewer-01.png`,
+      stars: 5,
+      text: 'مثال‌های واقعی دوره باعث شد بتوانم همان هفته اول چارچوب را در تیم خودم پیاده کنم.',
+    },
+    {
+      name: 'علی رضایی',
+      role: 'مدیر عامل',
+      avatar: `${AV}/staff-ali-ahmadi.png`,
+      stars: 5,
+      text: 'نگاه ایشان به منابع انسانی کاملاً کسب‌وکارمحور است؛ چیزی که در دوره‌های مشابه ندیده بودم.',
+    },
+    {
+      name: 'مریم محمدی',
+      role: 'مدیر منابع انسانی',
+      avatar: `${AV}/reviewer-02.png`,
+      stars: 4,
+      text: 'محتوا بسیار کاربردی بود. تنها کاش زمان بخش کارگاهی کمی بیشتر بود.',
+    },
+  ],
+};
+
+export const instructorCerts = {
+  title: 'گواهینامه‌ها و اعتبارنامه‌ها',
+  items: [
+    { name: 'گواهینامه بین‌المللی SHRM-SCP', issuer: 'انجمن مدیریت منابع انسانی آمریکا', year: '۱۴۰۲' },
+    { name: 'گواهینامه ارزیاب مرکز ارزیابی', issuer: 'انجمن مدیریت منابع انسانی ایران', year: '۱۴۰۱' },
+    { name: 'گواهینامه مربیگری حرفه‌ای ICF', issuer: 'فدراسیون بین‌المللی کوچینگ', year: '۱۴۰۰' },
+    { name: 'گواهینامه تحلیلگر داده منابع انسانی', issuer: 'دانشگاه تهران', year: '۱۳۹۹' },
+  ],
+};
