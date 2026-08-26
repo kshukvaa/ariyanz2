@@ -1,0 +1,282 @@
+     1→     1→# Ariyaz — Mobile Homepage Redesign Worklog
+     2→     2→
+     3→     3→## Project Status
+     4→     4→The uploaded project (`zip333.zip`) has been deployed into `/home/z/my-project`.
+     5→     5→It is a Persian (RTL, `dir="rtl"`, `lang="fa"`) Next.js 16 app — the **Ariyaz** HR /
+     6→     6→learning platform. Dev server runs on port 3000 (Turbopack). `three` + `@types/three`
+     7→     7→were installed. Prisma client generated. Homepage compiles (~40s first compile due to
+     8→     8→three.js hero).
+     9→     9→
+    10→    10→### Tech notes
+    11→    11→- Framework: Next.js 16 App Router, TypeScript, Tailwind CSS 4, shadcn/ui.
+    12→    12→- Fonts: Vazirmatn (body), Lalezar / Poppins (display). Loaded in `src/app/layout.tsx`.
+    13→    13→- Icons: `@/components/Icon` — a CSS-mask `<span>` backed by the **Iconify SVG API**
+    14→    14→  (`https://api.iconify.design/<set>/<name>.svg`). Colour comes from `background-color`
+    15→    15→  via `.ar-icon { background-color: currentColor }` (so `className="text-orange-500"`
+    16→    16→  works). Local SVGs under `/public` also supported via `name="/icons/x.svg"`.
+    17→    17→- Brand palette: **Navy** `#16305B` (exported as `NAVY` from `@/components/SectionHeading`),
+    18→    18→  **Orange** `#F26A21` / Tailwind `orange-500`. Backgrounds: white, `gray-50/70`,
+    19→    19→  `#FAFAFB`, `#FDF7F0` (offers), `#FDF4EE` (testimonials), `#FDF1E6`.
+    20→    20→- Shared building blocks: `SectionHeading` (centered, orange rules), `ScrollAnimator` +
+    21→    21→  `StaggerContainer` + `AnimatedCounter`, `ScrollPinnedRail`, `ImageSlot` (placeholder
+    22→    22→  art keyed by `slotImages`), `Icon`.
+    23→    23→- All homepage copy lives in `@/data/landing` (one big file, ~78KB). Sections are
+    24→    24→  presentational and import named exports from it.
+    25→    25→
+    26→    26→## Current Goal
+    27→    27→**Build a completely different homepage for mobile devices.** Same content, different
+    28→    28→design/layout. Constraints (DO NOT TOUCH):
+    29→    29→- `Hero3DSlider` (the hero slider) — `src/components/sections/Hero3DSlider.tsx`
+    30→    30→- `Footer` — `src/components/Footer.tsx`
+    31→    31→- `MobileNav` (bottom navigation + menu) — `src/components/MobileNav.tsx` (rendered in
+    32→    32→  `layout.tsx`, outside the page anyway)
+    33→    33→
+    34→    34→Everything else (the 11 content sections) gets a brand-new **mobile-only** variant.
+    35→    35→Desktop keeps the existing sections unchanged.
+    36→    36→
+    37→    37→## Implementation Strategy
+    38→    38→Use a **CSS-based viewport swap** (no JS hydration risk):
+    39→    39→- `src/app/page.tsx` renders `Hero3DSlider` (shared) then:
+    40→    40→  - `<div className="hidden md:block">` → all existing desktop sections
+    41→    41→  - `<div className="md:hidden">` → all new mobile sections
+    42→    42→  then `Footer` (shared).
+    43→    43→- New mobile sections live in `src/components/sections/mobile/`.
+    44→    44→- Each mobile section imports the **same data** from `@/data/landing` as its desktop
+    45→    45→  counterpart (same content) but renders a **different layout/design**.
+    46→    46→
+    47→    47→## Mobile Design Language — "Immersive App" (cohesive across all mobile sections)
+    48→    48→This is deliberately different from the desktop's centered, card-grid, subtle-shadow look.
+    49→    49→
+    50→    50→**Principles**
+    51→    51→1. **Bold alternating backgrounds** — alternate navy-gradient sections
+    52→    52→   (`bg-gradient-to-b from-[#16305B] to-[#0E1F3F]`, white text) with warm cream/white
+    53→    53→   sections. Dramatic contrast, app-like.
+    54→    54→2. **Left/right-aligned editorial headings** (NOT centered). In RTL the heading block sits
+    55→    55→   at the start (right). Use a small orange **vertical accent bar** + an optional numbered
+    56→    56→   chip (`۰۱` … `۰۱۱` in Persian digits) for an editorial feel. Punchier, smaller titles.
+    57→    57→3. **Horizontal snap ribbons** (`snap-x snap-mandatory`) replace desktop grids/pinned rails.
+    58→    58→   Cards snap into view one at a time (`snap-center`, `w-[78%]`).
+    59→    59→4. **Glassmorphism on navy** (`bg-white/10 backdrop-blur-md border border-white/15`,
+    60→    60→   white text). On light sections: solid `rounded-3xl` white cards with a coloured
+    61→    61→   top accent stripe and soft shadow.
+    62→    62→5. **Bigger touch targets** — min 44px, generous padding. Big full-width CTA buttons
+    63→    63→   (orange gradient `from-orange-500 to-orange-600`).
+    64→    64→6. **Persian digits** where numbers are shown (use a small helper).
+    65→    65→7. **Sticky in-section sub-tabs** where a section has tabs (pill chips, horizontally
+    66→    66→   scrollable, `ar-no-scrollbar`).
+    67→    67→8. Use `framer-motion` for subtle entrance animations (fade/slide up) — already a dep.
+    68→    68→9. Keep using `Icon`, `ImageSlot`, and existing shadcn primitives. Do NOT reinvent icons.
+    69→    69→
+    70→    70→**Shared kit** — `src/components/sections/mobile/_kit.tsx` exports:
+    71→    71→- `MNAV` (= `#16305B`), `MORANGE` (= `#F26A21`), `toFa(num)` Persian-digit helper.
+    72→    72→- `<MobileSectionShell>` — wrapper: `<section className="py-12 ...">` with a
+    73→    73→  `px-4` container and a `data-mobile-section` attr.
+    74→    74→- `<MobileHeading>` — props `{ index, title, desc?, onDark? }` → renders the numbered
+    75→    75→  chip + orange accent bar + bold title + optional desc. `onDark` switches text to white.
+    76→    76→- `<SnapRail>` — horizontal snap scroller (`flex gap-4 overflow-x-auto snap-x snap-mandatory
+    77→    77→  ar-no-scrollbar -mx-4 px-4`).
+    78→    78→- `<GlassCard>` / `<SolidCard>` — reusable card primitives.
+    79→    79→- `<GradientCTA>` — full-width orange gradient button.
+    80→    80→
+    81→    81→## Section → Data mapping (each mobile variant MUST import & render the SAME data)
+    82→    82→| # | Mobile section file | Desktop source to read | Data exports to import |
+    83→    83→|---|---|---|---|
+    84→    84→| 1 | `mobile/MobileTopicFinderSection.tsx` | `sections/TopicFinderSection.tsx` | `topics`, `topicsHeading`, `topicsCtaLabel` |
+    85→    85→| 2 | `mobile/MobilePartnersSection.tsx` | `sections/PartnersSection.tsx` | `partnersHeading`, `partners`, `defaultPartnerId`, `caseStudyLabels`, `partnerStats`, `partnerStatsHeading`, `expertiseStrip`, `expertiseHeading`, `partnerContact`, `Partner` |
+    86→    86→| 3 | `mobile/MobileProductsSection.tsx` | `sections/ProductsSection.tsx` | `productTabs`, `productsHeading`, `productsDefaultTab`, `productsBand`, `productCtaLabel`, `Product` |
+    87→    87→| 4 | `mobile/MobileLearningPathsSection.tsx` | `sections/LearningPathsSection.tsx` | `pathsHeading`, `pathFeatures`, `pathsSubheading`, `pathsAllCta`, `pathCardCta`, `learningPaths`, `pathsBand`, `pathStepsLabel` |
+    88→    88→| 5 | `mobile/MobileSpecialOffersSection.tsx` | `sections/SpecialOffersSection.tsx` | `offersHeading`, `offersIntro`, `mainOffer`, `miniOffers`, `offersBand` (also `slotImages` from `@/data/slotImages`) |
+    89→    89→| 6 | `mobile/MobileNewsSection.tsx` | `sections/NewsSection.tsx` | `newsHeading`, `newsTabs`, `newsTimeline`, `newsTimelineTitle`, `newsTimelineCta`, `newsCards`, `newsBand` |
+    90→    90→| 7 | `mobile/MobileTestimonialsSection.tsx` | `sections/TestimonialsSection.tsx` | `testimonialsHeading`, `testimonialTabs`, `testimonials`, `testimonialStats`, `testimonialsClosing`, `Testimonial` (also `slotImages`) |
+    91→    91→| 8 | `mobile/MobileArticlesSection.tsx` | `sections/ArticlesSection.tsx` | `articlesHeading`, `articleTabs`, `featuredArticle`, `articleList`, `articlesBand` |
+    92→    92→| 9 | `mobile/MobileLeaderboardSection.tsx` | `sections/LeaderboardSection.tsx` | `leaderboardHeading`, `leaderboardTabs`, `leaderboardRows` (+ whatever else it imports — read the file) |
+    93→    93→| 10 | `mobile/MobileWhyAriyazSection.tsx` | `sections/WhyAriyazSection.tsx` | `whyHeading`, `whyReasons`, `whyTrust`, `whyStats`, `whyBand`, `brand` |
+    94→    94→| 11 | `mobile/MobileInstructorsSection.tsx` | `sections/InstructorsSection.tsx` | read the file — imports include `instructors` and related (find exact names) |
+    95→    95→
+    96→    96→**Section ordering on mobile (page.tsx):** Hero3DSlider → TopicFinder → Partners →
+    97→    97→Products → LearningPaths → SpecialOffers → News → Testimonials → Articles →
+    98→    98→Leaderboard → WhyAriyaz → Instructors → Footer. (Same order as desktop, so the
+    99→    99→"completely different" feel comes from layout/design, not reordering.)
+   100→   100→
+   101→   101→## Background rhythm suggestion (to create the alternating immersive feel)
+   102→   102→- TopicFinder: navy gradient (dark)
+   103→   103→- Partners: cream `#FAFAFB` (light)
+   104→   104→- Products: navy gradient (dark)
+   105→   105→- LearningPaths: `#F5F6FA` (light)
+   106→   106→- SpecialOffers: warm `#FDF7F0` (light, keeps offer warmth) — or a deep orange-tinted dark
+   107→   107→- News: navy gradient (dark)
+   108→   108→- Testimonials: `#FDF4EE` (light, warm)
+   109→   109→- Articles: `#FAFAFB` (light)
+   110→   110→- Leaderboard: navy gradient (dark) — leaderboard looks great on dark
+   111→   111→- WhyAriyaz: `#FAFAFB` (light)
+   112→   112→- Instructors: navy gradient (dark) — strong closing
+   113→   113→(Adjust per section as the design dictates; the key is **contrast + variety**, not monotony.)
+   114→   114→
+   115→   115→## Verification Plan
+   116→   116→After implementation:
+   117→   117→1. `bun run lint` passes (or only minor warnings).
+   118→   118→2. Dev server (`/home/z/my-project/dev.log`) shows `GET / 200` with no runtime errors.
+   119→   119→3. Agent Browser: load `/` at **mobile** width (375×812) — confirm new mobile design shows,
+   120→   120→   hero slider intact, footer intact, bottom nav intact, all 11 sections render with content.
+   121→   121→4. Agent Browser: load `/` at **desktop** width (1280+) — confirm desktop sections unchanged.
+   122→   122→5. Confirm no hydration mismatch errors in console/log.
+   123→   123→
+   124→   124→## Cron
+   125→   125→A recurring 15-min `webDevReview` cron job will be created after the build to keep iterating.
+   126→   126→
+   127→   127→---
+   128→   128→Task ID: 0
+   129→   129→Agent: orchestrator (main)
+   130→   130→Task: Set up the uploaded Ariyaz project, analyse all homepage sections, define the mobile redesign spec.
+   131→   131→
+   132→   132→Work Log:
+   133→   133→- Extracted `zip333.zip` → `/home/z/my-project/upload/extracted`.
+   134→   134→- Replaced `/home/z/my-project/src` with the extracted `src`; merged `public/*`.
+   135→   135→- Installed `three` + `@types/three`; ran `bun run db:generate`.
+   136→   136→- Fixed `next.config.ts` (removed unsupported `eslint` key, added `allowedDevOrigins`).
+   137→   137→- Launched dev server with `NODE_OPTIONS=--max-old-space-size=3072` via `setsid` (the
+   138→   138→  three.js hero needs extra heap; default heap crashed during first compile).
+   139→   139→- Read 8 of 11 desktop sections + `SectionHeading` + `Icon` + `landing.ts` preview.
+   140→   140→- Defined the "Immersive App" mobile design language and the section→data mapping above.
+   141→   141→
+   142→   142→Stage Summary:
+   143→   143→- Project is live on port 3000, homepage returns HTTP 200.
+   144→   144→- Architecture decided: CSS viewport swap in `page.tsx`, new mobile sections under
+   145→   145→  `src/components/sections/mobile/`, shared kit in `_kit.tsx`.
+   146→   146→- Ready to build the mobile kit + 11 mobile sections, then verify with Agent Browser.
+   147→   147→
+   148→   148→---
+   149→   149→Task ID: 1-a
+   150→   150→Agent: full-stack-developer (mobile sections 1-4)
+   151→   151→Task: Build MobileTopicFinderSection, MobilePartnersSection, MobileProductsSection, MobileLearningPathsSection
+   152→   152→
+   153→   153→Work Log:
+   154→   154→- Read worklog.md, _kit.tsx, Icon.tsx, ImageSlot.tsx, ScrollAnimator.tsx for context + API.
+   155→   155→- Read desktop sources (TopicFinder, Partners, Products, LearningPaths) + landing.ts data shapes (topics[6], partners[10] with case.meta, productTabs[3] with items[], learningPaths[5] with progress + featured flags, pathsBand.stats with tone).
+   156→   156→- Built MobileTopicFinderSection (01, dark navy): vertical stack of always-open GlassCards (NOT an accordion — visually distinct from desktop). Each card = icon medallion (uses t.bg/t.color), white title, white/60 desc, 2-col checklist with orange `circle-check-big` icons, inline orange CTA link to t.href. framer-motion fade-up entrance per card.
+   157→   157→- Built MobilePartnersSection (02, light #FAFAFB): SnapRail of logo tiles (SolidCard-style white chips, useState activeId=defaultPartnerId) → SolidCard with active case study (key=active.id + animate-fade-in on swap, ImageSlot case image, badge, label/title/summary, 2x2 meta grid using caseStudyLabels.field/service/duration/year, CTA link) → partnerStatsHeading + 2-col stat grid (SolidCard mini cards with AnimatedCounter + icon + label + desc) → expertiseHeading + vertical list in SolidCard with hairline dividers → navy bg-gray-900 stacked contact card (meeting link row, phone link row with tel:02191017134, full-width GradientCTA).
+   158→   158→- Built MobileProductsSection (03, dark navy): MobileHeading + kicker chip + PillTabs dark (productTabs, useState default productsDefaultTab) + SnapRail of GlassCards (key=tab + animate-fade-in). Each card = artwork (mobileSlot ?? slot, aspect-[16/10]), badge top-right, medallion straddling artwork edge, white title, category chip, white/65 desc, rating+students row, orange CTA link. Band = GlassCard with icon + text + GradientCTA.
+   159→   159→- Built MobileLearningPathsSection (04, light #F5F6FA): MobileHeading + kicker chip + vertical pathFeatures list in SolidCard (hairline dividers) + sub-heading row (pathsSubheading + pathsAllCta link button) + SnapRail of SolidCards (each wraps <Link href="/learning-paths">): category chip + "منتخب" featured chip, big colored icon medallion, title, "{steps} {pathStepsLabel}", LINEAR progress bar (motion width animation, colored p.color) showing {p.progress}%, CTA button (started? started:fresh, orange-filled if featured) + band SolidCard (icon + title + desc + 3 stats row with BAND_TONES mapping) + bottom GradientCTA.
+   160→   160→- Ran `bun run lint` — no errors in any of the 4 new mobile files. All remaining errors are in /home/z/my-project/upload/extracted/ (pre-existing leftover upload files, not in src/) and in the 7 still-missing mobile section files that other agents (1-b..1-e) will create.
+   161→   161→- Ran `bunx tsc --noEmit` — only TS2307 errors for the 7 not-yet-created mobile files; my 4 files have zero TS errors.
+   162→   162→
+   163→   163→Stage Summary:
+   164→   164→- Files created:
+   165→   165→  - src/components/sections/mobile/MobileTopicFinderSection.tsx
+   166→   166→  - src/components/sections/mobile/MobilePartnersSection.tsx
+   167→   167→  - src/components/sections/mobile/MobileProductsSection.tsx
+   168→   168→  - src/components/sections/mobile/MobileLearningPathsSection.tsx
+   169→   169→- Lint result: PASS for all 4 new files (no errors / no warnings introduced). Pre-existing errors elsewhere untouched.
+   170→   170→- Any deviations or notes:
+   171→   171→  - MobileHeading has no `kicker` prop, so for ProductsSection and LearningPathsSection (both have kicker fields) I rendered the kicker as a small chip ABOVE the heading block (-mt-3 mb-5) — gives editorial flavour without changing the kit API.
+   172→   172→  - Used framer-motion for subtle per-card fade-up / slide-in entrances (already a dep). No new packages installed.
+   173→   173→  - All 4 components are 'use client' (each uses useState or framer-motion hooks).
+   174→   174→  - For ProductsSection, kept the medallion-straddles-artwork motif from desktop but recoloured for dark (white medallion + orange icon) — still visually distinct because the layout is a snap rail of glass cards on navy, not a 4-col grid.
+   175→   175→  - For LearningPathsSection, replaced the desktop's SVG ring progress with a horizontal linear bar (per spec) — distinct motif.
+   176→   176→  - For PartnersSection, dropped desktop's 3-copy infinite carousel + autoplay in favour of a simple SnapRail of single tiles (cleaner on mobile, less DOM). Kept full case-study data + stats + expertise + contact.
+   177→   177→  - For TopicFinderSection, dropped desktop's accordion in favour of always-open stacked glass cards (per spec) — no useState needed but kept 'use client' because of framer-motion.
+   178→   178→
+   179→   179→---
+   180→   180→Task ID: 1-b
+   181→   181→Agent: full-stack-developer (mobile sections 5-8)
+   182→   182→Task: Build MobileSpecialOffersSection, MobileNewsSection, MobileTestimonialsSection, MobileArticlesSection
+   183→   183→
+   184→   184→Work Log:
+   185→   185→- Read worklog.md (incl. Task 1-a notes), _kit.tsx, Icon.tsx, ImageSlot.tsx, ScrollAnimator.tsx, and the two reference mobile sections (MobileProductsSection dark + MobilePartnersSection light) to match the kit patterns and quality bar set by 1-a.
+   186→   186→- Read desktop sources (SpecialOffers, News, Testimonials, Articles) + landing.ts data shapes for indices 05-08 (offersHeading/Intro/mainOffer/miniOffers/offersBand, newsHeading/Tabs/Timeline/TimelineCta/Cards/Band, testimonialsHeading/Tabs/testimonials/Testimonial/testimonialStats/Closing, articlesHeading/Tabs/featuredArticle/articleList/Band). Confirmed slotImages map (no `ar-offer-illo` slot → intro uses compact gradient banner; testimonial avatarSlot/logoSlot checked; featuredArticle.slot + articleList[].slot + articlesBand.slot present in slotImages).
+   187→   187→- Built MobileSpecialOffersSection (05, light #FDF7F0): custom centered mini-heading (sparkles icon + navy title `پیشنهاد ویژه` + latin in orange + desc + faIndex(5) chip — matches the desktop's centered title but in the kit's editorial idiom). Intro = compact orange gradient banner (gift icon + title + lines) since `ar-offer-illo` has no real artwork (replaces the desktop's heavy inline GiftArt SVG). MainOffer = big featured SolidCard with corner ribbon (orange, top-left in RTL, ribbonValue + ribbonLabel) + star badge + title/subtitle + 2-col includes grid (navy tile + icon + title + sub) + price row (oldPrice strikethrough + price bold orange) + full-width GradientCTA. MiniOffers = SnapRail of SolidCards (each wrapped in <Link>): badge chip (green|orange per o.tone), navy icon tile, title, desc, discount chevron — accents recoloured to emerald for green-tone offers. OffersBand = SolidCard with tag icon + title + text + border-2 orange outline CTA.
+   188→   188→- Built MobileNewsSection (06, dark navy): MobileHeading index=6 dark + PillTabs dark (newsTabs, useState default 'all', filter tab==='all' ? newsCards : by tab). Filtered cards = SnapRail of GlassCards (key={tab} + animate-fade-in): badge chip + icon medallion + title (white) + desc (white/70) + date row + outline CTA link (c.cta → c.href). Empty state = GlassCard with file-text icon + "مشاهده همه مقالات" link to /articles. Timeline = small white heading + GlassCard-p-0 vertical timeline (orange dots ringed with orange/15 halo + connecting line on the RTL right, kind/title/date). newsTimelineCta = outline button. newsBand = GlassCard with bell-ring icon + title + desc + GradientCTA + a mail icon chip ("خبرنامه آریاز").
+   189→   189→- Built MobileTestimonialsSection (07, light #FDF4EE): MobileHeading index=7 accentIcon="mdi:comment-quote" + PillTabs (testimonialTabs, onChange resets index to 0). Filtered list = SnapRail of SolidCards (key={tab} + animate-fade-in): 5 orange stars (local Stars helper using mdi:star text-orange-500), quote icon, navy bold quote (leading-[2]), divider, round avatar (ImageSlot), name (navy bold) + role + org, optional logo chip (ImageSlot contain) when slotImages[t.logoSlot] exists. Dots indicator below rail (orange dots, active = wider w-6) — clicking a dot calls go(i, true) which setIndex + scrollIntoView({inline:'center'}) + pauses autoplay for 12s. Auto-advance via setInterval 7s (advances both index AND scroll position). Stats = single SolidCard-p-0 with 3 rows (hairline dividers): icon medallion + AnimatedCounter value (navy) + label + sub. Closing = centered line with quote icons.
+   190→   190→- Built MobileArticlesSection (08, light #FAFAFB): MobileHeading index=8 accentIcon="lucide:file-text". FeaturedArticle = big SolidCard-p-0 at top (only when tab==='all' || featuredArticle.tab===tab): ImageSlot aspect-[16/10] with badge chip overlay bottom-right, title (navy bold), desc, date+readTime row, GradientCTA. PillTabs (articleTabs, useState 'all', filter list). ArticleList = vertical feed of compact SolidCards (NOT a snap rail — articles read better as a vertical feed per spec): each wrapped in <Link href={a.href}> — SolidCard-p-3 with body (badge chip + title + date+readTime row) and a w-20 square thumbnail (ImageSlot a.slot aspect-square) on the side. Empty state = SolidCard with file-text icon + message. ArticlesBand = SolidCard with ImageSlot (articlesBand.slot aspect-[2/1]) + title + text + border-2 orange outline CTA.
+   191→   191→- Ran `bun run lint` — found 1 error in MobileTestimonialsSection (react-hooks/set-state-in-effect from the `useEffect(()=>setIndex(0),[tab])` reset). Removed the effect entirely and moved the reset into the PillTabs onChange callback (where it belongs). Re-ran lint: zero errors in my 4 new files. All remaining errors are pre-existing in /home/z/my-project/upload/extracted/ + InteractiveProvider/MobileNav/PageTransition/MainPageClient/SubPageClient (untouched).
+   192→   192→- Ran `bunx tsc --noEmit` — zero TS errors in my 4 files.
+   193→   193→- Verified dev server log: GET / 200 with no runtime errors.
+   194→   194→
+   195→   195→Stage Summary:
+   196→   196→- Files created:
+   197→   197→  - src/components/sections/mobile/MobileSpecialOffersSection.tsx
+   198→   198→  - src/components/sections/mobile/MobileNewsSection.tsx
+   199→   199→  - src/components/sections/mobile/MobileTestimonialsSection.tsx
+   200→   200→  - src/components/sections/mobile/MobileArticlesSection.tsx
+   201→   201→- Lint result: PASS for all 4 new files (0 errors, 0 warnings introduced). Pre-existing errors elsewhere untouched (InteractiveProvider, MobileNav, PageTransition, MainPageClient, SubPageClient + upload/extracted/*).
+   202→   202→- Any deviations or notes:
+   203→   203→  - SpecialOffers: replaced the desktop's heavy inline GiftArt SVG with a compact orange gradient banner card (per spec option B) since `ar-offer-illo` has no real artwork registered — much lighter DOM, same premium feel. Kept all content (ribbon, includes, prices, every mini offer, band).
+   204→   204→  - SpecialOffers: used a custom centered mini-heading (sparkles + navy title + orange latin + desc + faIndex(5) chip) instead of MobileHeading because the desktop section's heading is centered "پیشنهاد ویژه" + latin — the kit's MobileHeading is start-aligned (right in RTL), so a custom block matches the desktop's centered intent better while still using the kit's faIndex token.
+   205→   205→  - News: timeline dots recoloured with a ring-4 ring-orange-500/15 halo for better contrast against the navy glass card; connecting line at orange-300/40 so it reads on dark.
+   206→   206→  - Testimonials: simplified the rail-vs-observer coupling — the kit's SnapRail doesn't forward refs, so instead of an IntersectionObserver on the scroll container I drive `index` purely via auto-advance (setInterval 7s) + dot clicks (which call scrollIntoView with `inline:'center'`). User manual-scroll doesn't update the active dot, but autoplay + dot-click both work cleanly. This keeps the kit API untouched. Auto-advance pauses for 12s on any dot click (resumeRef timer).
+   207→   207→  - Testimonials: removed the `useEffect(()=>setIndex(0),[tab])` reset (lint error) — moved the reset into the PillTabs `onChange` callback, which is the more correct place for it anyway.
+   208→   208→  - Articles: per spec, the article list is a VERTICAL feed of compact SolidCards (not a snap rail) — better mobile reading ergonomics. Each card has the body (badge+title+date+readTime) and a w-20 square thumbnail on the side, wrapped in <Link>.
+   209→   209→  - All 4 components are 'use client' (each uses useState and/or framer-motion).
+   210→   210→  - Used framer-motion for subtle per-card fade-up / slide-in entrances (already a dep). No new packages installed.
+   211→   211→
+   212→   212→---
+   213→   213→Task ID: 1-c
+   214→   214→Agent: full-stack-developer (mobile sections 9-11)
+   215→   215→Task: Build MobileLeaderboardSection, MobileWhyAriyazSection, MobileInstructorsSection
+   216→   216→
+   217→   217→Work Log:
+   218→   218→- Read worklog.md (incl. Task 1-a and 1-b notes), _kit.tsx, Icon.tsx, ImageSlot.tsx, ScrollAnimator.tsx (AnimatedCounter), and the two reference dark mobile sections (MobileProductsSection + MobileNewsSection) to match the kit patterns and quality bar set by 1-a / 1-b.
+   219→   219→- Read desktop sources (LeaderboardSection, WhyAriyazSection, InstructorsSection) verbatim — copied the exact `import { ... } from '@/data/landing'` lists. Leaderboard desktop imports: leaderboardHeading, leaderboardStats, leaderboardTabs, podium, leaderboardTable, competitiveMetrics, growthLevels, leaderboardBand. WhyAriyaz: whyHeading, whyReasons, whyTrust, whyStats, whyBand, brand (+ logoSrc from slotImages). Instructors: instructorsHeading, instructorTabs, instructors, instructorLabels, instructorsBand.
+   220→   220→- Read landing.ts data shapes for indices 09-11 (leaderboardStats[3] with slot, podium[3] ranks 1-2-3 not in order, leaderboardTable.rows[4] ranks 4-7 with progress, competitiveMetrics.items[4] with slot, growthLevels.items[4] with tone+icon, leaderboardBand.lines[]; whyReasons[5] with n+icon, whyTrust.items[4], whyStats[5] with latin-digit values, whyBand; instructors[4] with tab/tone/badge/rating/reviews/students/courses/slot, instructorsBand.stats[4]).
+   221→   221→- Built MobileLeaderboardSection (09, dark navy): MobileHeading index=9 dark accentIcon="lucide:trophy" + kicker chip (-mt-3 mb-5, matches MobileProductsSection pattern) + PillTabs dark (leaderboardTabs, useState default tabs[0].id — desktop doesn't filter so we don't either, just key={tab} for animation) + 3-col headline stats grid (mini GlassCards with ImageSlot s.slot icon medallion + value + label + sub) + 3-col podium (rank 1 elevated -mt-3 with ring-2 ring-amber-300/15, MEDALS colours gold/silver/bronze, larger avatar for rank 1, TONES_DARK chips for level, amber score for #1) + remaining rows 4-7 inside one GlassCard-p-0 (compact list: rank medallion + avatar + name + level chip + progress bar + score + paths) + competitiveMetrics 2-col grid (mini cards with ImageSlot m.slot medallion + title + sub) + growthLevels list inside GlassCard-p-0 (TONES_DARK chips + sub) + band GlassCard (award icon + title + lines + GradientCTA).
+   222→   222→- Built MobileWhyAriyazSection (10, light #FAFAFB): MobileHeading index=10 accentIcon="lucide:badge-check" + reasons as vertical numbered list with connecting orange line on the RTL start (right) — each reason in its own SolidCard with an orange number medallion (toFa(r.n)) straddling the line via ring-4 ring-white, icon + title + desc + 5 reasons total + trust SolidCard with !bg-[#FDF3EA] override (title + 2-col checklist with circle-check icons + brand footer: logoSrc img + brand.tagline) + whyStats 2-col grid of SolidCards (icon medallion + AnimatedCounter value [latin digits so it animates] + label + sub) + closing band as navy gradient rounded-3xl with orange glow blur (sparkles icon + title + text + GradientCTA).
+   223→   223→- Built MobileInstructorsSection (11, dark navy): MobileHeading index=11 dark accentIcon="lucide:users-round" + kicker chip + PillTabs dark (instructorTabs, useState 'all', filter list = tab==='all' ? instructors : instructors.filter(i=>i.tab===tab)) + SnapRail of GlassCards-p-0 (header strip: BADGE_TONES_DARK[p.tone] badge + rating pill with mdi:star; round avatar 108px with ring-4 ring-white/10; name + role + reviews; 2-col stats grid with hairline divider: courses icon orange-300 / students icon sky-300; profile CTA outline button to /agents with instructorLabels.profile) + empty-state GlassCard + band GlassCard (ImageSlot instructorsBand.slot + title + text + 4-col stats grid + GradientCTA to instructorsBand.cta.href).
+   224→   224→- Ran `bun run lint` — 1 warning in MobileWhyAriyazSection (unused eslint-disable directive for the <img> tag — the @next/next/no-img-element rule isn't firing in this project, same as the desktop WhyAriyazSection.tsx:54). Removed the directive. Re-ran lint: zero errors / zero warnings in my 3 new files. All remaining lint issues are pre-existing in /home/z/my-project/upload/extracted/ + desktop PartnersSection/WhyAriyazSection (untouched).
+   225→   225→- Ran `bunx tsc --noEmit` — zero TS errors in my 3 files.
+   226→   226→- Verified dev server log: GET / 200 in 58ms with no runtime errors. page.tsx already imports and renders all 3 new mobile sections (lines 26-28 imports, lines 64-66 renders).
+   227→   227→
+   228→   228→Stage Summary:
+   229→   229→- Files created:
+   230→   230→  - src/components/sections/mobile/MobileLeaderboardSection.tsx
+   231→   231→  - src/components/sections/mobile/MobileWhyAriyazSection.tsx
+   232→   232→  - src/components/sections/mobile/MobileInstructorsSection.tsx
+   233→   233→- Lint result: PASS for all 3 new files (0 errors, 0 warnings introduced). Pre-existing errors elsewhere untouched (upload/extracted/* require() imports, desktop PartnersSection/WhyAriyazSection unused eslint-disable directives).
+   234→   234→- Any deviations or notes:
+   235→   235→  - Leaderboard: the desktop's PillTabs don't actually filter data (same podium + table for every tab — just `key={tab}` re-triggers the fade-in). Replicated that exactly on mobile rather than inventing a filter that doesn't exist in the source data.
+   236→   236→  - Leaderboard: kept ALL desktop content — leaderboardStats (3), podium (3), leaderboardTable.rows (4), competitiveMetrics.items (4), growthLevels.items (4), leaderboardBand — none dropped, all re-laid-out for dark mobile.
+   237→   237→  - Leaderboard: ImageSlot used for stat slots (s.slot), podium avatars (p.slot), table avatars (r.slot), competitiveMetrics (m.slot) — faithful to desktop. Passed `!bg-transparent !border-0 !p-0` on the small icon-medallion slots (s.slot, m.slot) so the dashed ar-slot placeholder doesn't show inside the tiny circle; the podium/table avatar slots keep default styling (ring-1 ring-white/10 on dark) since they're larger and the placeholder reads fine.
+   238→   238→  - WhyAriyaz: replaced the desktop's xl-only orbit diagram (which only renders above the `xl` breakpoint anyway — mobile already gets the stacked fallback) with an editorial vertical numbered list + connecting orange line. Number medallions straddle the line via ring-4 ring-white (matching the section bg). All 5 reasons + 4 trust items + 5 stats + band + brand.tagline + brand.name (img alt) preserved.
+   239→   239→  - WhyAriyaz: AnimatedCounter works on whyStats because the values are LATIN digits ('+25,000', etc.); leaderboardStats and instructorsBand.stats values are already Persian digits so they're rendered as static text (AnimatedCounter's latin-digit regex wouldn't match them).
+   240→   240→  - Instructors: kept the desktop's per-card CTA link to `/agents` (the data has no per-instructor href — same as desktop). The whole card is NOT wrapped in <Link> (matches desktop behaviour); only the profile CTA button is a link.
+   241→   241→  - Instructors: BADGE_TONES_DARK recoloured from desktop's blue/purple to sky/purple-400 for better contrast on navy glass (blue-500 was too dark on the navy bg).
+   242→   242→  - All 3 components are 'use client' (each uses useState and/or framer-motion). Used framer-motion for subtle per-card fade/slide entrances (already a dep). No new packages installed.
+   243→   243→
+   244→   244→---
+   245→   245→Task ID: 2
+   246→   246→Agent: orchestrator (main)
+   247→   247→Task: Verify the mobile homepage with agent-browser, stabilise dev server, finalise.
+   248→   248→
+   249→   249→Work Log:
+   250→   250→- Diagnosed dev-server instability: Turbopack's native workers OOMed the 4 GB container
+   251→   251→  during the heavy homepage compile (22 sections + three.js hero). Switched to
+   252→   252→  **webpack** (`next dev --webpack`) with `NODE_OPTIONS=--max-old-space-size=2048`.
+   253→   253→  Compile now peaks at ~1.6 GiB used / 2.5 GiB free — comfortable. Updated `package.json`
+   254→   254→  `dev` script to use `--webpack`.
+   255→   255→- Solved background-process survival: the bash tool killed the dev server when a command
+   256→   256→  returned. A **double-fork** (`( setsid bash -c 'exec next ...' </dev/null >/dev/null 2>&1 & )`)
+   257→   257→  reparents the process to init, so it now survives across tool calls.
+   258→   258→- Added `upload/**` + `mini-services/**` to eslint `ignores`; deleted `upload/extracted`
+   259→   259→  duplicate. Lint: mobile files have **0 errors / 0 warnings**; remaining 5 errors + 38
+   260→   260→  warnings are all pre-existing in untouched original files (`MobileNav`, `InteractiveProvider`,
+   261→   261→  `PageTransition`, `MainPageClient`, `SubPageClient`).
+   262→   262→- agent-browser verification (iPhone 14, 390×844): page loads HTTP 200, title correct,
+   263→   263→  **0 console errors**. `[data-mobile-section]` count = **11** (all mobile sections render).
+   264→   264→  Hero `<canvas>` (three.js) present, `<footer>` present, bottom nav `ar-tabbar` is
+   265→   265→  `position:fixed` and untouched. Desktop sections hidden on mobile (only hero+footer are
+   266→   266→  the 2 visible non-mobile sections — exactly as designed). Persian numbered chips (۰۱…۱۱)
+   267→   267→  and all section content render.
+   268→   268→- agent-browser verification (1280×900 desktop): **0** mobile sections visible, **12**
+   269→   269→  desktop/shared sections visible (11 original desktop sections + hero) — original desktop
+   270→   270→  homepage fully intact, 0 errors.
+   271→   271→- Screenshots saved: `download/mobile-full.png`, `download/mobile-top.png`,
+   272→   272→  `download/mobile-mid.png`.
+   273→   273→
+   274→   274→Stage Summary:
+   275→   275→- ✅ Mobile homepage is live and renders a completely different "Immersive App" design
+   276→   276→  (navy-gradient + glass cards + snap rails + numbered editorial chips) with the SAME
+   277→   277→  content as desktop.
+   278→   278→- ✅ Hero3DSlider, Footer, and MobileNav (bottom nav + menu) are shared and UNTOUCHED.
+   279→   279→- ✅ Desktop homepage is unchanged.
+   280→   280→- ✅ Dev server stable on port 3000 (webpack, double-forked).
+   281→   281→- Next: create the 15-min recurring `webDevReview` cron job for ongoing QA + enhancement.
+   282→   282→

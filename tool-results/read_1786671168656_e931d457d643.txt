@@ -1,0 +1,1133 @@
+     1→'use client';
+     2→
+     3→/* ──────────────────────────────────────────────────────────────
+     4→   Mobile homepage kit — shared design tokens + primitives for the
+     5→   "Immersive App" mobile design language.
+     6→
+     7→   This is mobile-only. Desktop sections stay untouched.
+     8→
+     9→   v3 (webDevReview round 2) — additions:
+    10→   • Standardised CTA height: GradientCTA + new OutlineCTA now share
+    11→     `min-h-[48px]` and identical typography so every primary/secondary
+    12→     button across the 11 sections lines up.
+    13→   • New `Reveal` — a framer-motion wrapper for staggered entrance
+    14→     animations (fade + slide-up). Drop-in for any block.
+    15→   • SectionDivider gained an optional centered icon medallion that
+    16→     fades in on scroll for a richer seam.
+    17→   • StatBadge icon medallion + value alignment tightened.
+    18→   • New `ScrollHint` — a bouncing chevron overlaid on the hero's
+    19→     bottom edge (mobile only) that invites the user to scroll.
+    20→   • New `useInViewOnce` — tiny hook returning a ref + boolean for
+    21→     one-shot scroll reveal (used by Reveal + SectionDivider).
+    22→────────────────────────────────────────────────────────────── */
+    23→
+    24→import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+    25→import Link from 'next/link';
+    26→import { motion } from 'framer-motion';
+    27→import Icon from '@/components/Icon';
+    28→
+    29→export const MNAV = '#16305B';
+    30→export const MNAV_DEEP = '#0E1F3F';
+    31→export const MORANGE = '#F26A21';
+    32→
+    33→/** Standard primary/secondary button height for the mobile homepage. */
+    34→export const CTA_MIN_HEIGHT = 'min-h-[48px]';
+    35→
+    36→/** Convert ASCII digits in a string/number to Persian digits. */
+    37→export function toFa(input: string | number): string {
+    38→  const fa = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+    39→  return String(input).replace(/[0-9]/g, (d) => fa[Number(d)]);
+    40→}
+    41→
+    42→/** Zero-padded two-digit Persian index for the editorial numbered chip. */
+    43→export function faIndex(n: number): string {
+    44→  return toFa(String(n).padStart(2, '0'));
+    45→}
+    46→
+    47→/* ── useInViewOnce — one-shot scroll reveal ── */
+    48→export function useInViewOnce<T extends HTMLElement = HTMLDivElement>(
+    49→  options?: IntersectionObserverInit
+    50→) {
+    51→  const ref = useRef<T>(null);
+    52→  const [inView, setInView] = useState(false);
+    53→  useEffect(() => {
+    54→    const el = ref.current;
+    55→    if (!el || inView) return;
+    56→    const obs = new IntersectionObserver(
+    57→      (entries) => {
+    58→        if (entries[0]?.isIntersecting) {
+    59→          setInView(true);
+    60→          obs.disconnect();
+    61→        }
+    62→      },
+    63→      options ?? { threshold: 0.15, rootMargin: '0px 0px -40px 0px' }
+    64→    );
+    65→    obs.observe(el);
+    66→    return () => obs.disconnect();
+    67→  }, [inView, options]);
+    68→  return { ref, inView };
+    69→}
+    70→
+    71→/* ── Reveal — framer-motion fade + slide-up, fires once on scroll-in ── */
+    72→export function Reveal({
+    73→  children,
+    74→  delay = 0,
+    75→  y = 20,
+    76→  className = '',
+    77→}: {
+    78→  children: React.ReactNode;
+    79→  delay?: number;
+    80→  y?: number;
+    81→  className?: string;
+    82→}) {
+    83→  const { ref, inView } = useInViewOnce<HTMLDivElement>();
+    84→  return (
+    85→    <motion.div
+    86→      ref={ref}
+    87→      initial={{ opacity: 0, y }}
+    88→      animate={inView ? { opacity: 1, y: 0 } : {}}
+    89→      transition={{ duration: 0.5, delay, ease: [0.16, 1, 0.3, 1] }}
+    90→      className={className}
+    91→    >
+    92→      {children}
+    93→    </motion.div>
+    94→  );
+    95→}
+    96→
+    97→/* ── useHaptic — light vibration on supported devices ──
+    98→   Returns a `tap(ms?)` function. No-op where `navigator.vibrate` is
+    99→   missing (desktop / iOS Safari) or when the user prefers reduced
+   100→   motion (accessibility). Always safe to call. */
+   101→export function useHaptic() {
+   102→  return useCallback((ms: number | number[] = 8) => {
+   103→    if (typeof window === 'undefined' || typeof navigator === 'undefined') return;
+   104→    // Respect the user's reduced-motion preference (also covers vibration).
+   105→    const mq = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+   106→    if (mq?.matches) return;
+   107→    if (typeof navigator.vibrate === 'function') {
+   108→      try { navigator.vibrate(ms); } catch { /* ignore */ }
+   109→    }
+   110→  }, []);
+   111→}
+   112→
+   113→/* ── usePrefersReducedMotion — boolean hook ── */
+   114→export function usePrefersReducedMotion() {
+   115→  const [reduce, setReduce] = useState(false);
+   116→  useEffect(() => {
+   117→    if (typeof window === 'undefined' || !window.matchMedia) return;
+   118→    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+   119→    // eslint-disable-next-line react-hooks/set-state-in-effect
+   120→    setReduce(mq.matches);
+   121→    const onChange = () => setReduce(mq.matches);
+   122→    mq.addEventListener?.('change', onChange);
+   123→    return () => mq.removeEventListener?.('change', onChange);
+   124→  }, []);
+   125→  return reduce;
+   126→}
+   127→
+   128→/* ── AmbientParticles — slow-floating dots for dark sections ──
+   129→   Pure CSS animation (no JS loop). Renders N absolutely-positioned
+   130→   dots with staggered delays. Pointer-events-none, aria-hidden.
+   131→   Disabled (renders nothing) when the user prefers reduced motion. */
+   132→export function AmbientParticles({ count = 6 }: { count?: number }) {
+   133→  const reduce = usePrefersReducedMotion();
+   134→  // Trim the count on low-end devices for performance.
+   135→  const n = typeof navigator !== 'undefined' && (navigator as Navigator & { hardwareConcurrency?: number }).hardwareConcurrency
+   136→    ? Math.min(count, (navigator as Navigator & { hardwareConcurrency?: number }).hardwareConcurrency! < 4 ? 3 : count)
+   137→    : count;
+   138→  const dots = Array.from({ length: reduce ? 0 : n });
+   139→  if (reduce) return null;
+   140→  return (
+   141→    <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+   142→      {dots.map((_, i) => {
+   143→        const left = (i * 17 + 11) % 100;
+   144→        const top = (i * 29 + 7) % 100;
+   145→        const size = 4 + ((i * 7) % 6);
+   146→        const dur = 9 + (i % 5) * 2;
+   147→        const delay = (i % 4) * 1.3;
+   148→        const orange = i % 2 === 0;
+   149→        return (
+   150→          <motion.span
+   151→            key={i}
+   152→            initial={{ opacity: 0 }}
+   153→            animate={{ opacity: [0, 0.5, 0], y: [0, -22, 0] }}
+   154→            transition={{ duration: dur, delay, repeat: Infinity, ease: 'easeInOut' }}
+   155→            className="absolute rounded-full"
+   156→            style={{
+   157→              left: `${left}%`,
+   158→              top: `${top}%`,
+   159→              width: size,
+   160→              height: size,
+   161→              background: orange ? '#F26A21' : '#93C5FD',
+   162→              filter: 'blur(1px)',
+   163→            }}
+   164→          />
+   165→        );
+   166→      })}
+   167→    </div>
+   168→  );
+   169→}
+   170→
+   171→/* ── useConfetti — a tiny one-shot confetti fired from a point ──
+   172→   Call `fire()` from a parent (e.g. on share-copy). Renders a
+   173→   fixed overlay; each piece is a small rotated div animated with
+   174→   framer-motion, removed after ~1s. No canvas, no deps. Disabled
+   175→   (fire is a no-op, node is null) when the user prefers reduced
+   176→   motion. */
+   177→export function useConfetti() {
+   178→  const reduce = usePrefersReducedMotion();
+   179→  const [pieces, setPieces] = useState<
+   180→    { id: number; x: number; y: number; dx: number; dy: number; rot: number; color: string }[]
+   181→  >([]);
+   182→  const idRef = useRef(0);
+   183→  const fire = useCallback((originX?: number, originY?: number) => {
+   184→    if (reduce) return;
+   185→    const colors = ['#F26A21', '#FBBF24', '#60A5FA', '#34D399', '#F472B6'];
+   186→    const ox = originX ?? (typeof window !== 'undefined' ? window.innerWidth / 2 : 200);
+   187→    const oy = originY ?? (typeof window !== 'undefined' ? window.innerHeight - 120 : 400);
+   188→    const next = Array.from({ length: 18 }).map(() => {
+   189→      const angle = (Math.random() * Math.PI) - Math.PI / 2; // upward fan
+   190→      const dist = 60 + Math.random() * 120;
+   191→      return {
+   192→        id: idRef.current++,
+   193→        x: ox,
+   194→        y: oy,
+   195→        dx: Math.cos(angle) * dist,
+   196→        dy: Math.sin(angle) * dist - 40,
+   197→        rot: (Math.random() - 0.5) * 540,
+   198→        color: colors[Math.floor(Math.random() * colors.length)],
+   199→      };
+   200→    });
+   201→    setPieces(next);
+   202→    // Clear after the animation finishes (bounds duration to ~1.1s).
+   203→    setTimeout(() => setPieces([]), 1100);
+   204→  }, [reduce]);
+   205→  const node =
+   206→    pieces.length === 0 ? null : (
+   207→      <div aria-hidden className="md:hidden fixed inset-0 z-[60] pointer-events-none">
+   208→        {pieces.map((p) => (
+   209→          <motion.span
+   210→            key={p.id}
+   211→            initial={{ x: p.x, y: p.y, opacity: 1, rotate: 0, scale: 1 }}
+   212→            animate={{ x: p.x + p.dx, y: p.y + p.dy + 120, opacity: 0, rotate: p.rot, scale: 0.6 }}
+   213→            transition={{ duration: 1, ease: [0.2, 0.6, 0.3, 1] }}
+   214→            className="absolute w-2 h-2.5 rounded-[2px]"
+   215→            style={{ background: p.color }}
+   216→          />
+   217→        ))}
+   218→      </div>
+   219→    );
+   220→  return { fire, node };
+   221→}
+   222→
+   223→/* ── useScrollRestore — persist scrollY to sessionStorage ──
+   224→   Saves the page scroll position (throttled to every 400ms) under
+   225→   the given key, and restores it on mount — UNLESS a location hash
+   226→   is present (then the browser's native anchor jump wins). Returns
+   227→   nothing; just call it once near the top of a client component. */
+   228→export function useScrollRestore(key: string) {
+   229→  useEffect(() => {
+   230→    // Restore on mount, but defer to a deep-link hash if present (the
+   231→    // browser's native anchor jump should win in that case).
+   232→    const hasHash = typeof window !== 'undefined' && !!window.location.hash;
+   233→    if (!hasHash) {
+   234→      try {
+   235→        const saved = sessionStorage.getItem(key);
+   236→        if (saved) {
+   237→          const y = Number(saved);
+   238→          if (Number.isFinite(y) && y > 0) {
+   239→            // Defer until after paint so the page has height.
+   240→            requestAnimationFrame(() => window.scrollTo({ top: y, behavior: 'auto' }));
+   241→          }
+   242→        }
+   243→      } catch { /* sessionStorage may be unavailable */ }
+   244→    }
+   245→
+   246→    let t: ReturnType<typeof setTimeout> | null = null;
+   247→    const onScroll = () => {
+   248→      if (t) return;
+   249→      t = setTimeout(() => {
+   250→        t = null;
+   251→        try { sessionStorage.setItem(key, String(window.scrollY)); } catch { /* ignore */ }
+   252→      }, 400);
+   253→    };
+   254→    window.addEventListener('scroll', onScroll, { passive: true });
+   255→    return () => {
+   256→      window.removeEventListener('scroll', onScroll);
+   257→      if (t) clearTimeout(t);
+   258→    };
+   259→  }, [key]);
+   260→}
+   261→
+   262→/* ── useLocalStorage — generic typed localStorage state ──
+   263→   SSR-safe (returns the initial value on the server). Syncs across
+   264→   tabs via the `storage` event AND within the same tab via a custom
+   265→   window event (the native `storage` event only fires cross-tab). */
+   266→export function useLocalStorage<T>(key: string, initial: T): [T, (v: T | ((prev: T) => T)) => void] {
+   267→  const [value, setValue] = useState<T>(initial);
+   268→  useEffect(() => {
+   269→    try {
+   270→      const raw = localStorage.getItem(key);
+   271→      if (raw !== null) {
+   272→        // eslint-disable-next-line react-hooks/set-state-in-effect
+   273→        setValue(JSON.parse(raw) as T);
+   274→      }
+   275→    } catch { /* ignore */ }
+   276→    // Cross-tab sync.
+   277→    const onStorage = (e: StorageEvent) => {
+   278→      if (e.key === key && e.newValue !== null) {
+   279→        try { setValue(JSON.parse(e.newValue) as T); } catch { /* ignore */ }
+   280→      }
+   281→    };
+   282→    // Same-tab sync: a custom event dispatched by the setter below.
+   283→    const onSameTab = (e: Event) => {
+   284→      const detail = (e as CustomEvent).detail as { key: string; value: T };
+   285→      if (detail && detail.key === key) setValue(detail.value);
+   286→    };
+   287→    window.addEventListener('storage', onStorage);
+   288→    window.addEventListener('mobile:local-storage', onSameTab as EventListener);
+   289→    return () => {
+   290→      window.removeEventListener('storage', onStorage);
+   291→      window.removeEventListener('mobile:local-storage', onSameTab as EventListener);
+   292→    };
+   293→  }, [key]);
+   294→  const set = useCallback(
+   295→    (v: T | ((prev: T) => T)) => {
+   296→      setValue((prev) => {
+   297→        const next = typeof v === 'function' ? (v as (p: T) => T)(prev) : v;
+   298→        try {
+   299→          localStorage.setItem(key, JSON.stringify(next));
+   300→          // Notify other hook instances in THIS tab.
+   301→          window.dispatchEvent(new CustomEvent('mobile:local-storage', { detail: { key, value: next } }));
+   302→        } catch { /* ignore */ }
+   303→        return next;
+   304→      });
+   305→    },
+   306→    [key]
+   307→  );
+   308→  return [value, set];
+   309→}
+   310→
+   311→/* ── useBookmarks — persist a Set of section ids to localStorage ──
+   312→   Returns `{ bookmarks, toggle, has }`. `bookmarks` is a string[] for
+   313→   easy rendering; `toggle(id)` adds/removes; `has(id)` checks membership. */
+   314→export function useBookmarks(storageKey: string) {
+   315→  const [arr, setArr] = useLocalStorage<string[]>(storageKey, []);
+   316→  const set = useMemo(() => new Set(arr), [arr]);
+   317→  const has = useCallback((id: string) => set.has(id), [set]);
+   318→  const toggle = useCallback(
+   319→    (id: string) => {
+   320→      setArr((prev) => {
+   321→        const s = new Set(prev);
+   322→        if (s.has(id)) s.delete(id);
+   323→        else s.add(id);
+   324→        return Array.from(s);
+   325→      });
+   326→    },
+   327→    [setArr]
+   328→  );
+   329→  return { bookmarks: arr, toggle, has };
+   330→}
+   331→
+   332→/* ── useSectionRead — tracks sections the visitor has substantially
+   333→   viewed (≥60% in view for >1.5s) and persists them to localStorage.
+   334→   Returns `{ read: Set<string>, isRead }`. Pass the list of section
+   335→   ids to observe. (v5: threshold relaxed from 80%/2s → 60%/1.5s so
+   336→   tall sections like TopicFinder can also be marked read.) */
+   337→export function useSectionRead(ids: string[], storageKey: string) {
+   338→  const [arr, setArr] = useLocalStorage<string[]>(storageKey, []);
+   339→  const readSet = useMemo(() => new Set(arr), [arr]);
+   340→  const timersRef = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
+   341→  useEffect(() => {
+   342→    if (ids.length === 0) return;
+   343→    const observers: IntersectionObserver[] = [];
+   344→    ids.forEach((id) => {
+   345→      const el = document.getElementById(id);
+   346→      if (!el) return;
+   347→      const obs = new IntersectionObserver(
+   348→        (entries) => {
+   349→          const e = entries[0];
+   350→          if (!e) return;
+   351→          if (e.intersectionRatio >= 0.6) {
+   352→            // Start a 1.5s timer; only mark read if it stays in view.
+   353→            if (!timersRef.current[id]) {
+   354→              timersRef.current[id] = setTimeout(() => {
+   355→                setArr((prev) => (prev.includes(id) ? prev : [...prev, id]));
+   356→                delete timersRef.current[id];
+   357→              }, 1500);
+   358→            }
+   359→          } else {
+   360→            // Left the viewport before 1.5s — cancel.
+   361→            if (timersRef.current[id]) {
+   362→              clearTimeout(timersRef.current[id]);
+   363→              delete timersRef.current[id];
+   364→            }
+   365→          }
+   366→        },
+   367→        { threshold: [0, 0.6] }
+   368→      );
+   369→      obs.observe(el);
+   370→      observers.push(obs);
+   371→    });
+   372→    return () => {
+   373→      observers.forEach((o) => o.disconnect());
+   374→      Object.values(timersRef.current).forEach(clearTimeout);
+   375→      timersRef.current = {};
+   376→    };
+   377→  }, [ids, setArr]);
+   378→  const isRead = useCallback((id: string) => readSet.has(id), [readSet]);
+   379→  return { read: readSet, isRead };
+   380→}
+   381→
+   382→/* ── BookmarkButton — a small toggle that adds/removes a section id
+   383→   from the bookmarks store. Renders a bookmark/ribbon icon; animates
+   384→   a fill + scale on add. Use inside a section heading row. */
+   385→export function BookmarkButton({
+   386→  sectionId,
+   387→  sectionTitle,
+   388→  bookmarks,
+   389→  onToggle,
+   390→  dark = false,
+   391→}: {
+   392→  sectionId: string;
+   393→  sectionTitle: string;
+   394→  bookmarks: ReturnType<typeof useBookmarks>;
+   395→  onToggle?: (id: string, nowBookmarked: boolean) => void;
+   396→  dark?: boolean;
+   397→}) {
+   398→  const haptic = useHaptic();
+   399→  const on = bookmarks.has(sectionId);
+   400→  return (
+   401→    <button
+   402→      type="button"
+   403→      onClick={() => {
+   404→        haptic(on ? 6 : 12);
+   405→        bookmarks.toggle(sectionId);
+   406→        onToggle?.(sectionId, !on);
+   407→      }}
+   408→      aria-label={on ? `حذف نشان از ${sectionTitle}` : `نشان کردن ${sectionTitle}`}
+   409→      aria-pressed={on}
+   410→      className={`shrink-0 w-9 h-9 rounded-full flex items-center justify-center transition-all active:scale-90 ${
+   411→        on
+   412→          ? 'bg-orange-500 text-white shadow-md shadow-orange-500/30'
+   413→          : dark
+   414→            ? 'bg-white/10 text-white/70 hover:bg-white/15'
+   415→            : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+   416→      }`}
+   417→    >
+   418→      <motion.span
+   419→        animate={on ? { scale: [1, 1.25, 1] } : { scale: 1 }}
+   420→        transition={{ duration: 0.35 }}
+   421→      >
+   422→        <Icon name={on ? 'lucide:bookmark-check' : 'lucide:bookmark'} size={16} className={on ? 'text-white' : ''} />
+   423→      </motion.span>
+   424→    </button>
+   425→  );
+   426→}
+   427→
+   428→/* ── GradientText — an orange→amber gradient clip for accent words ── */
+   429→export function GradientText({
+   430→  children,
+   431→  className = '',
+   432→}: {
+   433→  children: React.ReactNode;
+   434→  className?: string;
+   435→}) {
+   436→  return (
+   437→    <span
+   438→      className={`bg-gradient-to-l from-orange-500 to-amber-400 bg-clip-text text-transparent ${className}`}
+   439→    >
+   440→      {children}
+   441→    </span>
+   442→  );
+   443→}
+   444→
+   445→/* ── useDelayedReady — returns `ready` after `ms` (default 600ms).
+   446→   Used by snap-rail sections to show a SkeletonCard placeholder
+   447→   briefly before the real cards, improving perceived performance. */
+   448→export function useDelayedReady(ms = 600) {
+   449→  const [ready, setReady] = useState(false);
+   450→  useEffect(() => {
+   451→    const t = setTimeout(() => setReady(true), ms);
+   452→    return () => clearTimeout(t);
+   453→  }, [ms]);
+   454→  return ready;
+   455→}
+   456→
+   457→/* ── Skeleton — a single shimmering placeholder bar. ── */
+   458→export function Skeleton({
+   459→  className = '',
+   460→  rounded = 'rounded-md',
+   461→}: {
+   462→  className?: string;
+   463→  rounded?: string;
+   464→}) {
+   465→  return (
+   466→    <span
+   467→      aria-hidden
+   468→      className={`block bg-gradient-to-l from-gray-200 via-gray-100 to-gray-200 bg-[length:200%_100%] animate-[shimmer_1.4s_ease-in-out_infinite] ${rounded} ${className}`}
+   469→    />
+   470→  );
+   471→}
+   472→
+   473→/* ── SkeletonCard — a full snap-rail card skeleton matching the
+   474→   shape of a typical product/instructor/news card. Use inside a
+   475→   SnapItem while `useDelayedReady` is false. `dark` switches the
+   476→   shimmer to the glass-on-navy palette. */
+   477→export function SkeletonCard({ dark = false }: { dark?: boolean }) {
+   478→  const bar = dark
+   479→    ? 'from-white/10 via-white/20 to-white/10'
+   480→    : 'from-gray-200 via-gray-100 to-gray-200';
+   481→  return (
+   482→    <div
+   483→      className={`h-full rounded-3xl p-5 overflow-hidden ${
+   484→        dark ? 'bg-white/5 border border-white/10' : 'bg-white shadow-[0_10px_30px_rgba(22,48,91,0.07)]'
+   485→      }`}
+   486→    >
+   487→      <span className={`block w-full aspect-[16/10] mb-4 bg-[length:200%_100%] animate-[shimmer_1.4s_ease-in-out_infinite] bg-gradient-to-l ${bar} rounded-2xl`} />
+   488→      <span className={`block h-3.5 w-2/3 mx-auto mb-3 bg-[length:200%_100%] animate-[shimmer_1.4s_ease-in-out_infinite] bg-gradient-to-l ${bar} rounded-full`} />
+   489→      <span className={`block h-3 w-1/3 mx-auto mb-5 bg-[length:200%_100%] animate-[shimmer_1.4s_ease-in-out_infinite] bg-gradient-to-l ${bar} rounded-full`} />
+   490→      <span className={`block h-2 w-full mb-2 bg-[length:200%_100%] animate-[shimmer_1.4s_ease-in-out_infinite] bg-gradient-to-l ${bar} rounded-full`} />
+   491→      <span className={`block h-2 w-5/6 mb-5 bg-[length:200%_100%] animate-[shimmer_1.4s_ease-in-out_infinite] bg-gradient-to-l ${bar} rounded-full`} />
+   492→      <span className={`block h-9 w-full bg-[length:200%_100%] animate-[shimmer_1.4s_ease-in-out_infinite] bg-gradient-to-l ${bar} rounded-2xl`} />
+   493→    </div>
+   494→  );
+   495→}
+   496→
+   497→/* ── ShimmerDivider — a SectionDivider variant with a moving
+   498→   shimmer line instead of (or beside) the icon medallion. Use
+   499→   where a richer seam is wanted. */
+   500→export function ShimmerDivider({
+   501→  variant = 'light-to-dark',
+   502→}: {
+   503→  variant?: 'light-to-dark' | 'dark-to-light';
+   504→}) {
+   505→  const map: Record<string, string> = {
+   506→    'light-to-dark': 'from-white via-[#16305B]/5 to-[#16305B]',
+   507→    'dark-to-light': 'from-[#16305B] via-[#16305B]/5 to-white',
+   508→  };
+   509→  return (
+   510→    <div aria-hidden className={`relative h-8 bg-gradient-to-b ${map[variant]}`}>
+   511→      <span className="absolute top-1/2 -translate-y-1/2 right-0 left-0 h-px bg-gradient-to-l from-transparent via-orange-400/60 to-transparent bg-[length:200%_100%] animate-[shimmer_2s_ease-in-out_infinite]" />
+   512→    </div>
+   513→  );
+   514→}
+   515→
+   516→/* ── Section shell ── */
+   517→export function MobileSectionShell({
+   518→  children,
+   519→  className = '',
+   520→  dark = false,
+   521→  bg,
+   522→  id,
+   523→  blobs = true,
+   524→  particles = true,
+   525→}: {
+   526→  children: React.ReactNode;
+   527→  className?: string;
+   528→  dark?: boolean;
+   529→  /** Override the background (e.g. "bg-[#FDF7F0]"). `dark` still controls text colour. */
+   530→  bg?: string;
+   531→  id?: string;
+   532→  /** Paint the soft decorative blobs (dark sections only). Default true. */
+   533→  blobs?: boolean;
+   534→  /** Paint slow-floating ambient dots (dark sections only). Default true. */
+   535→  particles?: boolean;
+   536→}) {
+   537→  const baseBg = bg
+   538→    ? bg
+   539→    : dark
+   540→      ? 'bg-gradient-to-b from-[#16305B] to-[#0E1F3F]'
+   541→      : 'bg-white';
+   542→  return (
+   543→    <section
+   544→      id={id}
+   545→      data-mobile-section
+   546→      className={`relative px-4 overflow-hidden ${baseBg} ${
+   547→        dark ? 'py-16 text-white' : 'py-14 text-gray-900'
+   548→      } ${className}`}
+   549→    >
+   550→      {/* Decorative depth blobs for dark sections */}
+   551→      {dark && blobs && (
+   552→        <>
+   553→          <span
+   554→            aria-hidden
+   555→            className="pointer-events-none absolute -top-16 -left-16 w-56 h-56 rounded-full blur-3xl opacity-20"
+   556→            style={{ background: 'radial-gradient(circle, #F26A21 0%, transparent 70%)' }}
+   557→          />
+   558→          <span
+   559→            aria-hidden
+   560→            className="pointer-events-none absolute top-1/3 -right-20 w-64 h-64 rounded-full blur-3xl opacity-10"
+   561→            style={{ background: 'radial-gradient(circle, #60A5FA 0%, transparent 70%)' }}
+   562→          />
+   563→        </>
+   564→      )}
+   565→      {/* Ambient floating particles for dark sections — subtle "breathing" life */}
+   566→      {dark && particles && <AmbientParticles count={6} />}
+   567→      {/* Soft top hairline glow on light sections for separation */}
+   568→      {!dark && (
+   569→        <span
+   570→          aria-hidden
+   571→          className="pointer-events-none absolute top-0 right-0 left-0 h-px bg-gradient-to-l from-transparent via-orange-200/50 to-transparent"
+   572→        />
+   573→      )}
+   574→      <div className="relative z-10 max-w-md mx-auto">{children}</div>
+   575→    </section>
+   576→  );
+   577→}
+   578→
+   579→/* ── Editorial heading — numbered chip + orange accent bar, start-aligned (right in RTL) ── */
+   580→export function MobileHeading({
+   581→  index,
+   582→  title,
+   583→  desc,
+   584→  kicker,
+   585→  dark = false,
+   586→  accentIcon,
+   587→  pulse = false,
+   588→}: {
+   589→  index?: number;
+   590→  title: string;
+   591→  desc?: string;
+   592→  kicker?: string;
+   593→  dark?: boolean;
+   594→  accentIcon?: string;
+   595→  /** Briefly pulse the accent bar + chip (set true after a quick-jump arrival). */
+   596→  pulse?: boolean;
+   597→}) {
+   598→  return (
+   599→    <div className="mb-6">
+   600→      {kicker && (
+   601→        <div className="mb-2.5">
+   602→          <span
+   603→            className={`inline-flex items-center gap-1.5 text-[10.5px] font-bold tracking-wide px-2.5 py-1 rounded-full ${
+   604→              dark ? 'bg-orange-500/15 text-orange-300' : 'bg-orange-100 text-orange-600'
+   605→            }`}
+   606→          >
+   607→            <span className="w-1 h-1 rounded-full bg-current opacity-70" />
+   608→            {kicker}
+   609→          </span>
+   610→        </div>
+   611→      )}
+   612→      <div className="flex items-center gap-3 mb-3">
+   613→        {typeof index === 'number' && (
+   614→          <motion.span
+   615→            animate={pulse ? { scale: [1, 1.15, 1] } : {}}
+   616→            transition={{ duration: 0.6 }}
+   617→            className={`text-[11px] font-black tabular-nums px-2.5 py-1 rounded-full ${
+   618→              dark ? 'bg-white/10 text-orange-300 ring-1 ring-white/10' : 'bg-orange-100 text-orange-600'
+   619→            }`}
+   620→          >
+   621→            {faIndex(index)}
+   622→          </motion.span>
+   623→        )}
+   624→        <motion.span
+   625→          animate={pulse ? { scaleY: [1, 1.4, 1] } : {}}
+   626→          transition={{ duration: 0.6 }}
+   627→          className="h-5 w-1 rounded-full bg-orange-500 origin-center"
+   628→        />
+   629→        {accentIcon && (
+   630→          <Icon
+   631→            name={accentIcon}
+   632→            size={20}
+   633→            className={dark ? 'text-orange-300' : 'text-orange-500'}
+   634→          />
+   635→        )}
+   636→      </div>
+   637→      <h2
+   638→        className={`text-[22px] leading-[2rem] font-black ${
+   639→          dark ? 'text-white' : 'text-[#16305B]'
+   640→        }`}
+   641→      >
+   642→        {title}
+   643→      </h2>
+   644→      {desc && (
+   645→        <p
+   646→          className={`text-[13px] leading-[1.95rem] mt-2 ${
+   647→            dark ? 'text-white/65' : 'text-gray-500'
+   648→          }`}
+   649→        >
+   650→          {desc}
+   651→        </p>
+   652→      )}
+   653→    </div>
+   654→  );
+   655→}
+   656→
+   657→/* ── Horizontal snap rail ── */
+   658→export function SnapRail({
+   659→  children,
+   660→  className = '',
+   661→}: {
+   662→  children: React.ReactNode;
+   663→  className?: string;
+   664→}) {
+   665→  return (
+   666→    <div
+   667→      className={`flex gap-3 overflow-x-auto snap-x snap-mandatory ar-no-scrollbar -mx-4 px-4 pb-2 ${className}`}
+   668→    >
+   669→      {children}
+   670→    </div>
+   671→  );
+   672→}
+   673→
+   674→/** A snap-aligned rail item. Pass `width` like 'w-[78%]' or 'w-[60%]'. */
+   675→export function SnapItem({
+   676→  children,
+   677→  width = 'w-[78%]',
+   678→  className = '',
+   679→}: {
+   680→  children: React.ReactNode;
+   681→  width?: string;
+   682→  className?: string;
+   683→}) {
+   684→  return (
+   685→    <div className={`snap-center shrink-0 ${width} ${className}`}>{children}</div>
+   686→  );
+   687→}
+   688→
+   689→/**
+   690→ * SnapProgress — dots that track the active card of a SnapRail.
+   691→ * Pass the rail's total item count, the active index, and an onDot
+   692→ * callback (e.g. scroll the rail). Renders nothing when count <= 1.
+   693→ */
+   694→export function SnapProgress({
+   695→  count,
+   696→  active,
+   697→  onDot,
+   698→  dark = false,
+   699→}: {
+   700→  count: number;
+   701→  active: number;
+   702→  onDot: (i: number) => void;
+   703→  dark?: boolean;
+   704→}) {
+   705→  const haptic = useHaptic();
+   706→  if (count <= 1) return null;
+   707→  return (
+   708→    <div className="flex items-center justify-center gap-1.5 mt-3">
+   709→      {Array.from({ length: count }).map((_, i) => {
+   710→        const on = i === active;
+   711→        return (
+   712→          <button
+   713→            key={i}
+   714→            onClick={() => { haptic(6); onDot(i); }}
+   715→            aria-label={`کارت ${toFa(i + 1)}`}
+   716→            className={`rounded-full transition-all duration-300 ${
+   717→              on
+   718→                ? 'w-5 h-1.5 bg-orange-500'
+   719→                : `h-1.5 w-1.5 ${dark ? 'bg-white/25 hover:bg-white/40' : 'bg-gray-300 hover:bg-gray-400'}`
+   720→            }`}
+   721→          />
+   722→        );
+   723→      })}
+   724→    </div>
+   725→  );
+   726→}
+   727→
+   728→/* ── Glass card (use on dark sections) ── */
+   729→export function GlassCard({
+   730→  children,
+   731→  className = '',
+   732→}: {
+   733→  children: React.ReactNode;
+   734→  className?: string;
+   735→}) {
+   736→  return (
+   737→    <div
+   738→      className={`bg-white/10 backdrop-blur-md border border-white/15 rounded-3xl p-5 transition-transform duration-200 active:scale-[0.99] ${className}`}
+   739→    >
+   740→      {children}
+   741→    </div>
+   742→  );
+   743→}
+   744→
+   745→/* ── Solid white card with a coloured top accent (use on light sections) ── */
+   746→export function SolidCard({
+   747→  children,
+   748→  className = '',
+   749→  accent = MORANGE,
+   750→  hover = true,
+   751→}: {
+   752→  children: React.ReactNode;
+   753→  className?: string;
+   754→  accent?: string;
+   755→  hover?: boolean;
+   756→}) {
+   757→  return (
+   758→    <div
+   759→      className={`relative bg-white rounded-3xl shadow-[0_10px_30px_rgba(22,48,91,0.07)] p-5 overflow-hidden ${
+   760→        hover ? 'transition-transform duration-200 hover:-translate-y-0.5 active:scale-[0.99]' : ''
+   761→      } ${className}`}
+   762→    >
+   763→      <span
+   764→        className="absolute top-0 right-0 left-0 h-1"
+   765→        style={{ background: accent }}
+   766→      />
+   767→      {children}
+   768→    </div>
+   769→  );
+   770→}
+   771→
+   772→/* ── Full-width orange gradient CTA — standardised 48px height ──
+   773→   v5: multi-layer orange-tinted shadow for tactile depth. */
+   774→export function GradientCTA({
+   775→  href,
+   776→  label,
+   777→  icon = 'lucide:arrow-left',
+   778→  className = '',
+   779→}: {
+   780→  href: string;
+   781→  label: string;
+   782→  icon?: string;
+   783→  className?: string;
+   784→}) {
+   785→  const haptic = useHaptic();
+   786→  return (
+   787→    <Link
+   788→      href={href}
+   789→      onClick={() => haptic(10)}
+   790→      className={`group flex items-center justify-center gap-2 w-full ${CTA_MIN_HEIGHT} bg-gradient-to-l from-orange-500 to-orange-600 text-white rounded-2xl px-5 text-[14px] font-bold shadow-[0_4px_6px_-1px_rgba(249,115,22,0.25),0_10px_15px_-3px_rgba(249,115,22,0.18)] active:scale-[0.98] active:shadow-[0_2px_4px_-1px_rgba(249,115,22,0.2)] transition-all ${className}`}
+   791→    >
+   792→      <span>{label}</span>
+   793→      <Icon
+   794→        name={icon}
+   795→        size={17}
+   796→        className="text-white transition-transform group-hover:-translate-x-0.5"
+   797→      />
+   798→    </Link>
+   799→  );
+   800→}
+   801→
+   802→/* ── Outline CTA — secondary button, same 48px height as GradientCTA ── */
+   803→export function OutlineCTA({
+   804→  href,
+   805→  label,
+   806→  icon = 'lucide:arrow-left',
+   807→  dark = false,
+   808→  className = '',
+   809→}: {
+   810→  href: string;
+   811→  label: string;
+   812→  icon?: string;
+   813→  /** On dark sections the outline + text use orange-300; on light, orange-500. */
+   814→  dark?: boolean;
+   815→  className?: string;
+   816→}) {
+   817→  const haptic = useHaptic();
+   818→  return (
+   819→    <Link
+   820→      href={href}
+   821→      onClick={() => haptic(8)}
+   822→      className={`group flex items-center justify-center gap-2 w-full ${CTA_MIN_HEIGHT} border-2 ${
+   823→        dark ? 'border-orange-400/60 text-orange-300 hover:bg-orange-500/10' : 'border-orange-400 text-orange-500 hover:bg-orange-50'
+   824→      } rounded-2xl px-5 text-[14px] font-bold transition-colors active:scale-[0.98] ${className}`}
+   825→    >
+   826→      <span>{label}</span>
+   827→      <Icon
+   828→        name={icon}
+   829→        size={17}
+   830→        className={`transition-transform group-hover:-translate-x-0.5 ${dark ? 'text-orange-300' : 'text-orange-500'}`}
+   831→      />
+   832→    </Link>
+   833→  );
+   834→}
+   835→
+   836→/* ── Pill tab chips (horizontally scrollable) ── */
+   837→export function PillTabs<T extends string>({
+   838→  tabs,
+   839→  active,
+   840→  onChange,
+   841→  dark = false,
+   842→}: {
+   843→  tabs: { id: T; label: string; icon?: string }[];
+   844→  active: T;
+   845→  onChange: (id: T) => void;
+   846→  dark?: boolean;
+   847→}) {
+   848→  const haptic = useHaptic();
+   849→  return (
+   850→    <div className="flex gap-2 overflow-x-auto ar-no-scrollbar -mx-4 px-4 mb-5">
+   851→      {tabs.map((t) => {
+   852→        const on = t.id === active;
+   853→        return (
+   854→          <button
+   855→            key={t.id}
+   856→            onClick={() => { haptic(6); onChange(t.id); }}
+   857→            className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-[12.5px] font-bold whitespace-nowrap shrink-0 transition-all ${
+   858→              on
+   859→                ? 'bg-orange-500 text-white shadow-md shadow-orange-500/30'
+   860→                : dark
+   861→                  ? 'bg-white/10 text-white/70'
+   862→                  : 'bg-gray-100 text-gray-500'
+   863→            }`}
+   864→          >
+   865→            {t.icon && <Icon name={t.icon} size={15} className={on ? 'text-white' : ''} />}
+   866→            <span>{t.label}</span>
+   867→          </button>
+   868→        );
+   869→      })}
+   870→    </div>
+   871→  );
+   872→}
+   873→
+   874→/* ── Number medallion — used by numbered lists; vertically centered ──
+   875→   v4: adds a subtle inner ring + drop shadow for depth. */
+   876→export function NumberMedallion({
+   877→  n,
+   878→  className = '',
+   879→}: {
+   880→  n: number;
+   881→  className?: string;
+   882→}) {
+   883→  return (
+   884→    <span
+   885→      className={`shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 text-white text-[12px] font-black flex items-center justify-center tabular-nums ring-4 ring-white shadow-md shadow-orange-500/30 ${className}`}
+   886→    >
+   887→      {toFa(n)}
+   888→    </span>
+   889→  );
+   890→}
+   891→
+   892→/* ── Stat badge — compact icon + value + label, for stat grids ── */
+   893→export function StatBadge({
+   894→  icon,
+   895→  value,
+   896→  label,
+   897→  sub,
+   898→  dark = false,
+   899→}: {
+   900→  icon: string;
+   901→  value: string;
+   902→  label: string;
+   903→  sub?: string;
+   904→  dark?: boolean;
+   905→}) {
+   906→  return (
+   907→    <div
+   908→      className={`flex flex-col items-center text-center px-2 py-3 rounded-2xl ${
+   909→        dark ? 'bg-white/5 border border-white/10' : 'bg-gray-50/80'
+   910→      }`}
+   911→    >
+   912→      <span
+   913→        className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 ${
+   914→          dark ? 'bg-orange-500/15' : 'bg-orange-50'
+   915→        }`}
+   916→      >
+   917→        <Icon name={icon} size={20} className="text-orange-500" />
+   918→      </span>
+   919→      <span
+   920→        className={`text-[17px] font-black leading-none mb-1 ${dark ? 'text-white' : 'text-[#16305B]'}`}
+   921→      >
+   922→        {value}
+   923→      </span>
+   924→      <span className={`text-[11px] font-bold leading-tight mb-0.5 ${dark ? 'text-white/80' : 'text-gray-700'}`}>
+   925→        {label}
+   926→      </span>
+   927→      {sub && <span className={`text-[10px] leading-tight ${dark ? 'text-white/40' : 'text-gray-400'}`}>{sub}</span>}
+   928→    </div>
+   929→  );
+   930→}
+   931→
+   932→/* ── Chip list — horizontal scroll of small info chips ── */
+   933→export function ChipList({
+   934→  items,
+   935→  dark = false,
+   936→}: {
+   937→  items: { icon?: string; label: string }[];
+   938→  dark?: boolean;
+   939→}) {
+   940→  return (
+   941→    <div className="flex gap-2 overflow-x-auto ar-no-scrollbar -mx-4 px-4">
+   942→      {items.map((c, i) => (
+   943→        <span
+   944→          key={i}
+   945→          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11.5px] font-bold whitespace-nowrap shrink-0 ${
+   946→            dark ? 'bg-white/10 text-white/80' : 'bg-gray-100 text-gray-600'
+   947→          }`}
+   948→        >
+   949→          {c.icon && <Icon name={c.icon} size={13} className="text-orange-400" />}
+   950→          {c.label}
+   951→        </span>
+   952→      ))}
+   953→    </div>
+   954→  );
+   955→}
+   956→
+   957→/* ── Section divider — a smooth gradient seam with an optional icon medallion ── */
+   958→export function SectionDivider({
+   959→  variant = 'light-to-dark',
+   960→  icon,
+   961→}: {
+   962→  variant?: 'light-to-dark' | 'dark-to-light' | 'light-to-warm' | 'warm-to-light';
+   963→  /** Optional Iconify name rendered in a small medallion centred on the seam. */
+   964→  icon?: string;
+   965→}) {
+   966→  const map: Record<string, string> = {
+   967→    'light-to-dark': 'from-white via-[#16305B]/5 to-[#16305B]',
+   968→    'dark-to-light': 'from-[#16305B] via-[#16305B]/5 to-white',
+   969→    'light-to-warm': 'from-white via-[#FDF7F0]/40 to-[#FDF7F0]',
+   970→    'warm-to-light': 'from-[#FDF7F0] via-[#FDF7F0]/40 to-white',
+   971→  };
+   972→  // Hooks must be called unconditionally — always call, only USE the result
+   973→  // when an icon is provided.
+   974→  const { ref, inView } = useInViewOnce<HTMLDivElement>({ threshold: 0.5 });
+   975→  if (!icon) return <div aria-hidden className={`h-8 bg-gradient-to-b ${map[variant]}`} />;
+   976→  return (
+   977→    <div ref={ref} aria-hidden className={`relative h-8 bg-gradient-to-b ${map[variant]}`}>
+   978→      <motion.span
+   979→        initial={{ opacity: 0, scale: 0.6 }}
+   980→        animate={inView ? { opacity: 1, scale: 1 } : {}}
+   981→        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+   982→        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-white shadow-md flex items-center justify-center ring-1 ring-gray-100"
+   983→      >
+   984→        <Icon name={icon} size={14} className="text-orange-500" />
+   985→      </motion.span>
+   986→    </div>
+   987→  );
+   988→}
+   989→
+   990→/* ── BackToTop — floating button shown after scrolling ── */
+   991→export function BackToTop() {
+   992→  const [show, setShow] = useState(false);
+   993→  useEffect(() => {
+   994→    const onScroll = () => setShow(window.scrollY > 700);
+   995→    window.addEventListener('scroll', onScroll, { passive: true });
+   996→    onScroll();
+   997→    return () => window.removeEventListener('scroll', onScroll);
+   998→  }, []);
+   999→  if (!show) return null;
+  1000→  return (
+  1001→    <button
+  1002→      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+  1003→      aria-label="بازگشت به بالا"
+  1004→      className="md:hidden fixed bottom-24 left-4 z-40 w-11 h-11 rounded-full bg-[#16305B] text-white shadow-xl shadow-black/20 flex items-center justify-center active:scale-90 transition-transform"
+  1005→    >
+  1006→      <Icon name="lucide:arrow-up" size={20} className="text-white" />
+  1007→    </button>
+  1008→  );
+  1009→}
+  1010→
+  1011→/* ── ScrollHint — bouncing chevron overlaid on the hero's bottom edge ──
+  1012→   Mobile-only. Rendered as a fixed overlay (pointer-events-none) so it
+  1013→   sits visually on top of the hero without touching the hero component.
+  1014→   Fades out once the user scrolls past the first viewport. */
+  1015→export function ScrollHint() {
+  1016→  const [show, setShow] = useState(true);
+  1017→  useEffect(() => {
+  1018→    const onScroll = () => setShow(window.scrollY < window.innerHeight * 0.5);
+  1019→    window.addEventListener('scroll', onScroll, { passive: true });
+  1020→    onScroll();
+  1021→    return () => window.removeEventListener('scroll', onScroll);
+  1022→  }, []);
+  1023→  if (!show) return null;
+  1024→  return (
+  1025→    <div
+  1026→      aria-hidden
+  1027→      className="md:hidden fixed bottom-24 left-1/2 -translate-x-1/2 z-30 pointer-events-none"
+  1028→    >
+  1029→      <motion.div
+  1030→        animate={{ y: [0, 8, 0] }}
+  1031→        transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+  1032→        className="flex flex-col items-center gap-1"
+  1033→      >
+  1034→        <span className="text-[10px] font-bold text-white/90 drop-shadow-md">
+  1035→          اسکرول کنید
+  1036→        </span>
+  1037→        <span className="w-7 h-7 rounded-full bg-white/15 backdrop-blur-sm border border-white/25 flex items-center justify-center">
+  1038→          <Icon name="lucide:chevron-down" size={16} className="text-white drop-shadow-md" />
+  1039→        </span>
+  1040→      </motion.div>
+  1041→    </div>
+  1042→  );
+  1043→}
+  1044→
+  1045→/* ── PullToRefreshHint — a subtle spinner that appears when the user
+  1046→   overscrolls at the very top of the page. Mobile-only, pure visual
+  1047→   (does NOT actually refresh — it's a delightful hint that the page
+  1048→   is "springy"). Fades in when document is at scrollTop 0 AND a
+  1049→   touch-move pulls downward; fades out otherwise. Uses a scroll
+  1050→   listener on the body's overscroll as a lightweight proxy. */
+  1051→export function PullToRefreshHint() {
+  1052→  const [pull, setPull] = useState(0);
+  1053→  useEffect(() => {
+  1054→    let raf = 0;
+  1055→    const onScroll = () => {
+  1056→      cancelAnimationFrame(raf);
+  1057→      raf = requestAnimationFrame(() => {
+  1058→        // Only meaningful at the very top: a negative scrollY (rubber-band)
+  1059→        // or a touch overscroll. We approximate with scrollY <= 0.
+  1060→        const y = window.scrollY;
+  1061→        setPull(y <= 0 ? Math.min(1, (Math.abs(y) + 1) / 60) : 0);
+  1062→      });
+  1063→    };
+  1064→    window.addEventListener('scroll', onScroll, { passive: true });
+  1065→    return () => {
+  1066→      window.removeEventListener('scroll', onScroll);
+  1067→      cancelAnimationFrame(raf);
+  1068→    };
+  1069→  }, []);
+  1070→  if (pull <= 0.02) return null;
+  1071→  return (
+  1072→    <div
+  1073→      aria-hidden
+  1074→      className="md:hidden fixed top-1 left-1/2 -translate-x-1/2 z-30 pointer-events-none"
+  1075→      style={{ opacity: pull }}
+  1076→    >
+  1077→      <motion.span
+  1078→        animate={{ rotate: 360 }}
+  1079→        transition={{ duration: 0.9, repeat: Infinity, ease: 'linear' }}
+  1080→        className="block w-6 h-6 rounded-full border-2 border-orange-400/30 border-t-orange-500"
+  1081→      />
+  1082→    </div>
+  1083→  );
+  1084→}
+  1085→
+  1086→/* ── useSnapActive — tracks which SnapRail card is centered ──
+  1087→   Attach the returned ref to a SnapRail's inner scroll container.
+  1088→   Returns the active index. */
+  1089→export function useSnapActive(count: number) {
+  1090→  const ref = useRef<HTMLDivElement>(null);
+  1091→  const [active, setActive] = useState(0);
+  1092→  const onScroll = useCallback(() => {
+  1093→    const el = ref.current;
+  1094→    if (!el) return;
+  1095→    const center = el.scrollLeft + el.clientWidth / 2;
+  1096→    let best = 0;
+  1097→    let bestDist = Infinity;
+  1098→    Array.from(el.children).forEach((child, i) => {
+  1099→      const c = child as HTMLElement;
+  1100→      const cCenter = c.offsetLeft + c.clientWidth / 2;
+  1101→      const d = Math.abs(cCenter - center);
+  1102→      if (d < bestDist) {
+  1103→        bestDist = d;
+  1104→        best = i;
+  1105→      }
+  1106→    });
+  1107→    setActive(best);
+  1108→  }, [count]);
+  1109→  useEffect(() => {
+  1110→    const el = ref.current;
+  1111→    if (!el) return;
+  1112→    el.addEventListener('scroll', onScroll, { passive: true });
+  1113→    // Defer the initial active-card computation to the next frame so we
+  1114→    // don't call setState synchronously inside this effect (cascading render).
+  1115→    const raf = requestAnimationFrame(onScroll);
+  1116→    return () => {
+  1117→      el.removeEventListener('scroll', onScroll);
+  1118→      cancelAnimationFrame(raf);
+  1119→    };
+  1120→  }, [onScroll]);
+  1121→  const scrollTo = useCallback(
+  1122→    (i: number) => {
+  1123→      const el = ref.current;
+  1124→      if (!el) return;
+  1125→      const child = el.children[i] as HTMLElement | undefined;
+  1126→      if (!child) return;
+  1127→      el.scrollTo({ left: child.offsetLeft - (el.clientWidth - child.clientWidth) / 2, behavior: 'smooth' });
+  1128→    },
+  1129→    []
+  1130→  );
+  1131→  return { ref, active, scrollTo };
+  1132→}
+  1133→

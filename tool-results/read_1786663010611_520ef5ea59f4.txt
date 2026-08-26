@@ -1,0 +1,1911 @@
+     1→/* ──────────────────────────────────────────────────────────────
+     2→   Ariyaz — landing page content
+     3→   All copy lives here; components stay presentational.
+     4→   Icon names are Iconify ids (lucide:*, mdi:*, ic:*).
+     5→   `slot` values are <ImageSlot> ids awaiting real artwork.
+     6→────────────────────────────────────────────────────────────── */
+     7→
+     8→/* ── Header ─────────────────────────────────────────────────── */
+     9→
+    10→export const topBar = {
+    11→  auth: { label: 'ورود / ثبت‌نام', href: '/support', icon: 'lucide:user-round' },
+    12→  online: { label: 'آنلاین هستیم', icon: 'lucide:message-circle' },
+    13→  chat: { label: 'واتساپ / چت آنلاین', href: '#', icon: 'ic:baseline-whatsapp' },
+    14→  phone: { label: '021-91017134', href: 'tel:02191017134', icon: 'lucide:phone' },
+    15→};
+    16→
+    17→export const brand = {
+    18→  name: 'Ariyaz',
+    19→  tagline: 'رشد انسان‌ها، توانمندسازی سازمان‌ها',
+    20→  searchPlaceholder: 'جستجو در دوره‌ها، ابزارها، فرم‌ها و ...',
+    21→  ctaPrimary: { label: 'درخواست دوره آموزشی', href: '/courses', icon: 'lucide:graduation-cap' },
+    22→  ctaSecondary: { label: 'درخواست مشاوره سازمانی', href: '/org', icon: 'lucide:handshake' },
+    23→};
+    24→
+    25→export interface MegaLink {
+    26→  label: string;
+    27→  href: string;
+    28→}
+    29→
+    30→export interface MegaColumn {
+    31→  title: string;
+    32→  icon: string;
+    33→  /** Flat link list — used when the column has no sub-headings. */
+    34→  items: MegaLink[];
+    35→  /** Optional sub-headings; when present these replace `items`. */
+    36→  groups?: { title: string; items: MegaLink[] }[];
+    37→}
+    38→
+    39→/** Card tile used by the card-style mega menu (see `NavItem.cards`). */
+    40→export interface MegaCard {
+    41→  icon: string;
+    42→  /** Overrides the default navy glyph — e.g. WhatsApp green. */
+    43→  iconColor?: string;
+    44→  title: string;
+    45→  desc: string;
+    46→  href: string;
+    47→}
+    48→
+    49→export interface NavItem {
+    50→  id: string;
+    51→  label: string;
+    52→  icon: string;
+    53→  href: string;
+    54→  columns: MegaColumn[];
+    55→  /** When present the panel renders as icon cards instead of link columns. */
+    56→  cards?: MegaCard[];
+    57→  promo: { title: string; desc: string; cta: string; bg: string; slot?: string };
+    58→  features: { icon: string; text: string }[];
+    59→}
+    60→
+    61→export const navItems: NavItem[] = [
+    62→  {
+    63→    id: 'free',
+    64→    label: 'رایگان اما کاربردی',
+    65→    icon: 'lucide:gift',
+    66→    href: '/library',
+    67→    columns: [
+    68→      {
+    69→        title: 'یادگیری رایگان',
+    70→        icon: 'lucide:play-circle',
+    71→        items: [],
+    72→        groups: [
+    73→          {
+    74→            title: 'ویدیوهای آموزشی رایگان',
+    75→            items: [
+    76→              { label: 'منابع انسانی', href: '/videos' },
+    77→              { label: 'مدیریت و رهبری', href: '/videos' },
+    78→              { label: 'مهارت‌های نرم', href: '/videos' },
+    79→            ],
+    80→          },
+    81→          {
+    82→            title: 'مقالات کاربردی',
+    83→            items: [
+    84→              { label: 'مقالات HR', href: '/articles' },
+    85→              { label: 'مقالات مهارت نرم', href: '/articles' },
+    86→              { label: 'تجربه‌های مدیریتی', href: '/articles' },
+    87→              { label: 'تحلیل‌های تخصصی', href: '/articles' },
+    88→            ],
+    89→          },
+    90→        ],
+    91→      },
+    92→      {
+    93→        title: 'ابزارهای حرفه‌ای رایگان',
+    94→        icon: 'lucide:wrench',
+    95→        items: [],
+    96→        groups: [
+    97→          {
+    98→            title: 'فرم‌ها و دستورالعمل‌ها',
+    99→            items: [
+   100→              { label: 'فرم‌های منابع انسانی', href: '/tools' },
+   101→              { label: 'چک‌لیست‌ها', href: '/tools' },
+   102→              { label: 'دستورالعمل‌های کاربردی', href: '/tools' },
+   103→            ],
+   104→          },
+   105→          {
+   106→            title: 'برنامه‌ها و ابزارها',
+   107→            items: [
+   108→              { label: 'فایل‌های اکسل', href: '/tools' },
+   109→              { label: 'قالب‌های آماده', href: '/tools' },
+   110→              { label: 'ابزارهای محاسباتی', href: '/salary-calculator' },
+   111→            ],
+   112→          },
+   113→          {
+   114→            title: 'ایجنت‌های رایگان',
+   115→            items: [
+   116→              { label: 'ایجنت‌های عمومی', href: '/agents' },
+   117→              { label: 'ایجنت‌های منابع انسانی', href: '/agents' },
+   118→              { label: 'ایجنت‌های مهارت نرم', href: '/agents' },
+   119→            ],
+   120→          },
+   121→        ],
+   122→      },
+   123→      {
+   124→        title: 'آزمون‌ها و منابع تخصصی',
+   125→        icon: 'lucide:clipboard-check',
+   126→        items: [],
+   127→        groups: [
+   128→          {
+   129→            title: 'تست‌ها و آزمون‌های استخدامی',
+   130→            items: [
+   131→              { label: 'تست‌های عمومی', href: '/exams' },
+   132→              { label: 'تست‌های تخصصی', href: '/exams' },
+   133→              { label: 'آزمون‌های روانشناسی', href: '/exams' },
+   134→            ],
+   135→          },
+   136→          {
+   137→            title: 'کتاب‌های تخصصی رایگان',
+   138→            items: [
+   139→              { label: 'کتاب‌های منابع انسانی', href: '/books' },
+   140→              { label: 'کتاب‌های مدیریت', href: '/books' },
+   141→              { label: 'کتاب‌های مهارت نرم', href: '/books' },
+   142→            ],
+   143→          },
+   144→          {
+   145→            title: 'قوانین تأمین اجتماعی و قانون کار',
+   146→            items: [
+   147→              { label: 'قانون تأمین اجتماعی', href: '/laws' },
+   148→              { label: 'قانون کار و آیین‌نامه‌ها', href: '/laws' },
+   149→              { label: 'بخشنامه‌ها و مصوبات', href: '/laws' },
+   150→            ],
+   151→          },
+   152→        ],
+   153→      },
+   154→    ],
+   155→    promo: {
+   156→      title: 'منابع هوشمند آریاز',
+   157→      desc: 'دانش، ابزار و منابع تخصصی برای رشد حرفه‌ای افراد و سازمان‌ها',
+   158→      cta: 'شروع یادگیری رایگان',
+   159→      bg: '#FDF4EC',
+   160→      slot: 'ar-mm-free',
+   161→    },
+   162→    features: [
+   163→      { icon: 'lucide:badge-check', text: 'محتوای تخصصی معتبر' },
+   164→      { icon: 'lucide:refresh-cw', text: 'منابع به‌روز HR' },
+   165→      { icon: 'lucide:wrench', text: 'ابزارهای آماده و کاربردی' },
+   166→      { icon: 'lucide:trending-up', text: 'مناسب رشد حرفه‌ای' },
+   167→    ],
+   168→  },
+   169→  {
+   170→    id: 'courses',
+   171→    label: 'دوره‌ها',
+   172→    icon: 'lucide:book-open',
+   173→    href: '/courses',
+   174→    columns: [
+   175→      {
+   176→        title: 'موضوعات آموزشی',
+   177→        icon: 'lucide:book-open',
+   178→        items: [],
+   179→        groups: [
+   180→          {
+   181→            title: 'منابع انسانی و سازمان',
+   182→            items: [
+   183→              { label: 'مدیریت منابع انسانی', href: '/courses' },
+   184→              { label: 'سیستم‌ها و فرآیندهای منابع انسانی', href: '/courses' },
+   185→              { label: 'اداری و کارگزینی', href: '/courses' },
+   186→            ],
+   187→          },
+   188→          {
+   189→            title: 'مدیریت و رهبری',
+   190→            items: [
+   191→              { label: 'مدیران تازه‌وارد', href: '/courses' },
+   192→              { label: 'مدیریت تیم', href: '/courses' },
+   193→              { label: 'رهبری سازمانی', href: '/courses' },
+   194→            ],
+   195→          },
+   196→          {
+   197→            title: 'مهارت‌های فردی و حرفه‌ای',
+   198→            items: [
+   199→              { label: 'مدیریت بر خود', href: '/courses' },
+   200→              { label: 'ارتباطات بین‌فردی', href: '/courses' },
+   201→              { label: 'اخلاق حرفه‌ای', href: '/courses' },
+   202→            ],
+   203→          },
+   204→        ],
+   205→      },
+   206→      {
+   207→        title: 'انتخاب مسیر یادگیری',
+   208→        icon: 'lucide:crosshair',
+   209→        items: [
+   210→          { label: 'مسیرهای آموزشی', href: '/learning-paths' },
+   211→          { label: 'مسیر توسعه منابع انسانی', href: '/learning-paths' },
+   212→          { label: 'مسیر مدیریت و رهبری', href: '/learning-paths' },
+   213→          { label: 'مسیر توسعه مهارت‌های فردی', href: '/learning-paths' },
+   214→        ],
+   215→      },
+   216→      {
+   217→        title: 'خدمات آموزشی',
+   218→        icon: 'lucide:calendar-days',
+   219→        items: [
+   220→          { label: 'تقویم آموزشی', href: '/courses' },
+   221→          { label: 'استعلام گواهینامه‌ها', href: '/support' },
+   222→          { label: 'پرسش‌های متداول دوره‌ها', href: '/support' },
+   223→          { label: 'قوانین ثبت‌نام', href: '/laws' },
+   224→        ],
+   225→      },
+   226→    ],
+   227→    promo: {
+   228→      title: 'مهارت‌هایی\nبرای دنیای واقعی',
+   229→      desc: 'مهارت‌هایی یادبگیرید که در مسیر حرفه‌ای شما اثر واقعی ایجاد کند',
+   230→      cta: 'مشاهده دوره‌ها',
+   231→      bg: '#FDF4EC',
+   232→      slot: 'ar-mm-courses',
+   233→    },
+   234→    features: [
+   235→      { icon: 'lucide:user-round', text: 'مناسب رشد حرفه‌ای' },
+   236→      { icon: 'lucide:book-open', text: 'محتوای تخصصی و به‌روز' },
+   237→      { icon: 'lucide:route', text: 'مسیرهای یادگیری مشخص' },
+   238→      { icon: 'lucide:badge-check', text: 'آموزش کاربردی و نتیجه‌محور' },
+   239→    ],
+   240→  },
+   241→  {
+   242→    id: 'org',
+   243→    label: 'خدمات سازمانی',
+   244→    icon: 'lucide:building-2',
+   245→    href: '/org',
+   246→    columns: [
+   247→      {
+   248→        title: 'خدمات برون‌سپاری',
+   249→        icon: 'lucide:cog',
+   250→        items: [
+   251→          { label: 'برون‌سپاری جذب و استخدام', href: '/org' },
+   252→          { label: 'برون‌سپاری کارکرد HR، بیمه و مالیات حقوق', href: '/org' },
+   253→          { label: 'برون‌سپاری واحد منابع انسانی (ویژه شرکت‌های کوچک)', href: '/org' },
+   254→        ],
+   255→      },
+   256→      {
+   257→        title: 'طراحی سیستم‌های HR',
+   258→        icon: 'lucide:puzzle',
+   259→        items: [
+   260→          { label: 'طراحی سازمان و ساختار سازمانی', href: '/org' },
+   261→          { label: 'طراحی و استقرار فرآیندهای منابع انسانی', href: '/org' },
+   262→          { label: 'طراحی نظام‌های انگیزشی و برند کارفرمایی', href: '/org' },
+   263→        ],
+   264→      },
+   265→      {
+   266→        title: 'مشاوره‌های سازمانی',
+   267→        icon: 'lucide:lightbulb',
+   268→        items: [
+   269→          { label: 'مشاوره تخصصی منابع انسانی', href: '/org' },
+   270→          { label: 'مشاوره تخصصی تأمین اجتماعی', href: '/org' },
+   271→          { label: 'مشاوره تخصصی اداره کار', href: '/org' },
+   272→        ],
+   273→      },
+   274→    ],
+   275→    promo: {
+   276→      title: 'از مسئله تا راهکار',
+   277→      desc: 'مسائل منابع انسانی خود را با راهکارهای تخصصی حل کنید',
+   278→      cta: 'درخواست مشاوره',
+   279→      bg: '#FDF4EC',
+   280→      slot: 'ar-mm-org',
+   281→    },
+   282→    features: [
+   283→      { icon: 'lucide:users-round', text: 'متخصصان منابع انسانی' },
+   284→      { icon: 'lucide:handshake', text: 'همراهی از طراحی تا اجرا' },
+   285→      { icon: 'lucide:crosshair', text: 'راهکارهای متناسب با نیاز شما' },
+   286→      { icon: 'lucide:badge-check', text: 'تجربه عملی در سازمان‌ها' },
+   287→    ],
+   288→  },
+   289→  {
+   290→    id: 'tools',
+   291→    label: 'فرم‌ها و ابزارها',
+   292→    icon: 'mdi:toolbox-outline',
+   293→    href: '/tools',
+   294→    columns: [
+   295→      {
+   296→        title: 'فرم‌ها و مستندات',
+   297→        icon: 'lucide:file-text',
+   298→        items: [
+   299→          { label: 'دستورالعمل‌های اجرایی', href: '/tools' },
+   300→          { label: 'فرم‌های کاربردی', href: '/tools' },
+   301→          { label: 'چک‌لیست‌ها', href: '/tools' },
+   302→        ],
+   303→      },
+   304→      {
+   305→        title: 'ابزارهای کاربردی',
+   306→        icon: 'lucide:sliders-horizontal',
+   307→        items: [
+   308→          { label: 'اکسل‌های محاسباتی', href: '/tools' },
+   309→          { label: 'داشبوردها و قالب‌های مدیریتی', href: '/tools' },
+   310→          { label: 'بوم‌ها (Canvas)', href: '/tools' },
+   311→        ],
+   312→      },
+   313→      {
+   314→        title: 'آزمون‌ها و پرسشنامه‌ها',
+   315→        icon: 'lucide:clipboard-check',
+   316→        items: [
+   317→          { label: 'تست‌های شخصیت و رفتار', href: '/exams' },
+   318→          { label: 'پرسشنامه‌های سازمانی', href: '/exams' },
+   319→          { label: 'تست‌های رهبری', href: '/exams' },
+   320→          { label: 'آزمون‌های استخدامی', href: '/exams' },
+   321→        ],
+   322→      },
+   323→    ],
+   324→    promo: {
+   325→      title: 'ابزارهایی که\nکار را ساده‌تر می‌کنند',
+   326→      desc: 'مجموعه‌ای از فرم‌ها، ابزارها و الگوهای آماده برای اجرای حرفه‌ای فرآیندهای منابع انسانی.',
+   327→      cta: 'مشاهده ابزارها',
+   328→      bg: '#FDF4EC',
+   329→      slot: 'ar-mm-tools',
+   330→    },
+   331→    features: [
+   332→      { icon: 'lucide:circle-check', text: 'آماده استفاده' },
+   333→      { icon: 'lucide:file-pen-line', text: 'قابل ویرایش و شخصی‌سازی' },
+   334→      { icon: 'lucide:users-round', text: 'طراحی‌شده بر اساس تجربه واقعی' },
+   335→      { icon: 'lucide:clock', text: 'صرفه‌جویی در زمان اجرای کارها' },
+   336→    ],
+   337→  },
+   338→  {
+   339→    id: 'agents',
+   340→    label: 'ایجنت‌ها',
+   341→    icon: 'lucide:bot',
+   342→    href: '/agents',
+   343→    columns: [
+   344→      {
+   345→        title: 'ایجنت‌های عمومی و سازمانی',
+   346→        icon: 'lucide:bot',
+   347→        items: [
+   348→          { label: 'دستیارهای عمومی', href: '/agents' },
+   349→          { label: 'تحلیل و خلاصه‌سازی اطلاعات', href: '/agents' },
+   350→          { label: 'گزارش‌نویسی و تولید محتوا', href: '/agents' },
+   351→          { label: 'برنامه‌ریزی و تصمیم‌یارها', href: '/agents' },
+   352→        ],
+   353→      },
+   354→      {
+   355→        title: 'ایجنت‌های تخصصی منابع انسانی',
+   356→        icon: 'lucide:bot',
+   357→        items: [
+   358→          { label: 'ایجنت‌های توسعه منابع انسانی', href: '/agents' },
+   359→          { label: 'ایجنت‌های تحلیل‌گری منابع انسانی', href: '/agents' },
+   360→          { label: 'ایجنت‌های اداری و کارگزینی', href: '/agents' },
+   361→        ],
+   362→      },
+   363→      {
+   364→        title: 'ایجنت‌های توسعه فردی و رهبری',
+   365→        icon: 'lucide:bot',
+   366→        items: [
+   367→          { label: 'توسعه مهارت‌های نرم', href: '/agents' },
+   368→          { label: 'کوچینگ و خودشناسی', href: '/agents' },
+   369→          { label: 'مدیریت و رهبری', href: '/agents' },
+   370→          { label: 'ارتباطات حرفه‌ای', href: '/agents' },
+   371→        ],
+   372→      },
+   373→    ],
+   374→    promo: {
+   375→      title: 'ایجنت متناسب با\nنیاز شما',
+   376→      desc: 'ایجنت اختصاصی خود را متناسب با فرآیندها، داده‌ها و نیازهای واقعی سازمان طراحی کنید.',
+   377→      cta: 'درخواست ایجنت سفارشی',
+   378→      bg: '#FDF4EC',
+   379→      slot: 'ar-mm-agents',
+   380→    },
+   381→    features: [
+   382→      { icon: 'lucide:circle-check', text: 'آماده استفاده' },
+   383→      { icon: 'lucide:sliders-horizontal', text: 'قابل سفارشی‌سازی' },
+   384→      { icon: 'lucide:crosshair', text: 'متناسب با فرآیندهای واقعی' },
+   385→      { icon: 'lucide:handshake', text: 'همراهی از طراحی تا استقرار' },
+   386→    ],
+   387→  },
+   388→  {
+   389→    id: 'shop',
+   390→    label: 'فروشگاه',
+   391→    icon: 'lucide:shopping-cart',
+   392→    href: '/master-list',
+   393→    columns: [
+   394→      {
+   395→        title: 'پیشنهادهای ویژه',
+   396→        icon: 'lucide:tag',
+   397→        items: [
+   398→          { label: 'جدیدترین محصولات', href: '/master-list' },
+   399→          { label: 'پرفروش‌ترین محصولات', href: '/master-list' },
+   400→          { label: 'محصولات منتخب آریاز', href: '/master-list' },
+   401→          { label: 'تخفیف‌ها و پیشنهادهای ویژه', href: '/master-list' },
+   402→        ],
+   403→      },
+   404→      {
+   405→        title: 'بسته‌های حرفه‌ای',
+   406→        icon: 'lucide:layers',
+   407→        items: [
+   408→          { label: 'بسته‌های منابع انسانی', href: '/master-list' },
+   409→          { label: 'بسته‌های مدیریتی', href: '/master-list' },
+   410→          { label: 'بسته‌های توسعه فردی', href: '/master-list' },
+   411→          { label: 'بسته‌های سازمانی', href: '/master-list' },
+   412→        ],
+   413→      },
+   414→      {
+   415→        title: 'راهنمای خرید',
+   416→        icon: 'lucide:circle-help',
+   417→        items: [
+   418→          { label: 'مقایسه محصولات', href: '/master-list' },
+   419→          { label: 'سوالات متداول', href: '/support' },
+   420→          { label: 'شرایط خرید و دانلود', href: '/support' },
+   421→          { label: 'پشتیبانی خرید', href: '/support' },
+   422→        ],
+   423→      },
+   424→    ],
+   425→    promo: {
+   426→      title: 'همه محصولات آریاز، یکجا',
+   427→      desc: 'از دوره‌ها و ابزارها تا ایجنت‌های هوشمند و بسته‌های تخصصی؛ هر آنچه برای توسعه فردی و سازمانی نیاز دارید.',
+   428→      cta: 'ورود به فروشگاه',
+   429→      bg: '#FDF4EC',
+   430→      slot: 'ar-mm-shop',
+   431→    },
+   432→    features: [
+   433→      { icon: 'lucide:shield-check', text: 'خرید امن و آسان' },
+   434→      { icon: 'lucide:download', text: 'دانلود و دسترسی سریع' },
+   435→      { icon: 'lucide:refresh-cw', text: 'به‌روزرسانی مستمر محصولات' },
+   436→      { icon: 'lucide:headphones', text: 'پشتیبانی تخصصی قبل و بعد از خرید' },
+   437→    ],
+   438→  },
+   439→  {
+   440→    id: 'membership',
+   441→    label: 'اشتراک',
+   442→    icon: 'lucide:crown',
+   443→    href: '/master-list',
+   444→    columns: [
+   445→      {
+   446→        title: 'پلن‌های اشتراک',
+   447→        icon: 'lucide:ticket',
+   448→        items: [
+   449→          { label: 'اشتراک فردی', href: '/master-list' },
+   450→          { label: 'اشتراک حرفه‌ای', href: '/master-list' },
+   451→          { label: 'اشتراک سازمانی', href: '/org' },
+   452→          { label: 'مقایسه پلن‌ها', href: '/master-list' },
+   453→        ],
+   454→      },
+   455→      {
+   456→        title: 'امکانات اشتراک',
+   457→        icon: 'lucide:infinity',
+   458→        items: [
+   459→          { label: 'دسترسی نامحدود به دوره‌ها', href: '/courses' },
+   460→          { label: 'دسترسی به ایجنت‌ها', href: '/agents' },
+   461→          { label: 'دسترسی به فرم‌ها و ابزارها', href: '/tools' },
+   462→          { label: 'دسترسی به به‌روزرسانی‌ها', href: '/master-list' },
+   463→        ],
+   464→      },
+   465→      {
+   466→        title: 'خدمات ویژه اعضا',
+   467→        icon: 'lucide:star',
+   468→        items: [
+   469→          { label: 'وبینارهای اختصاصی', href: '/courses' },
+   470→          { label: 'انجمن اعضا', href: '/support' },
+   471→          { label: 'مشاوره ویژه اعضا', href: '/org' },
+   472→          { label: 'پشتیبانی اختصاصی', href: '/support' },
+   473→        ],
+   474→      },
+   475→    ],
+   476→    promo: {
+   477→      title: 'همیشه یک قدم جلوتر باشید',
+   478→      desc: 'با اشتراک آریاز به جدیدترین دوره‌ها، ابزارها، ایجنت‌ها و خدمات اختصاصی دسترسی داشته باشید.',
+   479→      cta: 'مشاهده پلن‌های اشتراک',
+   480→      bg: '#FDF4EC',
+   481→      slot: 'ar-mm-membership',
+   482→    },
+   483→    features: [
+   484→      { icon: 'lucide:infinity', text: 'دسترسی نامحدود به محتوای تخصصی' },
+   485→      { icon: 'lucide:wallet', text: 'صرفه‌جویی در هزینه‌های یادگیری' },
+   486→      { icon: 'lucide:refresh-cw', text: 'به‌روزرسانی مستمر محتوا و ابزارها' },
+   487→      { icon: 'lucide:award', text: 'خدمات و مزایای اختصاصی اعضای آریاز' },
+   488→    ],
+   489→  },
+   490→  {
+   491→    id: 'salary',
+   492→    label: 'ماشین حساب حقوق',
+   493→    icon: 'lucide:calculator',
+   494→    href: '/salary-calculator',
+   495→    columns: [
+   496→      {
+   497→        title: 'محاسبه حقوق',
+   498→        icon: 'lucide:calculator',
+   499→        items: [
+   500→          { label: 'حقوق و مزایای پایه', href: '/salary-calculator' },
+   501→          { label: 'اضافه‌کاری و نوبت‌کاری', href: '/salary-calculator' },
+   502→          { label: 'عیدی، سنوات و مرخصی', href: '/salary-calculator' },
+   503→        ],
+   504→      },
+   505→      {
+   506→        title: 'کسورات قانونی',
+   507→        icon: 'lucide:gauge',
+   508→        items: [
+   509→          { label: 'بیمه تأمین اجتماعی', href: '/salary-calculator' },
+   510→          { label: 'مالیات بر حقوق', href: '/salary-calculator' },
+   511→          { label: 'بیمه تکمیلی', href: '/salary-calculator' },
+   512→        ],
+   513→      },
+   514→      {
+   515→        title: 'قوانین مرتبط',
+   516→        icon: 'lucide:file-text',
+   517→        items: [
+   518→          { label: 'قانون کار', href: '/laws' },
+   519→          { label: 'قوانین تأمین اجتماعی', href: '/laws' },
+   520→          { label: 'بخشنامه‌های حقوق و دستمزد', href: '/laws' },
+   521→        ],
+   522→      },
+   523→    ],
+   524→    promo: {
+   525→      title: 'محاسبه دقیق حقوق و مزایا',
+   526→      desc: 'خروجی قابل استناد، مطابق آخرین بخشنامه‌ها',
+   527→      cta: 'ورود به ماشین حساب',
+   528→      bg: '#ECFEFF',
+   529→    },
+   530→    features: [
+   531→      { icon: 'lucide:zap', text: 'محاسبه لحظه‌ای' },
+   532→      { icon: 'lucide:badge-check', text: 'مطابق قانون کار' },
+   533→      { icon: 'lucide:download', text: 'خروجی قابل دانلود' },
+   534→      { icon: 'lucide:circle-help', text: 'راهنمای گام‌به‌گام' },
+   535→    ],
+   536→  },
+   537→  {
+   538→    id: 'support',
+   539→    label: 'پشتیبانی',
+   540→    icon: 'lucide:headphones',
+   541→    href: '/support',
+   542→    columns: [
+   543→      {
+   544→        title: 'کانال‌های ارتباطی',
+   545→        icon: 'lucide:messages-square',
+   546→        items: [
+   547→          { label: 'چت آنلاین', href: '/support' },
+   548→          { label: 'واتساپ', href: '#' },
+   549→          { label: 'تماس تلفنی', href: 'tel:02191017134' },
+   550→        ],
+   551→      },
+   552→      {
+   553→        title: 'راهنما و آموزش',
+   554→        icon: 'lucide:circle-help',
+   555→        items: [
+   556→          { label: 'پرسش‌های متداول', href: '/support' },
+   557→          { label: 'راهنمای خرید', href: '/support' },
+   558→          { label: 'راهنمای استفاده از ابزارها', href: '/tools' },
+   559→        ],
+   560→      },
+   561→      {
+   562→        title: 'حساب کاربری',
+   563→        icon: 'lucide:user-round',
+   564→        items: [
+   565→          { label: 'ورود / ثبت‌نام', href: '/support' },
+   566→          { label: 'سفارش‌های من', href: '/support' },
+   567→          { label: 'تیکت پشتیبانی', href: '/support' },
+   568→        ],
+   569→      },
+   570→    ],
+   571→    /* Reads right-to-left: تالار گفتگو ← … ← تیکت */
+   572→    cards: [
+   573→      {
+   574→        icon: 'lucide:users-round',
+   575→        title: 'تالار گفتگو',
+   576→        desc: 'سوال بپرسید و با دیگران\nتجربه‌ها را به اشتراک بگذارید.',
+   577→        href: '/support',
+   578→      },
+   579→      {
+   580→        icon: 'lucide:circle-help',
+   581→        title: 'پرسش‌های متداول',
+   582→        desc: 'پاسخ سوالات رایج خود را\nدر این بخش بیابید.',
+   583→        href: '/support',
+   584→      },
+   585→      {
+   586→        icon: 'ic:baseline-whatsapp',
+   587→        iconColor: '#25D366',
+   588→        title: 'واتساپ',
+   589→        desc: 'از طریق واتساپ سریع‌تر\nبا ما در ارتباط باشید.',
+   590→        href: '#',
+   591→      },
+   592→      {
+   593→        icon: 'lucide:message-circle-more',
+   594→        title: 'چت آنلاین',
+   595→        desc: 'با کارشناسان ما به صورت\nآنلاین گفتگو کنید.',
+   596→        href: '/support',
+   597→      },
+   598→      {
+   599→        icon: 'lucide:ticket',
+   600→        iconColor: '#F97316',
+   601→        title: 'تیکت',
+   602→        desc: 'درخواست خود را ثبت کنید\nو پیگیری نمایید.',
+   603→        href: '/support',
+   604→      },
+   605→    ],
+   606→    promo: {
+   607→      title: 'ما در کنار شما هستیم',
+   608→      desc: 'از طریق کانال‌های مختلف با کارشناسان آریاز در ارتباط باشید؛ سریع، ساده و در دسترس.',
+   609→      cta: 'ورود به صفحه پشتیبانی',
+   610→      bg: '#FDF3EA',
+   611→      slot: 'ar-mm-support',
+   612→    },
+   613→    features: [
+   614→      { icon: 'lucide:headphones', text: 'پاسخگویی سریع\nدر کوتاه‌ترین زمان' },
+   615→      { icon: 'lucide:shield-check', text: 'پشتیبانی حرفه‌ای\nتوسط کارشناسان متخصص' },
+   616→      { icon: 'lucide:clock', text: 'در دسترس\nدر هر زمان و مکان' },
+   617→      { icon: 'lucide:lock', text: 'اطمینان و امنیت\nاطلاعات شما محفوظ است' },
+   618→    ],
+   619→  },
+   620→];
+   621→
+   622→/* ── 1. Hero carousel ───────────────────────────────────────── */
+   623→
+   624→export const heroSlides = [
+   625→  {
+   626→    id: 'slide-1',
+   627→    kicker: 'پلتفرم یکپارچه توسعه منابع انسانی',
+   628→    title: 'رشد انسان‌ها، توانمندسازی سازمان‌ها',
+   629→    subtitle: 'پلتفرم یکپارچه توسعه منابع انسانی، رهبری، مهارت‌های نرم و تحول سازمانی',
+   630→    desc: 'یادگیری، توسعه، ابزارهای حرفه‌ای، کوچینگ و راهکارهای سازمانی؛ همه در یک اکوسیستم هوشمند',
+   631→    ctas: [
+   632→      { label: 'درخواست مشاوره سازمانی', href: '/org', primary: true, icon: 'lucide:handshake' },
+   633→      { label: 'شروع یادگیری', href: '/courses', primary: false, icon: 'lucide:play-circle' },
+   634→    ],
+   635→    agentCards: [
+   636→      { title: 'ایجنت‌های عمومی سازمان', icon: 'lucide:building-2' },
+   637→      { title: 'منابع انسانی', icon: 'lucide:users-round' },
+   638→      { title: 'مهارت نرم', icon: 'lucide:smile' },
+   639→      { title: 'سفارشی سازمانی', icon: 'lucide:puzzle' },
+   640→    ],
+   641→    slot: 'ar-hero-1',
+   642→    slotLabel: 'تصویر اسلاید ۱ — اکوسیستم آریاز با پنج حوزه رشد',
+   643→  },
+   644→  {
+   645→    id: 'slide-2',
+   646→    kicker: 'مسیرهای یادگیری آریاز',
+   647→    title: 'مسیر رشد حرفه‌ای خود را بسازید',
+   648→    subtitle: 'از انتخاب هدف تا تسلط بر مهارت؛ گام‌به‌گام و با پیگیری پیشرفت',
+   649→    desc: 'مسیرهای یادگیری آریاز شما را از نقطه‌ای که هستید به جایی که می‌خواهید باشید می‌رساند',
+   650→    tiles: [
+   651→      { title: 'دوره‌های تخصصی', icon: 'lucide:graduation-cap' },
+   652→      { title: 'مهارت‌های نرم', icon: 'lucide:messages-square' },
+   653→      { title: 'رهبری و مدیریت', icon: 'lucide:crown' },
+   654→      { title: 'کوچینگ و منتورینگ', icon: 'lucide:mic' },
+   655→    ],
+   656→    ctas: [
+   657→      { label: 'شروع مسیر یادگیری', href: '/learning-paths', primary: true, icon: 'lucide:route' },
+   658→      { label: 'مشاهده دوره‌ها', href: '/courses', primary: false, icon: 'lucide:book-open' },
+   659→    ],
+   660→    slot: 'ar-hero-2',
+   661→    slotLabel: 'تصویر اسلاید ۲ — پله‌های مسیر رشد حرفه‌ای با ۴ مرحله',
+   662→  },
+   663→  {
+   664→    id: 'slide-3',
+   665→    kicker: 'هوش مصنوعی در خدمت منابع انسانی',
+   666→    title: 'ایجنت‌های هوشمند آریاز؛ دستیاران دیجیتال شما',
+   667→    subtitle: 'ایجنت‌هایی که فرآیندهای تکراری را برمی‌دارند تا تیم شما روی کار مهم تمرکز کند',
+   668→    desc: 'از طراحی KPI تا تحلیل نظرسنجی کارکنان؛ همه با یک دستیار هوشمند',
+   669→    traits: [
+   670→      { title: 'قابل سفارشی‌سازی', icon: 'lucide:sliders-horizontal' },
+   671→      { title: '۲۴/۷ در دسترس', icon: 'lucide:clock' },
+   672→      { title: 'سریع و دقیق', icon: 'lucide:zap' },
+   673→      { title: 'امن و قابل اعتماد', icon: 'lucide:shield-check' },
+   674→    ],
+   675→    /* Glass cards that float around the 3D robot */
+   676→    robotCards: [
+   677→      { title: 'ایجنت‌های عمومی سازمان', icon: 'lucide:building-2' },
+   678→      { title: 'منابع انسانی', icon: 'lucide:users-round' },
+   679→      { title: 'مهارت نرم', icon: 'lucide:smile' },
+   680→      { title: 'سفارشی سازمانی', icon: 'lucide:puzzle' },
+   681→    ],
+   682→    ctas: [
+   683→      { label: 'درخواست ایجنت سفارشی', href: '/agents', primary: true, icon: 'lucide:bot' },
+   684→      { label: 'مشاهده ایجنت‌ها', href: '/agents', primary: false, icon: 'lucide:arrow-left' },
+   685→    ],
+   686→    slot: 'ar-hero-3',
+   687→    slotLabel: 'تصویر اسلاید ۳ — ربات دستیار هوشمند با کارت‌های ایجنت',
+   688→  },
+   689→  {
+   690→    /* Two-tone headline; tiles stack icon over a two-line label. */
+   691→    id: 'slide-4',
+   692→    variant: 'growth',
+   693→    titleTop: 'مسیر رشد',
+   694→    titleAccent: 'حرفه‌ای خود را بسازید',
+   695→    desc: 'با مسیرهای یادگیری، دوره‌های تخصصی، کوچینگ و ابزارهای توسعه فردی، توانمندی‌های خود را مرحله‌به‌مرحله ارتقا دهید.',
+   696→    tiles: [
+   697→      { title: 'دوره‌های\nتخصصی', icon: 'lucide:graduation-cap' },
+   698→      { title: 'مهارت‌های\nنرم', icon: 'lucide:users-round' },
+   699→      { title: 'رهبری و\nمدیریت', icon: 'lucide:bar-chart-3' },
+   700→      { title: 'کوچینگ و\nمنتورینگ', icon: 'lucide:messages-square' },
+   701→    ],
+   702→    ctas: [
+   703→      { label: 'شروع مسیر یادگیری', href: '/learning-paths', primary: true, icon: 'lucide:arrow-left' },
+   704→      { label: 'مشاهده دوره‌ها', href: '/courses', primary: false, icon: 'lucide:arrow-left' },
+   705→    ],
+   706→    slot: 'ar-hero-2',
+   707→    slotLabel: 'تصویر اسلاید ۴ — پله‌های مسیر رشد با چهار مرحله',
+   708→  },
+   709→];
+   710→
+   711→/* Mobile hero proof stats (replaces the 3D robot on small screens) */
+   712→export const heroMobileStats = [
+   713→  { value: '+۱۲۰', label: 'سازمان همکار' },
+   714→  { value: '+۲۵۰K', label: 'مدیر و کارمند' },
+   715→  { value: '۹۸٪', label: 'رضایت مشتریان' },
+   716→];
+   717→
+   718→/* ── 2. Topic finder ────────────────────────────────────────── */
+   719→
+   720→export const topicsHeading = {
+   721→  title: 'به دنبال چه موضوعی در آریاز هستید؟',
+   722→  desc: 'موضوع مورد نظر خود را انتخاب کنید تا سریع‌تر به محتوای دلخواهتان برسید.',
+   723→};
+   724→
+   725→export const topics = [
+   726→  {
+   727→    id: 'hr',
+   728→    title: 'منابع انسانی و سازمان',
+   729→    desc: 'برای متخصصان منابع انسانی و مدیران HR',
+   730→    icon: 'lucide:users-round',
+   731→    color: '#F97316',
+   732→    bg: '#FFF7ED',
+   733→    items: ['سیستم‌های منابع انسانی', 'جذب و استخدام', 'عملکرد و جبران خدمات'],
+   734→    href: '/org',
+   735→  },
+   736→  {
+   737→    id: 'lead',
+   738→    title: 'مدیریت و رهبری',
+   739→    desc: 'برای مدیران و رهبران سازمان',
+   740→    icon: 'lucide:flag',
+   741→    color: '#2563EB',
+   742→    bg: '#EFF6FF',
+   743→    items: ['مدیریت تیم', 'رهبری سازمانی', 'توسعه مدیران'],
+   744→    href: '/learning-paths',
+   745→  },
+   746→  {
+   747→    id: 'skills',
+   748→    title: 'مهارت‌های فردی و حرفه‌ای',
+   749→    desc: 'برای رشد فردی و موفقیت شغلی',
+   750→    icon: 'lucide:user-round-cog',
+   751→    color: '#059669',
+   752→    bg: '#ECFDF5',
+   753→    items: ['ارتباطات', 'مذاکره', 'مدیریت زمان'],
+   754→    href: '/courses',
+   755→  },
+   756→  {
+   757→    id: 'ai',
+   758→    title: 'هوش مصنوعی و ایجنت‌ها',
+   759→    desc: 'برای هوشمندسازی کارها و فرآیندها',
+   760→    icon: 'lucide:bot',
+   761→    color: '#7C3AED',
+   762→    bg: '#FAF5FF',
+   763→    items: ['ایجنت‌های سازمانی', 'ابزارهای هوشمند', 'اتوماسیون کارها'],
+   764→    href: '/agents',
+   765→  },
+   766→  {
+   767→    id: 'tools',
+   768→    title: 'ابزارها و منابع کاربردی',
+   769→    desc: 'برای اجرای سریع‌تر و حرفه‌ای‌تر',
+   770→    icon: 'mdi:toolbox-outline',
+   771→    color: '#0891B2',
+   772→    bg: '#ECFEFF',
+   773→    items: ['فرم‌ها', 'چک‌لیست‌ها', 'قالب‌ها و داشبوردها'],
+   774→    href: '/tools',
+   775→  },
+   776→  {
+   777→    id: 'services',
+   778→    title: 'خدمات سازمانی',
+   779→    desc: 'برای حل مسائل واقعی کسب‌وکار',
+   780→    icon: 'lucide:handshake',
+   781→    color: '#E11D48',
+   782→    bg: '#FFF1F2',
+   783→    items: ['طراحی سیستم‌ها', 'مشاوره HR', 'برون‌سپاری'],
+   784→    href: '/org',
+   785→  },
+   786→];
+   787→
+   788→export const topicsCtaLabel = 'مشاهده موضوعات';
+   789→
+   790→/* ── 3. Partners ────────────────────────────────────────────── */
+   791→
+   792→export const partnersHeading = {
+   793→  title: 'سازمان‌هایی که با آریاز همکاری کرده‌اند',
+   794→  desc: 'همراه سازمان‌ها در طراحی سیستم‌های منابع انسانی، توسعه مدیران و تحول سازمانی',
+   795→};
+   796→
+   797→export interface Partner {
+   798→  id: string;
+   799→  label: string;
+   800→  /** Logo artwork slot. */
+   801→  slot: string;
+   802→  /** Case study shown when this brand is selected in the carousel. */
+   803→  case: {
+   804→    title: string;
+   805→    slot: string;
+   806→    slotLabel: string;
+   807→    /** One-paragraph outline of what was delivered. */
+   808→    summary: string;
+   809→    field: string;
+   810→    service: string;
+   811→    duration: string;
+   812→    year: string;
+   813→  };
+   814→}
+   815→
+   816→export const partners: Partner[] = [
+   817→  {
+   818→    id: 'golrang',
+   819→    label: 'گلرنگ',
+   820→    slot: 'ar-logo-golrang',
+   821→    case: {
+   822→      title: 'طراحی مسیر شغلی و جانشین‌پروری',
+   823→      summary: 'طراحی مسیر شغلی و نظام جانشین‌پروری برای سطوح کلیدی سازمان، شامل شناسایی نقش‌های حساس، تدوین معیارهای آمادگی و برنامه توسعه فردی جانشینان.',
+   824→      slot: 'ar-case-golrang',
+   825→      slotLabel: 'تصویر پروژه گلرنگ — مجتمع صنعتی',
+   826→      field: 'منابع انسانی',
+   827→      service: 'طراحی مسیر شغلی و نظام جانشین‌پروری',
+   828→      duration: '۸ ماه',
+   829→      year: '۱۴۰۲',
+   830→    },
+   831→  },
+   832→  {
+   833→    id: 'mellat-ins',
+   834→    label: 'بیمه ملت',
+   835→    slot: 'ar-logo-mellat-ins',
+   836→    case: {
+   837→      title: 'استقرار نظام مدیریت عملکرد',
+   838→      summary: 'طراحی و استقرار نظام ارزیابی عملکرد مبتنی بر شاخص‌های کلیدی، همراه با آموزش مدیران و پیاده‌سازی چرخه بازخورد دوره‌ای در کل سازمان.',
+   839→      slot: 'ar-case-mellat-ins',
+   840→      slotLabel: 'تصویر پروژه بیمه ملت — ساختمان مرکزی',
+   841→      field: 'مدیریت عملکرد',
+   842→      service: 'طراحی و استقرار نظام ارزیابی عملکرد',
+   843→      duration: '۵ ماه',
+   844→      year: '۱۴۰۳',
+   845→    },
+   846→  },
+   847→  {
+   848→    id: 'baraka',
+   849→    label: 'بارکا',
+   850→    slot: 'ar-logo-baraka',
+   851→    case: {
+   852→      title: 'بازطراحی فرآیند جذب و استخدام',
+   853→      summary: 'بازطراحی فرآیند جذب از انتشار آگهی تا مصاحبه ساختاریافته و تصمیم نهایی، با هدف کوتاه‌تر شدن زمان استخدام و بهبود کیفیت انتخاب.',
+   854→      slot: 'ar-case-baraka',
+   855→      slotLabel: 'تصویر پروژه بارکا — کارخانه و دفتر مرکزی',
+   856→      field: 'جذب و استخدام',
+   857→      service: 'بازطراحی فرآیند جذب و مصاحبه ساختاریافته',
+   858→      duration: '۳ ماه',
+   859→      year: '۱۴۰۴',
+   860→    },
+   861→  },
+   862→  {
+   863→    id: 'sunich',
+   864→    label: 'سن‌ایچ',
+   865→    slot: 'ar-logo-sunich',
+   866→    case: {
+   867→      title: 'طراحی نظام جبران خدمات',
+   868→      summary: 'طراحی و استقرار نظام جبران خدمات شامل ساختار حقوق و مزایا، طبقه‌بندی شغلی و مدل پرداخت عملکرد با رویکرد رقابت‌پذیری و افزایش انگیزش سازمانی.',
+   869→      slot: 'ar-case-sunich',
+   870→      slotLabel: 'تصویر پروژه سن‌ایچ — لابی دفتر مرکزی',
+   871→      field: 'منابع انسانی',
+   872→      service: 'طراحی سیستم‌های جبران خدمات',
+   873→      duration: '۴ ماه',
+   874→      year: '۱۴۰۳',
+   875→    },
+   876→  },
+   877→  {
+   878→    id: 'snapp',
+   879→    label: 'اسنپ',
+   880→    slot: 'ar-logo-snapp',
+   881→    case: {
+   882→      title: 'توسعه مهارت‌های رهبری مدیران میانی',
+   883→      summary: 'برنامه توسعه رهبری و کوچینگ مدیران میانی با ترکیبی از کارگاه‌های عملی، تمرین‌های میدانی و جلسات کوچینگ فردی در طول مسیر.',
+   884→      slot: 'ar-case-snapp',
+   885→      slotLabel: 'تصویر پروژه اسنپ — فضای کار تیم‌ها',
+   886→      field: 'آموزش و توسعه',
+   887→      service: 'برنامه توسعه رهبری و کوچینگ مدیران',
+   888→      duration: '۶ ماه',
+   889→      year: '۱۴۰۴',
+   890→    },
+   891→  },
+   892→  {
+   893→    id: 'mellat',
+   894→    label: 'بانک ملت',
+   895→    slot: 'ar-logo-mellat',
+   896→    case: {
+   897→      title: 'طراحی مدل شایستگی و کانون ارزیابی',
+   898→      summary: 'طراحی مدل شایستگی سازمانی و اجرای کانون ارزیابی برای انتخاب و توسعه مدیران، همراه با تدوین گزارش‌های توسعه فردی برای هر شرکت‌کننده.',
+   899→      slot: 'ar-case-mellat',
+   900→      slotLabel: 'تصویر پروژه بانک ملت — ساختمان مرکزی',
+   901→      field: 'ارزیابی و سنجش',
+   902→      service: 'طراحی مدل شایستگی و اجرای کانون ارزیابی',
+   903→      duration: '۷ ماه',
+   904→      year: '۱۴۰۲',
+   905→    },
+   906→  },
+   907→  {
+   908→    id: 'digikala',
+   909→    label: 'دیجی‌کالا',
+   910→    slot: 'ar-logo-digikala',
+   911→    case: {
+   912→      title: 'استقرار داشبورد شاخص‌های منابع انسانی',
+   913→      summary: 'طراحی و پیاده‌سازی داشبورد شاخص‌های منابع انسانی برای پایش لحظه‌ای جذب، نگهداشت و عملکرد، و تبدیل داده‌های پراکنده به تصمیم‌های روشن.',
+   914→      slot: 'ar-case-digikala',
+   915→      slotLabel: 'تصویر پروژه دیجی‌کالا — دفتر مرکزی',
+   916→      field: 'تحلیل داده منابع انسانی',
+   917→      service: 'طراحی و پیاده‌سازی داشبورد شاخص‌های HR',
+   918→      duration: '۴ ماه',
+   919→      year: '۱۴۰۴',
+   920→    },
+   921→  },
+   922→  {
+   923→    id: 'melli',
+   924→    label: 'بانک ملی',
+   925→    slot: 'ar-logo-melli',
+   926→    case: {
+   927→      title: 'برنامه توسعه مدیران شعب',
+   928→      summary: 'طراحی و اجرای برنامه توسعه مدیران شعب با تمرکز بر مهارت‌های رهبری، مدیریت تیم و تجربه مشتری، متناسب با شرایط واقعی شبکه شعب.',
+   929→      slot: 'ar-case-melli',
+   930→      slotLabel: 'تصویر پروژه بانک ملی — ساختمان شعبه مرکزی',
+   931→      field: 'آموزش سازمانی',
+   932→      service: 'طراحی و اجرای برنامه توسعه مدیران شعب',
+   933→      duration: '۹ ماه',
+   934→      year: '۱۴۰۳',
+   935→    },
+   936→  },
+   937→  {
+   938→    id: 'moallem',
+   939→    label: 'بیمه معلم',
+   940→    slot: 'ar-logo-moallem',
+   941→    case: {
+   942→      title: 'بازنگری ساختار سازمانی و شرح مشاغل',
+   943→      summary: 'بازنگری ساختار سازمانی و تدوین شرح مشاغل برای همه واحدها، با هدف شفاف شدن مرزهای مسئولیت و حذف هم‌پوشانی وظایف.',
+   944→      slot: 'ar-case-moallem',
+   945→      slotLabel: 'تصویر پروژه بیمه معلم — ساختمان مرکزی',
+   946→      field: 'ساختار سازمانی',
+   947→      service: 'بازنگری ساختار و تدوین شرح مشاغل',
+   948→      duration: '۵ ماه',
+   949→      year: '۱۴۰۳',
+   950→    },
+   951→  },
+   952→  {
+   953→    id: 'kourosh',
+   954→    label: 'فروشگاه کوروش',
+   955→    slot: 'ar-logo-kourosh',
+   956→    case: {
+   957→      title: 'نظام آموزش و توانمندسازی کارکنان فروشگاهی',
+   958→      summary: 'طراحی نظام آموزش و ارزیابی کارکنان فروشگاهی، شامل مسیرهای آموزشی نقش‌محور و سنجش دوره‌ای مهارت‌ها در سطح شعب.',
+   959→      slot: 'ar-case-kourosh',
+   960→      slotLabel: 'تصویر پروژه فروشگاه کوروش — مجتمع تجاری',
+   961→      field: 'آموزش و توسعه',
+   962→      service: 'طراحی نظام آموزش و ارزیابی کارکنان',
+   963→      duration: '۶ ماه',
+   964→      year: '۱۴۰۴',
+   965→    },
+   966→  },
+   967→];
+   968→
+   969→/** Brand selected when the section first renders. */
+   970→export const defaultPartnerId = 'sunich';
+   971→
+   972→export const caseStudyLabels = {
+   973→  badge: 'پروژه انجام شده',
+   974→  field: { label: 'حوزه همکاری', icon: 'lucide:user-round' },
+   975→  service: { label: 'خدمات ارائه شده', icon: 'lucide:users-round' },
+   976→  duration: { label: 'مدت زمان پروژه', icon: 'lucide:clock' },
+   977→  year: { label: 'سال همکاری', icon: 'lucide:calendar-days' },
+   978→  cta: { label: 'مشاهده مطالعه موردی', href: '/articles' },
+   979→};
+   980→
+   981→export const partnerStatsHeading = 'بیش از یک دهه تجربه کنار سازمان‌ها';
+   982→
+   983→export const partnerStats = [
+   984→  { value: '+120', label: 'سازمان همکار', desc: 'در بخش‌های مختلف', icon: 'lucide:building-2' },
+   985→  { value: '+200', label: 'پروژه موفق', desc: 'طراحی و اجرا شده', icon: 'lucide:handshake' },
+   986→  { value: '+250K', label: 'مدیر و کارمند تحت پوشش', desc: 'سیستم‌های طراحی شده', icon: 'lucide:users' },
+   987→  { value: '98%', label: 'رضایت مشتریان', desc: 'از همکاری با آریاز', icon: 'lucide:badge-check' },
+   988→  { value: '+12', label: 'سال تجربه تخصصی', desc: 'در حوزه منابع انسانی', icon: 'lucide:trending-up' },
+   989→  { value: '+90%', label: 'پروژه‌های تکرارشونده', desc: 'از سمت مشتریان', icon: 'lucide:target' },
+   990→];
+   991→
+   992→export const expertiseHeading = 'تخصص ما، ارزش پایدار برای سازمان شما';
+   993→
+   994→export const expertiseStrip = [
+   995→  { text: 'تعهد به محرمانگی', desc: 'و حفظ اطلاعات سازمان', icon: 'lucide:lock' },
+   996→  { text: 'همراهی در تمام مراحل', desc: 'از طراحی تا استقرار و ارزیابی', icon: 'lucide:refresh-cw' },
+   997→  { text: 'رویکرد داده‌محور و علمی', desc: 'برای تصمیم‌گیری‌های بهتر', icon: 'lucide:bar-chart-3' },
+   998→  { text: 'تیم متخصص با تجربه', desc: 'با دانش روز و تجربه متنوع', icon: 'lucide:user-round' },
+   999→  { text: 'راهکارهای عملی و قابل اجرا', desc: 'متناسب با نیاز سازمان شما', icon: 'lucide:shield-check' },
+  1000→];
+  1001→
+  1002→export const partnerContact = {
+  1003→  meeting: { label: 'جلسه آنلاین با کارشناسان', icon: 'lucide:calendar-clock', href: '/support' },
+  1004→  cta: { label: 'درخواست مشاوره سازمانی', href: '/org' },
+  1005→  phone: { label: 'مشاوره رایگان تلفنی', value: '021-91017134', icon: 'lucide:phone-call' },
+  1006→};
+  1007→
+  1008→/* ── 4. Products ────────────────────────────────────────────── */
+  1009→
+  1010→export const productsHeading = {
+  1011→  kicker: 'محصولات منتخب آریاز',
+  1012→  title: 'تازه‌ها، پرفروش‌ها و به‌زودی',
+  1013→  desc: 'دوره‌ها، ابزارها و راهکارهای کاربردی برای رشد فردی و سازمانی',
+  1014→};
+  1015→
+  1016→export interface Product {
+  1017→  title: string;
+  1018→  category: string;
+  1019→  /** Ribbon shown over the artwork — e.g. جدید / پرفروش. */
+  1020→  badge?: string;
+  1021→  /** Tailwind classes for the badge chip. */
+  1022→  badgeClass?: string;
+  1023→  /** Tailwind classes for the category chip. */
+  1024→  categoryClass?: string;
+  1025→  /** Medallion glyph straddling the artwork's lower edge. */
+  1026→  icon?: string;
+  1027→  desc: string;
+  1028→  students: string;
+  1029→  rating: string;
+  1030→  slot: string;
+  1031→  mobileSlot?: string;
+  1032→  href: string;
+  1033→}
+  1034→
+  1035→export const productTabs: { id: string; label: string; icon: string; items: Product[] }[] = [
+  1036→  {
+  1037→    id: 'new',
+  1038→    label: 'تازه‌ها',
+  1039→    icon: 'mdi:new-box',
+  1040→    items: [
+  1041→      {
+  1042→        title: 'مسیر یادگیری جذب و استخدام',
+  1043→        category: 'مسیر یادگیری',
+  1044→        desc: 'از طراحی آگهی شغلی تا مصاحبه ساختاریافته و انتخاب نهایی، در ۱۲ گام عملی',
+  1045→        students: '۱,۲۴۰ یادگیرنده',
+  1046→        rating: '۴.۸',
+  1047→        slot: 'ar-p-new-1',
+  1048→        mobileSlot: 'ar-m-p1',
+  1049→        href: '/learning-paths',
+  1050→      },
+  1051→      {
+  1052→        title: 'ماشین حساب حقوق و مزایا',
+  1053→        category: 'ابزار',
+  1054→        desc: 'محاسبه دقیق حقوق، کسورات و مزایا مطابق آخرین بخشنامه‌های قانون کار',
+  1055→        students: '۳,۵۶۰ کاربر',
+  1056→        rating: '۴.۹',
+  1057→        slot: 'ar-p-new-2',
+  1058→        mobileSlot: 'ar-m-p2',
+  1059→        href: '/salary-calculator',
+  1060→      },
+  1061→      {
+  1062→        title: 'پکیج فرم‌های ارزیابی عملکرد',
+  1063→        category: 'فرم و قالب',
+  1064→        desc: 'مجموعه کامل فرم‌های ارزیابی عملکرد، قابل ویرایش و متناسب با هر ساختار سازمانی',
+  1065→        students: '۸۹۰ سازمان',
+  1066→        rating: '۴.۷',
+  1067→        slot: 'ar-p-new-3',
+  1068→        mobileSlot: 'ar-m-p3',
+  1069→        href: '/tools',
+  1070→      },
+  1071→      {
+  1072→        title: 'ایجنت کوچینگ مدیران',
+  1073→        category: 'ایجنت هوشمند',
+  1074→        desc: 'دستیار هوشمندی که مدیران را در تصمیم‌گیری و گفتگوهای دشوار همراهی می‌کند',
+  1075→        students: '۶۲۰ مدیر',
+  1076→        rating: '۴.۶',
+  1077→        slot: 'ar-p-new-4',
+  1078→        mobileSlot: 'ar-m-p4',
+  1079→        href: '/agents',
+  1080→      },
+  1081→    ],
+  1082→  },
+  1083→  {
+  1084→    id: 'best',
+  1085→    label: 'پرفروش‌ها',
+  1086→    icon: 'lucide:flame',
+  1087→    items: [
+  1088→      {
+  1089→        title: 'دوره مدیریت عملکرد حرفه‌ای',
+  1090→        category: 'دوره آموزشی',
+  1091→        badge: 'جدید',
+  1092→        badgeClass: 'bg-emerald-100 text-emerald-700',
+  1093→        categoryClass: 'bg-violet-100 text-violet-700',
+  1094→        icon: 'lucide:graduation-cap',
+  1095→        desc: 'به صورت عملی یاد بگیرید چگونه یک سیستم مدیریت عملکرد اثربخش طراحی و اجرا کنید.',
+  1096→        students: '۷۸۷ دانشجو',
+  1097→        rating: '۴.۸',
+  1098→        slot: 'ar-p-best-1',
+  1099→        href: '/courses',
+  1100→      },
+  1101→      {
+  1102→        title: 'ایجنت طراحی KPI هوشمند',
+  1103→        category: 'ایجنت هوشمند',
+  1104→        badge: 'جدید',
+  1105→        badgeClass: 'bg-emerald-100 text-emerald-700',
+  1106→        categoryClass: 'bg-violet-100 text-violet-700',
+  1107→        icon: 'lucide:bot',
+  1108→        desc: 'با هوش مصنوعی، شاخص‌های کلیدی عملکرد (KPI) متناسب با شغل و اهداف سازمان خود را طراحی کنید.',
+  1109→        students: '۱۵۶ دانشجو',
+  1110→        rating: '۴.۹',
+  1111→        slot: 'ar-p-best-2',
+  1112→        href: '/agents',
+  1113→      },
+  1114→      {
+  1115→        title: 'بوم طراحی مسیر شغلی',
+  1116→        category: 'ابزار کاربردی',
+  1117→        badge: 'جدید',
+  1118→        badgeClass: 'bg-emerald-100 text-emerald-700',
+  1119→        categoryClass: 'bg-emerald-100 text-emerald-700',
+  1120→        icon: 'lucide:file-spreadsheet',
+  1121→        desc: 'یک ابزار کاربردی برای طراحی مسیرهای شغلی، شایستگی‌ها و برنامه‌های توسعه کارکنان در سازمان.',
+  1122→        students: '۷۱۷ دانشجو',
+  1123→        rating: '۴.۷',
+  1124→        slot: 'ar-p-best-3',
+  1125→        href: '/tools',
+  1126→      },
+  1127→      {
+  1128→        title: 'بسته مدیر تازه‌وارد',
+  1129→        category: 'بسته حرفه‌ای',
+  1130→        badge: 'پرفروش',
+  1131→        badgeClass: 'bg-violet-600 text-white',
+  1132→        categoryClass: 'bg-orange-100 text-orange-600',
+  1133→        icon: 'lucide:briefcase',
+  1134→        desc: 'مجموعه‌ای کامل از دوره‌ها، ابزارها و راهنماهای ضروری برای موفقیت در نقش مدیر جدید.',
+  1135→        students: '۴۷۶ دانشجو',
+  1136→        rating: '۴.۹',
+  1137→        slot: 'ar-p-best-4',
+  1138→        href: '/master-list',
+  1139→      },
+  1140→    ],
+  1141→  },
+  1142→  {
+  1143→    id: 'soon',
+  1144→    label: 'به‌زودی',
+  1145→    icon: 'lucide:calendar-clock',
+  1146→    items: [
+  1147→      {
+  1148→        title: 'داشبورد شاخص‌های منابع انسانی',
+  1149→        category: 'ابزار',
+  1150→        desc: 'تصویری یکپارچه از شاخص‌های کلیدی HR برای تصمیم‌گیری سریع‌تر',
+  1151→        students: 'به‌زودی',
+  1152→        rating: '—',
+  1153→        slot: 'ar-p-soon-1',
+  1154→        href: '/tools',
+  1155→      },
+  1156→      {
+  1157→        title: 'دوره مصاحبه رفتاری ساختاریافته',
+  1158→        category: 'دوره آموزشی',
+  1159→        desc: 'طراحی سؤال، ارزیابی پاسخ و کاهش خطای قضاوت در مصاحبه استخدامی',
+  1160→        students: 'به‌زودی',
+  1161→        rating: '—',
+  1162→        slot: 'ar-p-soon-2',
+  1163→        href: '/courses',
+  1164→      },
+  1165→      {
+  1166→        title: 'ایجنت تحلیل نظرسنجی کارکنان',
+  1167→        category: 'ایجنت هوشمند',
+  1168→        desc: 'نتایج نظرسنجی را تحلیل و اولویت‌های بهبود را پیشنهاد می‌کند',
+  1169→        students: 'به‌زودی',
+  1170→        rating: '—',
+  1171→        slot: 'ar-p-soon-3',
+  1172→        href: '/agents',
+  1173→      },
+  1174→      {
+  1175→        title: 'بسته توسعه رهبران ارشد',
+  1176→        category: 'بسته آموزشی',
+  1177→        desc: 'برنامه توسعه رهبری برای لایه مدیران ارشد سازمان',
+  1178→        students: 'به‌زودی',
+  1179→        rating: '—',
+  1180→        slot: 'ar-p-soon-4',
+  1181→        href: '/master-list',
+  1182→      },
+  1183→    ],
+  1184→  },
+  1185→];
+  1186→
+  1187→export const productsDefaultTab = 'best';
+  1188→
+  1189→export const productsBand = {
+  1190→  icon: 'lucide:gift',
+  1191→  text: 'همین حالا عضو شوید و از تخفیف‌های ویژه و محتوای اختصاصی آریاز بهره‌مند شوید.',
+  1192→  cta: { label: 'مشاهده همه محصولات', href: '/master-list' },
+  1193→};
+  1194→
+  1195→export const productCtaLabel = 'مشاهده محصول';
+  1196→
+  1197→/* ── 5. Learning paths ──────────────────────────────────────── */
+  1198→
+  1199→export const pathsHeading = {
+  1200→  kicker: 'مسیرهای یادگیری هدفمند',
+  1201→  title: 'مسیر تسلط مهارت‌ها',
+  1202→  desc: 'مسیر رشد خود را انتخاب کنید و مرحله‌به‌مرحله از محتواها عبور کنید و درصد پیشرفت خود را ببینید.',
+  1203→};
+  1204→
+  1205→export const pathFeatures = [
+  1206→  {
+  1207→    title: 'محتوای متنوع',
+  1208→    desc: 'ترکیبی از دوره‌ها، ابزارها، تمرین‌ها\nو منابع کاربردی',
+  1209→    icon: 'lucide:monitor-play',
+  1210→  },
+  1211→  {
+  1212→    title: 'گواهینامه معتبر',
+  1213→    desc: 'با تکمیل هر مسیر گواهینامه\nمعتبر دریافت کنید',
+  1214→    icon: 'lucide:target',
+  1215→  },
+  1216→  {
+  1217→    title: 'پیگیری پیشرفت',
+  1218→    desc: 'پیشرفت خود را در هر مرحله\nمشاهده و تحلیل کنید',
+  1219→    icon: 'lucide:bar-chart-3',
+  1220→  },
+  1221→  {
+  1222→    title: 'یادگیری هدفمند',
+  1223→    desc: 'مسیرهای طراحی‌شده برای رسیدن\nبه مهارت‌های کلیدی',
+  1224→    icon: 'lucide:trophy',
+  1225→  },
+  1226→];
+  1227→
+  1228→export const pathsSubheading = 'مسیرهای پیشنهادی برای شما';
+  1229→
+  1230→export const pathsAllCta = { label: 'مشاهده همه مسیرها', href: '/learning-paths' };
+  1231→
+  1232→/** Card button copy — a started path says «ادامه», an untouched one «شروع». */
+  1233→export const pathCardCta = { started: 'ادامه مسیر', fresh: 'شروع مسیر' };
+  1234→
+  1235→export const learningPaths = [
+  1236→  { title: 'مسیر جذب و استخدام', category: 'منابع انسانی', steps: '۱۲', progress: 65, color: '#F97316', icon: 'lucide:users-round', started: true, featured: false },
+  1237→  { title: 'چطور مدیر شویم', category: 'مدیریت و رهبری', steps: '۱۰', progress: 70, color: '#F97316', icon: 'lucide:crown', started: true, featured: true },
+  1238→  { title: 'مدیریت خشم', category: 'توسعه فردی', steps: '۸', progress: 45, color: '#F97316', icon: 'lucide:brain', started: false, featured: false },
+  1239→  { title: 'کار با ایجنت‌ها', category: 'هوش مصنوعی', steps: '۹', progress: 30, color: '#F97316', icon: 'lucide:bot', started: false, featured: false },
+  1240→  { title: 'رهبری تیم و انگیزش', category: 'مدیریت و رهبری', steps: '۱۱', progress: 60, color: '#F97316', icon: 'lucide:mountain-snow', started: false, featured: false },
+  1241→];
+  1242→
+  1243→export const pathsBand = {
+  1244→  title: 'یادگیری ساختاریافته',
+  1245→  desc: 'هر مسیر شامل ترکیبی از دوره‌های آموزشی، ابزارهای کاربردی، تمرین‌های عملی و آزمون‌های ارزیابی است.',
+  1246→  icon: 'lucide:layers',
+  1247→  stats: [
+  1248→    { value: '+50', label: 'مسیر یادگیری', icon: 'lucide:book-open', tone: 'blue' as const },
+  1249→    { value: '+1200', label: 'محتوای آموزشی', icon: 'lucide:play-circle', tone: 'green' as const },
+  1250→    { value: '+85K', label: 'کاربر فعال', icon: 'lucide:users-round', tone: 'orange' as const },
+  1251→  ],
+  1252→};
+  1253→
+  1254→export const pathStepsLabel = 'مرحله';
+  1255→
+  1256→/* ── 6. Special offers ──────────────────────────────────────── */
+  1257→
+  1258→export const offersHeading = {
+  1259→  title: 'پیشنهاد ویژه',
+  1260→  latin: 'Special Offers',
+  1261→  desc: 'فرصت‌های استثنایی برای شروع مسیر رشد و ارتقای مهارت‌ها با بهترین شرایط',
+  1262→};
+  1263→
+  1264→/** Copy block beside the featured offer card. */
+  1265→export const offersIntro = {
+  1266→  title: 'فرصت امروز، موفقیت فردا',
+  1267→  lines: [
+  1268→    'پیشنهادهای منتخب آریاز با بهترین تخفیف‌ها',
+  1269→    'برای همراهی شما در مسیر رشد حرفه‌ای و سازمانی',
+  1270→  ],
+  1271→  slot: 'ar-offer-illo',
+  1272→  slotLabel: 'تصویر سه‌بعدی جعبه هدیه و برچسب تخفیف',
+  1273→};
+  1274→
+  1275→export const mainOffer = {
+  1276→  ribbonValue: '۳۰%',
+  1277→  ribbonLabel: 'تخفیف ویژه',
+  1278→  badge: 'پیشنهاد این ماه',
+  1279→  title: 'بسته توسعه مدیران حرفه‌ای',
+  1280→  subtitle: 'همه آنچه برای تبدیل شدن به یک مدیر موفق نیاز دارید',
+  1281→  includes: [
+  1282→    { icon: 'lucide:monitor-play', title: '۴ دوره آموزشی', sub: 'منتخب و کاربردی' },
+  1283→    { icon: 'lucide:briefcase', title: '۲ ابزار حرفه‌ای', sub: 'مخصوص مدیران' },
+  1284→    { icon: 'lucide:graduation-cap', title: 'مسیر یادگیری اختصاصی', sub: 'شخصی‌سازی شده' },
+  1285→    { icon: 'lucide:file-text', title: 'محتوای تکمیلی', sub: 'قابل دانلود' },
+  1286→  ],
+  1287→  price: '۸,۷۵۰,۰۰۰ تومان',
+  1288→  oldPrice: '۱۲,۵۰۰,۰۰۰ تومان',
+  1289→  cta: { label: 'مشاهده جزئیات و خرید', href: '/master-list' },
+  1290→};
+  1291→
+  1292→export const miniOffers = [
+  1293→  {
+  1294→    badge: 'پرفروش هفته',
+  1295→    badgeIcon: 'lucide:flame',
+  1296→    tone: 'orange' as const,
+  1297→    icon: 'lucide:bar-chart-3',
+  1298→    title: 'دوره مدیریت عملکرد',
+  1299→    desc: 'از طراحی تا ارزیابی موثر عملکرد',
+  1300→    discount: '۲۵% تخفیف',
+  1301→    href: '/courses',
+  1302→  },
+  1303→  {
+  1304→    badge: 'محصول جدید',
+  1305→    badgeIcon: 'mdi:new-box',
+  1306→    tone: 'green' as const,
+  1307→    icon: 'lucide:bot',
+  1308→    title: 'ایجنت طراحی KPI',
+  1309→    desc: 'هوش مصنوعی برای طراحی شاخص‌های عملکردی دقیق و هوشمند',
+  1310→    discount: '۱۵% تخفیف',
+  1311→    href: '/agents',
+  1312→  },
+  1313→  {
+  1314→    badge: 'بسته ویژه',
+  1315→    badgeIcon: 'lucide:gift',
+  1316→    tone: 'orange' as const,
+  1317→    icon: 'lucide:briefcase',
+  1318→    title: 'بسته جامع منابع انسانی',
+  1319→    desc: 'مجموعه کامل دوره‌ها، ابزارها و فرم‌های حرفه‌ای HR',
+  1320→    discount: '۲۵% تخفیف',
+  1321→    href: '/master-list',
+  1322→  },
+  1323→];
+  1324→
+  1325→export const offersBand = {
+  1326→  title: 'فرصت محدود!',
+  1327→  text: 'این پیشنهادها فقط تا پایان این ماه معتبر هستند.',
+  1328→  cta: { label: 'مشاهده همه پیشنهادها', href: '/master-list' },
+  1329→};
+  1330→
+  1331→/* ── 7. News ────────────────────────────────────────────────── */
+  1332→
+  1333→export const newsHeading = {
+  1334→  title: 'تازه‌های آریاز',
+  1335→  desc: 'آخرین دوره‌ها، ابزارها، ایجنت‌ها و مقالات جدیدی که به پلتفرم آریاز اضافه شده‌اند.',
+  1336→};
+  1337→
+  1338→export const newsTabs = [
+  1339→  { id: 'all', label: 'همه', icon: '' },
+  1340→  { id: 'learning', label: 'یادگیری', icon: 'lucide:graduation-cap' },
+  1341→  { id: 'tools', label: 'ابزار و ایجنت‌ها', icon: 'lucide:briefcase' },
+  1342→  { id: 'articles', label: 'مقالات', icon: 'lucide:file-pen-line' },
+  1343→  { id: 'notices', label: 'اطلاعیه‌ها', icon: 'lucide:megaphone' },
+  1344→];
+  1345→
+  1346→export const newsTimeline = [
+  1347→  { kind: 'دوره جدید', title: 'دوره مدیریت عملکرد حرفه‌ای', date: '۲۹ مرداد ۱۴۰۵' },
+  1348→  { kind: 'ابزار جدید', title: 'ایجنت طراحی KPI هوشمند', date: '۲۲ مرداد ۱۴۰۵' },
+  1349→  { kind: 'ابزار جدید', title: 'ماشین حساب حقوق و مزایا', date: '۲۰ مرداد ۱۴۰۵' },
+  1350→  { kind: 'اطلاعیه جدید', title: 'اضافه شدن مسیرهای یادگیری', date: '۱۸ مرداد ۱۴۰۵' },
+  1351→];
+  1352→
+  1353→export const newsTimelineTitle = 'آخرین به‌روزرسانی‌ها';
+  1354→
+  1355→export const newsTimelineCta = { label: 'مشاهده همه', href: '/news' };
+  1356→
+  1357→export const newsCards = [
+  1358→  {
+  1359→    tab: 'notices',
+  1360→    badge: 'اطلاعیه',
+  1361→    title: 'اضافه شدن مسیرهای یادگیری جدید',
+  1362→    desc: 'مسیرهای تخصصی جدید در حوزه‌های مدیریت، منابع انسانی و توسعه فردی به پلتفرم آریاز اضافه شد.',
+  1363→    date: '۱۸ مرداد ۱۴۰۵',
+  1364→    cta: 'مشاهده اطلاعیه',
+  1365→    icon: 'lucide:megaphone',
+  1366→    color: '#F97316',
+  1367→    href: '/learning-paths',
+  1368→  },
+  1369→  {
+  1370→    tab: 'tools',
+  1371→    badge: 'ابزار جدید',
+  1372→    title: 'ماشین حساب حقوق و مزایا',
+  1373→    desc: 'محاسبه سریع و دقیق حقوق و مزایا بر اساس قوانین به‌روز تأمین اجتماعی.',
+  1374→    date: '۲۰ مرداد ۱۴۰۵',
+  1375→    cta: 'استفاده از ابزار',
+  1376→    icon: 'lucide:calculator',
+  1377→    color: '#F97316',
+  1378→    href: '/salary-calculator',
+  1379→  },
+  1380→  {
+  1381→    tab: 'tools',
+  1382→    badge: 'ابزار جدید',
+  1383→    title: 'ایجنت طراحی KPI هوشمند',
+  1384→    desc: 'طراحی شاخص‌های عملکردی با کمک هوش مصنوعی در چند دقیقه.',
+  1385→    date: '۲۲ مرداد ۱۴۰۵',
+  1386→    cta: 'مشاهده ابزار',
+  1387→    icon: 'lucide:bot',
+  1388→    color: '#F97316',
+  1389→    href: '/agents',
+  1390→  },
+  1391→  {
+  1392→    tab: 'learning',
+  1393→    badge: 'دوره جدید',
+  1394→    title: 'دوره مدیریت عملکرد حرفه‌ای',
+  1395→    desc: 'آشنایی با طراحی، اجرا و بهبود سیستم مدیریت عملکرد کارکنان در سازمان‌ها.',
+  1396→    date: '۲۹ مرداد ۱۴۰۵',
+  1397→    cta: 'مشاهده دوره',
+  1398→    icon: 'lucide:graduation-cap',
+  1399→    color: '#F97316',
+  1400→    href: '/courses',
+  1401→  },
+  1402→];
+  1403→
+  1404→export const newsBand = {
+  1405→  title: 'هیچ به‌روزرسانی را از دست ندهید!',
+  1406→  desc: 'برای دریافت جدیدترین ابزارها، دوره‌ها، ایجنت‌ها و مقالات آریاز در خبرنامه ما عضو شوید.',
+  1407→  cta: { label: 'عضویت در خبرنامه', href: '/support' },
+  1408→};
+  1409→
+  1410→/* ── 8. Testimonials ────────────────────────────────────────── */
+  1411→
+  1412→export const testimonialsHeading = {
+  1413→  title: 'تجربه کسانی که با آریاز رشد کرده‌اند',
+  1414→  desc: 'بازخورد مدیران، متخصصان منابع انسانی و یادگیرندگان از مسیرهای توسعه آریاز',
+  1415→};
+  1416→
+  1417→export const testimonialTabs = [
+  1418→  { id: 'learner', label: 'تجربه یادگیرندگان', icon: 'lucide:graduation-cap' },
+  1419→  { id: 'org', label: 'تجربه سازمان‌ها', icon: 'lucide:building-2' },
+  1420→];
+  1421→
+  1422→export interface Testimonial {
+  1423→  /** Which tab the quote belongs to. */
+  1424→  kind: 'learner' | 'org';
+  1425→  /** Full quote, shown on the featured card. */
+  1426→  quote: string;
+  1427→  /** Condensed quote for the faded side previews. */
+  1428→  short: string;
+  1429→  name: string;
+  1430→  role: string;
+  1431→  org?: string;
+  1432→  avatarSlot: string;
+  1433→  /** Company mark, shown beside the name when available. */
+  1434→  logoSlot?: string;
+  1435→}
+  1436→
+  1437→export const testimonials: Testimonial[] = [
+  1438→  {
+  1439→    quote:
+  1440→      'دوره طراحی سیستم عملکرد آریاز کمک کرد فرآیند ارزیابی سازمان ما از حالت سنتی به یک سیستم قابل اندازه‌گیری تبدیل شود.',
+  1441→    short: 'فرآیند ارزیابی سازمان ما از حالت سنتی به یک سیستم قابل اندازه‌گیری تبدیل شد.',
+  1442→    kind: 'learner',
+  1443→    name: 'مهدی احمدی',
+  1444→    role: 'مدیر منابع انسانی',
+  1445→    org: 'شرکت سن‌ایچ',
+  1446→    avatarSlot: 'ar-t-main-1',
+  1447→    logoSlot: 'ar-t-logo-1',
+  1448→  },
+  1449→  {
+  1450→    quote:
+  1451→      'مسیر یادگیری مدیریت تیم باعث شد نگاه من به مدیریت افراد کاملاً تغییر کند؛ حالا برای هر گفتگوی دشوار چارچوب روشنی دارم.',
+  1452→    short: 'مسیر یادگیری مدیریت تیم باعث شد نگاه من به مدیریت افراد کاملاً تغییر کند.',
+  1453→    kind: 'learner',
+  1454→    name: 'سارا محمدی',
+  1455→    role: 'کارشناس منابع انسانی',
+  1456→    org: 'گروه صنعتی بارکا',
+  1457→    avatarSlot: 'ar-t-main-2',
+  1458→    logoSlot: 'ar-t-logo-2',
+  1459→  },
+  1460→  {
+  1461→    quote:
+  1462→      'محتوای دوره‌ها بسیار کاربردی و متناسب با نیازهای واقعی سازمان طراحی شده است و تیم آموزش ما دیگر دنبال منابع پراکنده نمی‌گردد.',
+  1463→    short: 'محتوای دوره‌ها بسیار کاربردی و متناسب با نیازهای واقعی سازمان طراحی شده است.',
+  1464→    kind: 'learner',
+  1465→    name: 'علی شریفی',
+  1466→    role: 'مدیر آموزش و توسعه',
+  1467→    org: 'بیمه ملت',
+  1468→    avatarSlot: 'ar-t-main-3',
+  1469→    logoSlot: 'ar-t-logo-3',
+  1470→  },
+  1471→  {
+  1472→    quote:
+  1473→      'طراحی نظام جبران خدمات با آریاز، شفافیتی به ساختار پرداخت ما داد که سال‌ها دنبالش بودیم. همراهی تیم تا مرحله اجرا ادامه داشت.',
+  1474→    short: 'طراحی نظام جبران خدمات، شفافیتی به ساختار پرداخت ما داد که سال‌ها دنبالش بودیم.',
+  1475→    kind: 'org',
+  1476→    name: 'گروه صنعتی گلرنگ',
+  1477→    role: 'واحد منابع انسانی',
+  1478→    avatarSlot: 'ar-t-main-4',
+  1479→    logoSlot: 'ar-t-logo-4',
+  1480→  },
+  1481→  {
+  1482→    quote:
+  1483→      'دوره‌های درون‌سازمانی آریاز متناسب با نیاز واقعی ما بازطراحی شد، نه یک بسته آماده. تفاوت در نتیجه کاملاً محسوس بود.',
+  1484→    short: 'دوره‌های درون‌سازمانی متناسب با نیاز واقعی ما بازطراحی شد، نه یک بسته آماده.',
+  1485→    kind: 'org',
+  1486→    name: 'بیمه ملت',
+  1487→    role: 'مدیریت آموزش',
+  1488→    avatarSlot: 'ar-t-main-5',
+  1489→    logoSlot: 'ar-t-logo-5',
+  1490→  },
+  1491→  {
+  1492→    quote:
+  1493→      'ایجنت‌های سازمانی آریاز بخش بزرگی از کارهای تکراری واحد منابع انسانی را برداشتند و تیم توانست روی توسعه کارکنان تمرکز کند.',
+  1494→    short: 'ایجنت‌های سازمانی بخش بزرگی از کارهای تکراری واحد منابع انسانی را برداشتند.',
+  1495→    kind: 'org',
+  1496→    name: 'گروه صنعتی بارکا',
+  1497→    role: 'دفتر تحول سازمانی',
+  1498→    avatarSlot: 'ar-t-main-6',
+  1499→    logoSlot: 'ar-t-logo-6',
+  1500→  },
+  1501→];
+  1502→
+  1503→export const testimonialStats = [
+  1504→  {
+  1505→    value: '+25,000',
+  1506→    label: 'یادگیرنده',
+  1507→    sub: 'در مسیر رشد و توسعه فردی و شغلی',
+  1508→    icon: 'lucide:users-round',
+  1509→  },
+  1510→  {
+  1511→    value: '+500',
+  1512→    label: 'سازمان همراه',
+  1513→    sub: 'در صنایع مختلف با آریاز همکاری دارند',
+  1514→    icon: 'lucide:building-2',
+  1515→  },
+  1516→  {
+  1517→    value: '98%',
+  1518→    label: 'رضایت کاربران',
+  1519→    sub: 'از کیفیت دوره‌ها و خدمات آریاز',
+  1520→    icon: 'lucide:smile',
+  1521→  },
+  1522→];
+  1523→
+  1524→export const testimonialsClosing =
+  1525→  'اعتماد شما، نیروی ما برای ساختن آینده بهتر منابع انسانی در ایران';
+  1526→
+  1527→/* ── Articles ───────────────────────────────────────────────── */
+  1528→
+  1529→export const articlesHeading = {
+  1530→  title: 'آخرین مقالات آریاز',
+  1531→  desc: 'تحلیل‌ها، تجربه‌ها و راهکارهای کاربردی برای توسعه انسان‌ها و سازمان‌ها',
+  1532→};
+  1533→
+  1534→export const articleTabs = [
+  1535→  { id: 'all', label: 'همه', icon: 'lucide:layers' },
+  1536→  { id: 'hr', label: 'منابع انسانی', icon: 'lucide:users-round' },
+  1537→  { id: 'lead', label: 'مدیریت و رهبری', icon: 'lucide:crown' },
+  1538→  { id: 'self', label: 'توسعه فردی', icon: 'lucide:user-round' },
+  1539→  { id: 'ai', label: 'هوش مصنوعی', icon: 'lucide:bot' },
+  1540→];
+  1541→
+  1542→export const featuredArticle = {
+  1543→  tab: 'hr',
+  1544→  badge: 'منابع انسانی',
+  1545→  title: 'چگونه یک سیستم عملکرد اثربخش طراحی کنیم؟',
+  1546→  desc: 'راهنمای گام‌به‌گام طراحی سیستم ارزیابی عملکرد که انگیزه ایجاد می‌کند، رفتارها را بهبود می‌دهد و به رشد سازمان کمک می‌کند.',
+  1547→  date: '۲۵ مرداد ۱۴۰۵',
+  1548→  readTime: '۱۲ دقیقه مطالعه',
+  1549→  slot: 'ar-art-feature',
+  1550→  cta: { label: 'مطالعه مقاله', href: '/articles' },
+  1551→};
+  1552→
+  1553→export const articleList = [
+  1554→  {
+  1555→    tab: 'hr',
+  1556→    badge: 'منابع انسانی',
+  1557→    title: 'طراحی مسیر شغلی کارکنان: از تئوری تا اجرا',
+  1558→    date: '۲۲ مرداد ۱۴۰۵',
+  1559→    readTime: '۸ دقیقه مطالعه',
+  1560→    slot: 'ar-art-1',
+  1561→    href: '/articles',
+  1562→  },
+  1563→  {
+  1564→    tab: 'ai',
+  1565→    badge: 'هوش مصنوعی',
+  1566→    title: 'چگونه AI Agentها منابع انسانی را متحول می‌کنند؟',
+  1567→    date: '۲۰ مرداد ۱۴۰۵',
+  1568→    readTime: '۶ دقیقه مطالعه',
+  1569→    slot: 'ar-art-2',
+  1570→    href: '/articles',
+  1571→  },
+  1572→  {
+  1573→    tab: 'lead',
+  1574→    badge: 'مدیریت و رهبری',
+  1575→    title: '۷ اشتباه رایج در طراحی KPI که نتیجه را خراب می‌کنند',
+  1576→    date: '۱۸ مرداد ۱۴۰۵',
+  1577→    readTime: '۷ دقیقه مطالعه',
+  1578→    slot: 'ar-art-3',
+  1579→    href: '/articles',
+  1580→  },
+  1581→];
+  1582→
+  1583→export const articlesBand = {
+  1584→  slot: 'ar-art-band',
+  1585→  title: 'دنیای دانش آریاز همیشه به‌روز است!',
+  1586→  text: 'مقالات تخصصی، تحلیل‌ها و تجربیات کاربردی برای رشد فردی و سازمانی شما.',
+  1587→  cta: { label: 'مشاهده همه مقالات', href: '/articles' },
+  1588→};
+  1589→
+  1590→/* ── Leaderboard ────────────────────────────────────────────── */
+  1591→
+  1592→export const leaderboardHeading = {
+  1593→  kicker: 'رنکینگ کاربران',
+  1594→  title: 'قهرمانان مسیر یادگیری آریاز',
+  1595→  desc: 'یادگیرندگانی که با استمرار، یادگیری و پیشرفت، مسیر رشد خود را سریع‌تر طی کرده‌اند.',
+  1596→};
+  1597→
+  1598→export const leaderboardStats = [
+  1599→  { value: '+۲۵,۰۰۰', label: 'یادگیرنده فعال', sub: 'در حال یادگیری و رشد', slot: 'ar-lb-stat-1' },
+  1600→  { value: '+۱۲۰,۰۰۰', label: 'امتیاز کسب شده', sub: 'در بین همه کاربران', slot: 'ar-lb-stat-2' },
+  1601→  { value: '+۸,۵۰۰', label: 'مسیر یادگیری تکمیل شده', sub: 'در دوره‌ها و مسیرهای مختلف', slot: 'ar-lb-stat-3' },
+  1602→];
+  1603→
+  1604→export const leaderboardTabs = [
+  1605→  { id: 'top', label: 'برترین‌ها', icon: 'lucide:crown' },
+  1606→  { id: 'progress', label: 'بیشترین پیشرفت', icon: 'lucide:trending-up' },
+  1607→  { id: 'active', label: 'فعال‌ترین‌ها', icon: 'lucide:flame' },
+  1608→];
+  1609→
+  1610→export const podium = [
+  1611→  { rank: 2, name: 'سارا یوسفی', level: 'سطح: متخصص', tone: 'blue', score: '۹,۶۷۰', slot: 'ar-lb-p2' },
+  1612→  { rank: 1, name: 'محمد احمدی', level: 'سطح: استاد آریاز', tone: 'gold', score: '۱۲,۸۵۰', slot: 'ar-lb-p1' },
+  1613→  { rank: 3, name: 'علی رضایی', level: 'سطح: در حال رشد', tone: 'green', score: '۷,۴۳۰', slot: 'ar-lb-p3' },
+  1614→];
+  1615→
+  1616→export const leaderboardTable = {
+  1617→  columns: ['رتبه', 'کاربر', 'سطح', 'امتیاز', 'مسیرهای تکمیل شده'],
+  1618→  rows: [
+  1619→    { rank: '۴', name: 'مهدی کریمی', level: 'متخصص', tone: 'amber', score: '۶,۲۳۰', paths: '۱۲ مسیر', progress: 82, slot: 'ar-lb-p1' },
+  1620→    { rank: '۵', name: 'نگار حسینی', level: 'در حال رشد', tone: 'blue', score: '۵,۴۸۰', paths: '۹ مسیر', progress: 64, slot: 'ar-lb-p2' },
+  1621→    { rank: '۶', name: 'امیرحسین نوری', level: 'در حال رشد', tone: 'blue', score: '۴,۸۷۰', paths: '۸ مسیر', progress: 52, slot: 'ar-lb-p3' },
+  1622→    { rank: '۷', name: 'الهام محمدی', level: 'شروع مسیر', tone: 'green', score: '۳,۹۲۰', paths: '۶ مسیر', progress: 36, slot: 'ar-lb-p2' },
+  1623→  ],
+  1624→};
+  1625→
+  1626→export const competitiveMetrics = {
+  1627→  title: 'شاخص‌های رقابتی',
+  1628→  items: [
+  1629→    { title: 'برترین دانشجویان', sub: 'کاربرانی با بیشترین امتیاز', slot: 'ar-lb-metric-1' },
+  1630→    { title: 'بیشترین پیشرفت', sub: 'کاربرانی با بیشترین رشد', slot: 'ar-lb-metric-2' },
+  1631→    { title: 'فعال‌ترین کاربران', sub: 'کاربرانی با بیشترین تعامل', slot: 'ar-lb-metric-3' },
+  1632→    { title: 'کامل‌ترین مسیرها', sub: 'کاربرانی با بیشترین مسیر تکمیل شده', slot: 'ar-lb-metric-4' },
+  1633→  ],
+  1634→};
+  1635→
+  1636→export const growthLevels = {
+  1637→  title: 'سطح‌های رشد در آریاز',
+  1638→  items: [
+  1639→    { label: 'شروع مسیر', sub: 'تازه‌وارد مسیر یادگیری', icon: 'lucide:sprout', tone: 'green' },
+  1640→    { label: 'در حال رشد', sub: 'یادگیری مستمر و پیشرفت خوب', icon: 'lucide:zap', tone: 'orange' },
+  1641→    { label: 'متخصص', sub: 'تسلط بر مباحث و مهارت‌ها', icon: 'lucide:star', tone: 'amber' },
+  1642→    { label: 'استاد', sub: 'تجربه بالا و کمک به دیگران', icon: 'lucide:crown', tone: 'purple' },
+  1643→  ],
+  1644→};
+  1645→
+  1646→export const leaderboardBand = {
+  1647→  slot: 'ar-lb-band',
+  1648→  title: 'مسیر یادگیری خود را شروع کنید',
+  1649→  lines: [
+  1650→    'با یادگیری، امتیاز کسب کنید، در رنکینگ‌ها بدرخشید',
+  1651→    'و به جمع برترین‌های آریاز بپیوندید',
+  1652→  ],
+  1653→  cta: { label: 'شروع مسیر یادگیری و کسب امتیاز', href: '/learning-paths' },
+  1654→};
+  1655→
+  1656→/* ── Why Ariyaz ─────────────────────────────────────────────── */
+  1657→
+  1658→export const whyHeading = {
+  1659→  title: 'چرا آریاز؟',
+  1660→  desc: 'یک پلتفرم یکپارچه برای رشد انسان‌ها و تحول سازمان‌ها',
+  1661→};
+  1662→
+  1663→export const whyReasons = [
+  1664→  {
+  1665→    n: '۱',
+  1666→    title: 'تجربه واقعی',
+  1667→    desc: 'بیش از یک دهه تجربه در کنار سازمان‌ها و درک عمیق از چالش‌های منابع انسانی',
+  1668→    icon: 'lucide:users-round',
+  1669→  },
+  1670→  {
+  1671→    n: '۲',
+  1672→    title: 'یادگیری کاربردی',
+  1673→    desc: 'محتواهایی که از تجربه واقعی کسب‌وکار و نیازهای روز سازمان‌ها ساخته شده‌اند',
+  1674→    icon: 'lucide:graduation-cap',
+  1675→  },
+  1676→  {
+  1677→    n: '۳',
+  1678→    title: 'هوشمندی AI',
+  1679→    desc: 'ایجنت‌ها و ابزارهای هوشمند برای تحلیل، تصمیم‌گیری و سرعت بخشیدن به کارها',
+  1680→    icon: 'lucide:bot',
+  1681→  },
+  1682→  {
+  1683→    n: '۴',
+  1684→    title: 'مسیرهای توسعه',
+  1685→    desc: 'از یادگیری پراکنده تا مسیر رشد مرحله‌به‌مرحله و هدفمند',
+  1686→    icon: 'lucide:route',
+  1687→  },
+  1688→  {
+  1689→    n: '۵',
+  1690→    title: 'همراهی تا اجرا',
+  1691→    desc: 'فقط آموزش نیست؛ در کنار شما هستیم تا راهکارها به نتایج واقعی در سازمان تبدیل شوند',
+  1692→    icon: 'lucide:handshake',
+  1693→  },
+  1694→];
+  1695→
+  1696→export const whyTrust = {
+  1697→  title: 'چرا سازمان‌ها به ما اعتماد دارند؟',
+  1698→  items: [
+  1699→    'رویکرد علمی و کاربردی',
+  1700→    'تخصصی و همراه',
+  1701→    'راهکارهای قابل اجرا',
+  1702→    'پشتیبانی مستمر',
+  1703→  ],
+  1704→};
+  1705→
+  1706→export const whyStats = [
+  1707→  { value: '+25,000', label: 'یادگیرنده فعال', sub: 'در سراسر کشور', icon: 'lucide:users-round' },
+  1708→  { value: '+500', label: 'سازمان همراه', sub: 'در صنایع مختلف', icon: 'lucide:building-2' },
+  1709→  { value: '+2,000', label: 'ساعت محتوای آموزشی', sub: 'به‌روز و کاربردی', icon: 'lucide:monitor-play' },
+  1710→  { value: '+80,000', label: 'گواهینامه صادر شده', sub: 'برای یادگیرندگان', icon: 'lucide:award' },
+  1711→  { value: '98%', label: 'رضایت کاربران', sub: 'از کیفیت خدمات', icon: 'lucide:smile' },
+  1712→];
+  1713→
+  1714→export const whyBand = {
+  1715→  title: 'همراه مطمئن شما در مسیر رشد و تحول',
+  1716→  text: 'با آریاز، یادگیری را به نتایج واقعی تبدیل کنید.',
+  1717→  cta: { label: 'شروع مسیر رشد', href: '/learning-paths' },
+  1718→};
+  1719→
+  1720→/* ── Instructors ────────────────────────────────────────────── */
+  1721→
+  1722→export const instructorsHeading = {
+  1723→  kicker: 'معرفی مدرس‌ها',
+  1724→  title: 'مدرس‌های آریاز',
+  1725→  desc: 'یادگیری از متخصصانی که تجربه واقعی کسب‌وکار را با شما به اشتراک می‌گذارند',
+  1726→};
+  1727→
+  1728→export const instructorTabs = [
+  1729→  { id: 'all', label: 'همه مدرس‌ها', icon: 'lucide:users-round' },
+  1730→  { id: 'hr', label: 'منابع انسانی', icon: 'lucide:user-round' },
+  1731→  { id: 'lead', label: 'مدیریت و رهبری', icon: 'lucide:crown' },
+  1732→  { id: 'self', label: 'توسعه فردی', icon: 'lucide:target' },
+  1733→  { id: 'ai', label: 'هوش مصنوعی', icon: 'lucide:bot' },
+  1734→];
+  1735→
+  1736→export const instructors = [
+  1737→  {
+  1738→    tab: 'hr',
+  1739→    badge: 'مدرس ارشد',
+  1740→    tone: 'orange',
+  1741→    name: 'دکتر سامان مصباح',
+  1742→    role: 'متخصص نظام‌های منابع انسانی و استراتژی HR',
+  1743→    rating: '4.9',
+  1744→    reviews: '( ۳۵۶ نظر )',
+  1745→    students: '۳,۴۰۰+',
+  1746→    courses: '۱۴',
+  1747→    slot: 'ar-ins-1',
+  1748→  },
+  1749→  {
+  1750→    tab: 'hr',
+  1751→    badge: 'متخصص HR',
+  1752→    tone: 'blue',
+  1753→    name: 'مهندس ندا رضایی',
+  1754→    role: 'مشاور و مدرس توسعه سازمانی و مدیریت عملکرد',
+  1755→    rating: '4.8',
+  1756→    reviews: '( ۲۸۹ نظر )',
+  1757→    students: '۲,۸۵۰+',
+  1758→    courses: '۱۱',
+  1759→    slot: 'ar-ins-2',
+  1760→  },
+  1761→  {
+  1762→    tab: 'self',
+  1763→    badge: 'مدرس منتخب',
+  1764→    tone: 'purple',
+  1765→    name: 'دکتر علیرضا نوری',
+  1766→    role: 'متخصص توسعه فردی و رهبری و کوچ حرفه‌ای',
+  1767→    rating: '4.9',
+  1768→    reviews: '( ۴۱۴ نظر )',
+  1769→    students: '۴,۱۰۰+',
+  1770→    courses: '۱۳',
+  1771→    slot: 'ar-ins-3',
+  1772→  },
+  1773→  {
+  1774→    tab: 'ai',
+  1775→    badge: 'متخصص AI',
+  1776→    tone: 'green',
+  1777→    name: 'مهندس امیر حیدری',
+  1778→    role: 'متخصص هوش مصنوعی و تحلیل داده',
+  1779→    rating: '4.7',
+  1780→    reviews: '( ۲۲۱ نظر )',
+  1781→    students: '۲,۲۰۰+',
+  1782→    courses: '۹',
+  1783→    slot: 'ar-ins-4',
+  1784→  },
+  1785→];
+  1786→
+  1787→export const instructorLabels = {
+  1788→  students: 'دانشجو',
+  1789→  courses: 'دوره آموزشی',
+  1790→  profile: 'مشاهده پروفایل',
+  1791→};
+  1792→
+  1793→export const instructorsBand = {
+  1794→  slot: 'ar-ins-band',
+  1795→  title: 'تجربه واقعی، آموزش واقعی',
+  1796→  text: 'مدرس‌های آریاز از میان مدیران ارشد، مشاوران و متخصصانی انتخاب شده‌اند که تجربه عملی و نتایج واقعی دارند.',
+  1797→  stats: [
+  1798→    { value: '+۱۰', label: 'سال تجربه', icon: 'lucide:award' },
+  1799→    { value: '+۲۵,۰۰۰', label: 'یادگیرنده فعال', icon: 'lucide:users-round' },
+  1800→    { value: '+۲۰۰', label: 'دوره آموزشی', icon: 'lucide:monitor-play' },
+  1801→    { value: '+۵۰', label: 'مدرس متخصص', icon: 'lucide:user-round' },
+  1802→  ],
+  1803→  cta: { label: 'مشاهده همه مدرس‌ها', href: '/agents' },
+  1804→};
+  1805→
+  1806→/* ── Footer ─────────────────────────────────────────────────── */
+  1807→
+  1808→/** Pre-footer conversion banner. */
+  1809→export const footerCta = {
+  1810→  slot: 'ar-footer-cta',
+  1811→  title: 'آماده‌اید مسیر رشد خود را شروع کنید؟',
+  1812→  text: 'با آریاز، مهارت‌های خود را ارتقا دهید و آینده شغلی و سازمانی خود را بسازید.',
+  1813→  primary: { label: 'شروع یادگیری', href: '/courses', icon: 'lucide:user-round' },
+  1814→  secondary: { label: 'درخواست مشاوره سازمانی', href: '/org', icon: 'lucide:building-2' },
+  1815→};
+  1816→
+  1817→export const footerBrand = {
+  1818→  headline: ['رشد انسان‌ها،', 'توانمندسازی سازمان‌ها'],
+  1819→  desc: 'پلتفرم یکپارچه یادگیری، توسعه فردی و راهکارهای سازمانی برای رشد فردی و سازمانی شما.',
+  1820→};
+  1821→
+  1822→export const footerColumns = [
+  1823→  {
+  1824→    title: 'دسترسی سریع',
+  1825→    links: [
+  1826→      { label: 'دوره‌ها', href: '/courses', icon: 'lucide:monitor-play' },
+  1827→      { label: 'مسیرهای یادگیری', href: '/learning-paths', icon: 'lucide:route' },
+  1828→      { label: 'ابزارهای رایگان', href: '/library', icon: 'lucide:gift' },
+  1829→      { label: 'ایجنت‌های هوشمند', href: '/agents', icon: 'lucide:bot' },
+  1830→      { label: 'مقالات', href: '/articles', icon: 'lucide:file-pen-line' },
+  1831→    ],
+  1832→  },
+  1833→  {
+  1834→    title: 'برای سازمان‌ها',
+  1835→    links: [
+  1836→      { label: 'خدمات سازمانی', href: '/org', icon: 'lucide:briefcase' },
+  1837→      { label: 'مشاوره منابع انسانی', href: '/org', icon: 'lucide:users-round' },
+  1838→      { label: 'طراحی سیستم‌های HR', href: '/org', icon: 'lucide:settings' },
+  1839→      { label: 'توسعه مدیران', href: '/learning-paths', icon: 'lucide:user-round' },
+  1840→    ],
+  1841→  },
+  1842→  {
+  1843→    title: 'پشتیبانی و قوانین',
+  1844→    links: [
+  1845→      { label: 'تماس با ما', href: '/support', icon: 'lucide:headphones' },
+  1846→      { label: 'سوالات متداول', href: '/support', icon: 'lucide:circle-help' },
+  1847→      { label: 'استعلام گواهینامه', href: '/support', icon: 'lucide:file-text' },
+  1848→      { label: 'قوانین و مقررات', href: '/laws', icon: 'lucide:scale' },
+  1849→      { label: 'حریم خصوصی', href: '/laws', icon: 'lucide:shield-check' },
+  1850→    ],
+  1851→  },
+  1852→];
+  1853→
+  1854→export const footerTrust = [
+  1855→  { title: 'پرداخت امن', sub: 'Secure Payment', icon: 'lucide:credit-card' },
+  1856→  { title: 'SSL', sub: 'Secure Connection', icon: 'lucide:lock' },
+  1857→  { title: 'نماد اعتماد الکترونیکی', sub: 'enamad.ir', icon: 'lucide:badge-check' },
+  1858→];
+  1859→
+  1860→export const footerContact = {
+  1861→  title: 'ارتباط با ما',
+  1862→  phone: { value: '۰۲۱-۹۱۰۱۷۱۳۴', href: 'tel:02191017134', icon: 'lucide:phone' },
+  1863→  mobile: { value: '۰۹۱۲ ۱۳۳ ۴۶۶۷', href: 'tel:09121334667', icon: 'ic:baseline-whatsapp' },
+  1864→  address: {
+  1865→    value: 'تهران، خیابان ولیعصر، بالاتر از میدان ونک، خیابان شهید خدامی، پلاک ۱۴ واحد ۴',
+  1866→    icon: 'lucide:map-pin',
+  1867→  },
+  1868→};
+  1869→
+  1870→export const footerSocial = [
+  1871→  { label: 'LinkedIn', icon: 'mdi:linkedin', color: '#0A66C2', href: '#' },
+  1872→  { label: 'Instagram', icon: 'mdi:instagram', color: '#E4405F', href: '#' },
+  1873→  { label: 'Telegram', icon: 'mdi:telegram', color: '#26A5E4', href: '#' },
+  1874→  { label: 'WhatsApp', icon: 'ic:baseline-whatsapp', color: '#25D366', href: '#' },
+  1875→];
+  1876→
+  1877→export const footerLegal = {
+  1878→  copyright: '© ۱۴۰۵ آریاز. تمامی حقوق محفوظ است.',
+  1879→};
+  1880→
+  1881→/* ── Mobile sticky bottom bar ───────────────────────────────── */
+  1882→
+  1883→/* Bottom bar on mobile. `action: 'menu'` opens the drill-down sheet
+  1884→   instead of navigating; everything else is a destination. */
+  1885→export const mobileTabs: {
+  1886→  label: string;
+  1887→  icon: string;
+  1888→  iconActive?: string;
+  1889→  href?: string;
+  1890→  action?: 'menu';
+  1891→}[] = [
+  1892→  { label: 'حساب کاربری', icon: 'lucide:user-round', href: '/support' },
+  1893→  { label: 'جستجو', icon: 'lucide:search', href: '/search' },
+  1894→  { label: 'منو', icon: 'lucide:layout-grid', iconActive: 'lucide:x', action: 'menu' },
+  1895→  { label: 'خانه', icon: 'lucide:house', href: '/' },
+  1896→  { label: 'مشاوره', icon: 'lucide:handshake', href: '/org' },
+  1897→];
+  1898→
+  1899→/** Icon-tile colour per section, in the manner of an iOS settings list. */
+  1900→export const navTileColors: Record<string, string> = {
+  1901→  free: '#F97316',
+  1902→  courses: '#2563EB',
+  1903→  org: '#4F46E5',
+  1904→  tools: '#0D9488',
+  1905→  agents: '#7C3AED',
+  1906→  shop: '#E11D48',
+  1907→  membership: '#D97706',
+  1908→  salary: '#16A34A',
+  1909→  support: '#64748B',
+  1910→};
+  1911→

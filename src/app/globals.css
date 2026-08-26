@@ -1,0 +1,1527 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: #ffffff;
+  --color-foreground: #111827;
+  --color-primary: #F97316;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #F3F4F6;
+  --color-secondary-foreground: #1E293B;
+  --color-muted: #F9FAFB;
+  --color-muted-foreground: #6B7280;
+  --color-accent: #FFF7ED;
+  --color-accent-foreground: #9A3412;
+  --color-border: #E5E7EB;
+  --color-input: #E5E7EB;
+  --color-ring: #F97316;
+  --color-card: #ffffff;
+  --color-card-foreground: #111827;
+  --color-popover: #ffffff;
+  --color-popover-foreground: #111827;
+  --color-destructive: #EF4444;
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.625rem;
+  --radius-xl: 1rem;
+  --font-sans: 'Vazirmatn', system-ui, sans-serif;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    box-sizing: border-box;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Vazirmatn', system-ui, -apple-system, sans-serif;
+    direction: rtl;
+    overflow-x: hidden;
+  }
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .submenu-enter {
+    animation: submenuIn 0.2s ease-out;
+  }
+}
+
+/* ── Ariyaz wordmark — Poppins italic, LTR ── */
+.ar-wordmark {
+  font-family: 'Poppins', system-ui, sans-serif;
+  font-style: italic;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  direction: ltr;
+}
+
+/* ── Iconify CSS-mask icons ──
+   Colour comes from background-color, so `text-*` utilities
+   recolour them through currentColor. */
+.ar-icon {
+  display: inline-block;
+  flex-shrink: 0;
+  background-color: currentColor;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+/* ── Empty image placeholder ── */
+.ar-slot {
+  border: 1px dashed #e5e7eb;
+  background-color: #f9fafb;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(148, 163, 184, 0.06) 0 6px,
+    transparent 6px 12px
+  );
+}
+
+/* ── Horizontal swipe rails (mobile) ──
+   Display is left to Tailwind (`flex md:hidden`) so the
+   responsive `hidden` utility still wins. */
+.ar-rail {
+  gap: 0.75rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 0.5rem;
+}
+.ar-rail::-webkit-scrollbar {
+  display: none;
+}
+.ar-rail-item {
+  scroll-snap-align: start;
+}
+
+.ar-no-scrollbar {
+  scrollbar-width: none;
+}
+.ar-no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes submenuIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== Scroll-triggered animation keyframes ===== */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideRight {
+  from { opacity: 0; transform: translateX(-40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideLeft {
+  from { opacity: 0; transform: translateX(40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.85); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes scaleUp {
+  from { opacity: 0; transform: scale(0.6); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes rotateIn {
+  from { opacity: 0; transform: rotate(-10deg) scale(0.9); }
+  to { opacity: 1; transform: rotate(0deg) scale(1); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-6px) rotate(2deg); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.3); }
+  50% { box-shadow: 0 0 20px 8px rgba(249, 115, 22, 0.15); }
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes drawCircle {
+  from { stroke-dashoffset: 100; }
+}
+
+@keyframes bounceIn {
+  0% { opacity: 0; transform: scale(0.3); }
+  50% { opacity: 1; transform: scale(1.05); }
+  70% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+@keyframes heroTextReveal {
+  0% { opacity: 0; transform: translateY(30px) skewY(2deg); }
+  100% { opacity: 1; transform: translateY(0) skewY(0deg); }
+}
+
+@keyframes orbit {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes slideInFromRight {
+  from { opacity: 0; transform: translateX(60px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInFromLeft {
+  from { opacity: 0; transform: translateX(-60px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes progressGrow {
+  from { width: 0%; }
+}
+
+@keyframes timelineDraw {
+  from { height: 0; }
+  to { height: 100%; }
+}
+
+@keyframes staggerFadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(30px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes numberPop {
+  0% { opacity: 0; transform: scale(0.5); }
+  60% { transform: scale(1.15); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes badgePop {
+  0% { opacity: 0; transform: scale(0); }
+  60% { transform: scale(1.2); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes ripple {
+  0% { transform: scale(0); opacity: 0.5; }
+  100% { transform: scale(4); opacity: 0; }
+}
+
+/* ===== Animation utility classes ===== */
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.6s ease-out forwards;
+}
+
+.animate-slide-down {
+  animation: slideDown 0.6s ease-out forwards;
+}
+
+.animate-slide-right {
+  animation: slideRight 0.6s ease-out forwards;
+}
+
+.animate-slide-left {
+  animation: slideLeft 0.6s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.5s ease-out forwards;
+}
+
+.animate-scale-up {
+  animation: scaleUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.animate-rotate-in {
+  animation: rotateIn 0.5s ease-out forwards;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: floatSlow 4s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-bounce-in {
+  animation: bounceIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.animate-hero-text {
+  animation: heroTextReveal 0.8s ease-out forwards;
+}
+
+.animate-orbit {
+  animation: orbit 20s linear infinite;
+}
+
+.animate-number-pop {
+  animation: numberPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.animate-badge-pop {
+  animation: badgePop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.animate-gradient-shift {
+  background-size: 200% 200%;
+  animation: gradientShift 3s ease infinite;
+}
+
+/* ===== Delay utilities ===== */
+
+.delay-75 { animation-delay: 75ms; }
+.delay-100 { animation-delay: 100ms; }
+.delay-150 { animation-delay: 150ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+.delay-600 { animation-delay: 600ms; }
+.delay-700 { animation-delay: 700ms; }
+.delay-800 { animation-delay: 800ms; }
+.delay-1000 { animation-delay: 1000ms; }
+
+/* ===== Initial hidden state for scroll animations ===== */
+
+.scroll-hidden {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.scroll-hidden.scroll-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.scroll-hidden-left {
+  opacity: 0;
+  transform: translateX(-40px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.scroll-hidden-left.scroll-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.scroll-hidden-right {
+  opacity: 0;
+  transform: translateX(40px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.scroll-hidden-right.scroll-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.scroll-hidden-scale {
+  opacity: 0;
+  transform: scale(0.85);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+
+.scroll-hidden-scale.scroll-visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ===== Stagger children utility ===== */
+
+.stagger-children > * {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+
+.stagger-children.scroll-visible > *:nth-child(1) { transition-delay: 0ms; opacity: 1; transform: translateY(0); }
+.stagger-children.scroll-visible > *:nth-child(2) { transition-delay: 80ms; opacity: 1; transform: translateY(0); }
+.stagger-children.scroll-visible > *:nth-child(3) { transition-delay: 160ms; opacity: 1; transform: translateY(0); }
+.stagger-children.scroll-visible > *:nth-child(4) { transition-delay: 240ms; opacity: 1; transform: translateY(0); }
+.stagger-children.scroll-visible > *:nth-child(5) { transition-delay: 320ms; opacity: 1; transform: translateY(0); }
+.stagger-children.scroll-visible > *:nth-child(6) { transition-delay: 400ms; opacity: 1; transform: translateY(0); }
+.stagger-children.scroll-visible > *:nth-child(7) { transition-delay: 480ms; opacity: 1; transform: translateY(0); }
+.stagger-children.scroll-visible > *:nth-child(8) { transition-delay: 560ms; opacity: 1; transform: translateY(0); }
+.stagger-children.scroll-visible > *:nth-child(9) { transition-delay: 640ms; opacity: 1; transform: translateY(0); }
+.stagger-children.scroll-visible > *:nth-child(10) { transition-delay: 720ms; opacity: 1; transform: translateY(0); }
+
+/* ===== Hover animations ===== */
+
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px -12px rgba(0,0,0,0.1);
+}
+
+.hover-scale {
+  transition: transform 0.3s ease;
+}
+.hover-scale:hover {
+  transform: scale(1.03);
+}
+
+.hover-glow {
+  transition: box-shadow 0.3s ease;
+}
+.hover-glow:hover {
+  box-shadow: 0 0 25px 5px rgba(249, 115, 22, 0.15);
+}
+
+/* ===== SVG progress animation ===== */
+
+.animate-progress-ring {
+  animation: drawCircle 1.5s ease-out forwards;
+}
+
+.animate-progress-bar {
+  animation: progressGrow 1s ease-out forwards;
+}
+
+/* ===== Shimmer effect for loading / special elements ===== */
+
+.shimmer-bg {
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* ===== Creative Hero Animations ===== */
+
+@keyframes heroOrbit {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes heroOrbitReverse {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+@keyframes heroFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes heroFloatSlow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-5px) rotate(1deg); }
+}
+
+@keyframes heroPulseGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.2), 0 0 40px 10px rgba(249, 115, 22, 0.08); }
+  50% { box-shadow: 0 0 0 15px rgba(249, 115, 22, 0.05), 0 0 60px 20px rgba(249, 115, 22, 0.12); }
+}
+
+@keyframes heroPulseCore {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+  50% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+}
+
+@keyframes heroSatellitePop {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+  70% { transform: translate(-50%, -50%) scale(1.08); }
+  100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes heroFadeRight {
+   from { opacity: 0; transform: translateX(30px); }
+   to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes heroFadeLeft {
+   from { opacity: 0; transform: translateX(-30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes heroFadeUp {
+   from { opacity: 0; transform: translateY(25px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes heroScaleIn {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+  60% { transform: translate(-50%, -50%) scale(1.08); }
+  100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes heroLineDraw {
+  from { stroke-dashoffset: 800; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes heroDotPulse {
+  0%, 100% { opacity: 0.4; r: 3; }
+  50% { opacity: 1; r: 5; }
+}
+
+@keyframes heroManEnter {
+  0% { opacity: 0; transform: translateY(40px) scale(0.95); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes heroBreathing {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+@keyframes heroBgFloat1 {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-15px) rotate(2deg); }
+}
+
+@keyframes bounce-subtle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.animate-bounce-subtle {
+  animation: bounce-subtle 2s ease-in-out infinite;
+}
+
+@keyframes heroBgFloat2 {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(10px) rotate(-1.5deg); }
+}
+
+@keyframes heroGradientOrb {
+  0%, 100% { opacity: 0.15; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 0.25; transform: translate(-50%, -50%) scale(1.1); }
+}
+
+@keyframes heroCarouselSlide {
+  0%, 30% { opacity: 1; transform: translateY(0); }
+  33%, 97% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.animate-hero-orbit {
+  animation: heroOrbit 25s linear infinite;
+}
+
+.animate-hero-orbit-reverse {
+  animation: heroOrbitReverse 35s linear infinite;
+}
+
+.animate-hero-float {
+  animation: heroFloat 3s ease-in-out infinite;
+}
+
+.animate-hero-float-slow {
+  animation: heroFloatSlow 4s ease-in-out infinite;
+}
+
+.animate-hero-pulse-glow {
+  animation: heroPulseGlow 3s ease-in-out infinite;
+}
+
+.animate-hero-breathing {
+  animation: heroBreathing 4s ease-in-out infinite;
+}
+
+.animate-hero-bg-float-1 {
+  animation: heroBgFloat1 6s ease-in-out infinite;
+}
+
+.animate-hero-bg-float-2 {
+  animation: heroBgFloat2 7s ease-in-out infinite;
+}
+
+/* ══ Mobile app bar + menu sheet ══════════════════════════════
+   Bottom bar is a floating pill; the menu is a bottom sheet that
+   drills three levels deep. Everything below 768px only — the
+   desktop mega-menu is untouched. */
+
+.ar-tabbar {
+  position: fixed;
+  inset-inline: 0.75rem;
+  bottom: 0;
+  z-index: 60;
+  padding-top: 0.5rem;
+  pointer-events: none;
+}
+.ar-tabbar-inner {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  pointer-events: auto;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(14px);
+  border: 1px solid #eceef7;
+  border-radius: 1.25rem;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+  padding: 0.35rem;
+}
+
+/* The lozenge that slides between tabs. Position is measured in JS so
+   it lands correctly under RTL without mirrored arithmetic. */
+.ar-tabbar-pill {
+  position: absolute;
+  top: 0.35rem;
+  bottom: 0.35rem;
+  border-radius: 0.9rem;
+  background: #fff5ed;
+  box-shadow: inset 0 0 0 1px #fbdcc2;
+  transition: left 0.34s cubic-bezier(0.22, 1, 0.36, 1), width 0.34s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ar-tabbar-item {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  padding: 0.5rem 0.2rem;
+  color: #8b94a8;
+  transition: color 0.2s ease;
+}
+.ar-tabbar-item.is-on {
+  color: #f97316;
+}
+.ar-tabbar-icon {
+  transition: transform 0.34s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.ar-tabbar-item.is-on .ar-tabbar-icon {
+  transform: translateY(-1px) scale(1.06);
+}
+.ar-tabbar-label {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+/* The middle control opens the menu rather than navigating, so it is
+   raised out of the bar as a disc. */
+.ar-tabbar-menu {
+  gap: 0.3rem;
+}
+.ar-tabbar-disc {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.9rem;
+  height: 2.9rem;
+  margin-top: -1.35rem;
+  border-radius: 999px;
+  background: linear-gradient(160deg, #fb8b3c 0%, #ea580c 100%);
+  color: #fff;
+  border: 3px solid #fff;
+  box-shadow: 0 8px 18px rgba(234, 88, 12, 0.36);
+  transition: transform 0.34s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.25s ease;
+}
+.ar-tabbar-menu.is-open .ar-tabbar-disc {
+  background: linear-gradient(160deg, #22406f 0%, #16305b 100%);
+  box-shadow: 0 8px 18px rgba(22, 48, 91, 0.32);
+  transform: rotate(90deg);
+}
+.ar-tabbar-menu.is-open .ar-tabbar-label {
+  color: #16305b;
+}
+
+/* ── Header toggle ──
+   The second way into the menu. The raised orange disc downstairs is
+   already the loud control, so this one stays quiet: the header's own
+   bordered-square language, navy bars that fold into a cross, and the
+   same navy the disc turns when the menu is open. */
+.ar-hdr-menu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.75rem;
+  background: #fff;
+  color: #16305b;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.ar-hdr-menu:active {
+  background: #f8fafc;
+}
+.ar-hdr-menu.is-open {
+  border-color: #16305b;
+  background: #16305b;
+  color: #fff;
+}
+
+.ar-hdr-menu-bars {
+  position: relative;
+  width: 18px;
+  height: 14px;
+}
+.ar-hdr-menu-bars i {
+  position: absolute;
+  inset-inline: 0;
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.16s ease;
+}
+.ar-hdr-menu-bars i:nth-child(1) { top: 0; }
+.ar-hdr-menu-bars i:nth-child(2) { top: 6px; }
+.ar-hdr-menu-bars i:nth-child(3) { top: 12px; }
+
+.ar-hdr-menu.is-open .ar-hdr-menu-bars i:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+.ar-hdr-menu.is-open .ar-hdr-menu-bars i:nth-child(2) {
+  opacity: 0;
+}
+.ar-hdr-menu.is-open .ar-hdr-menu-bars i:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+/* ── Full-screen menu ── */
+.ar-menu {
+  position: fixed;
+  inset: 0;
+  /* Above the assistant launcher (z-100) so nothing pierces it. */
+  z-index: 110;
+  display: flex;
+  flex-direction: column;
+  background: #f2f3f7;
+  transform: translateY(100%);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.36s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease;
+}
+.ar-menu.is-open {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.ar-menu-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 0.9rem 0.6rem;
+  padding-top: max(env(safe-area-inset-top), 0.85rem);
+  flex-shrink: 0;
+  background: rgba(242, 243, 247, 0.92);
+  backdrop-filter: blur(12px);
+}
+.ar-menu-title {
+  flex: 1;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 900;
+  color: #16305b;
+  animation: arTitleIn 0.28s ease both;
+}
+@keyframes arTitleIn {
+  from { opacity: 0; transform: translateY(3px); }
+  to { opacity: 1; transform: none; }
+}
+.ar-menu-back {
+  display: flex;
+  align-items: center;
+  gap: 0.1rem;
+  min-width: 4.75rem;
+  font-size: 13px;
+  font-weight: 700;
+  color: #f97316;
+}
+.ar-menu-back.is-ghost {
+  min-width: 4.75rem;
+}
+/* Takes the back button's slot at the top level, so the head keeps its
+   three-part balance whichever level is showing. */
+.ar-menu-brand {
+  display: flex;
+  align-items: center;
+  min-width: 4.75rem;
+}
+.ar-menu-brand-mark {
+  height: 1.6rem;
+  width: auto;
+}
+.ar-menu-close {
+  width: 1.9rem;
+  height: 1.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: #dfe1ea;
+  color: #59617a;
+  flex-shrink: 0;
+}
+.ar-menu-close:active {
+  background: #d2d5e0;
+}
+
+/* Search sits above the lists, as it does on an iOS settings screen. */
+.ar-menu-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0 0.9rem 0.85rem;
+  padding: 0.5rem 0.7rem;
+  border-radius: 0.7rem;
+  background: #e3e5ec;
+  flex-shrink: 0;
+}
+.ar-menu-search input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: 0;
+  outline: none;
+  font-size: 13.5px;
+  color: #16305b;
+}
+.ar-menu-search input::placeholder {
+  color: #8b90a2;
+}
+.ar-menu-search-icon,
+.ar-menu-search button {
+  color: #8b90a2;
+  flex-shrink: 0;
+}
+
+.ar-menu-body {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 2rem;
+}
+
+/* Standing footer: the consultation request stays reachable from every
+   level of the menu. Same button as the header CTA, full width. */
+.ar-menu-foot {
+  flex-shrink: 0;
+  padding: 0.75rem 0.9rem;
+  padding-bottom: max(env(safe-area-inset-bottom), 0.75rem);
+  background: rgba(242, 243, 247, 0.94);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid #e2e4ec;
+}
+.ar-menu-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border-radius: 0.75rem;
+  background: #f97316;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  box-shadow: 0 8px 18px rgba(249, 115, 22, 0.28);
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+.ar-menu-cta:active {
+  background: #ea580c;
+  transform: scale(0.985);
+}
+
+/* ── Grouped inset list ── */
+.ar-ios-group {
+  margin: 0 0.9rem 1.35rem;
+}
+.ar-ios-header {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #82889b;
+  padding: 0 0.75rem 0.4rem;
+}
+.ar-ios-card {
+  background: #fff;
+  border-radius: 0.7rem;
+  overflow: hidden;
+}
+
+.ar-ios-row {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.62rem 0.75rem;
+  min-height: 2.9rem;
+  text-align: right;
+  background: #fff;
+  transition: background 0.12s ease;
+}
+.ar-ios-row:active {
+  background: #e9eaf0;
+}
+/* Hairline starts after the tile — the detail that makes the list read
+   as a native settings screen rather than a stack of cards. */
+.ar-ios-row + .ar-ios-row::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  inset-inline-start: 0;
+  inset-inline-end: 3.05rem;
+  height: 1px;
+  background: #e4e5ea;
+}
+.ar-ios-row.is-plain + .ar-ios-row.is-plain::before {
+  inset-inline-end: 0.75rem;
+}
+.ar-ios-row.is-result + .ar-ios-row.is-result::before {
+  inset-inline-end: 1.85rem;
+}
+
+.ar-ios-tile {
+  width: 1.85rem;
+  height: 1.85rem;
+  border-radius: 0.42rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.ar-ios-tile.is-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+}
+.ar-ios-label {
+  flex: 1;
+  min-width: 0;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #16305b;
+  line-height: 1.5;
+}
+.ar-ios-detail {
+  font-size: 12.5px;
+  color: #9aa0b2;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+.ar-ios-trail {
+  display: block;
+  font-size: 10.5px;
+  color: #9aa0b2;
+  margin-top: 0.05rem;
+}
+.ar-ios-chevron {
+  color: #c2c5d1;
+  flex-shrink: 0;
+}
+.ar-ios-row.is-action .ar-ios-label {
+  color: #f97316;
+  font-weight: 800;
+}
+.ar-ios-row.is-action .ar-ios-chevron {
+  color: #f97316;
+}
+.ar-ios-empty {
+  text-align: center;
+  font-size: 13px;
+  color: #82889b;
+  padding: 3rem 1.5rem;
+}
+
+/* ── Section promo — the mega-menu's promo card, restacked for a phone ── */
+.ar-promo {
+  padding-top: 0.9rem;
+}
+.ar-promo-media {
+  margin: 0 0.75rem 0.85rem;
+  border-radius: 0.55rem;
+  background: #fdf3ea;
+  overflow: hidden;
+}
+.ar-promo-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.4rem;
+  height: 3.4rem;
+  margin: 0 auto 0.85rem;
+  border-radius: 0.9rem;
+  background: #fdf3ea;
+}
+.ar-promo-title {
+  font-size: 14.5px;
+  font-weight: 900;
+  line-height: 1.7;
+  color: #16305b;
+  text-align: center;
+  white-space: pre-line;
+  padding: 0 0.9rem;
+}
+.ar-promo-desc {
+  font-size: 12px;
+  line-height: 1.9;
+  color: #6c7286;
+  text-align: center;
+  padding: 0.35rem 0.9rem 0.85rem;
+}
+
+/* Level transition: the new panel travels in from the inline end
+   going deeper, and back from the inline start on the way out. */
+.ar-panel-push {
+  animation: arPanelPush 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.ar-panel-pop {
+  animation: arPanelPop 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes arPanelPush {
+  from { opacity: 0; transform: translateX(-14%); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes arPanelPop {
+  from { opacity: 0; transform: translateX(14%); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ar-menu,
+  .ar-tabbar-pill,
+  .ar-tabbar-icon,
+  .ar-tabbar-disc,
+  .ar-hdr-menu-bars i {
+    transition-duration: 0.01ms;
+  }
+  .ar-panel-push,
+  .ar-panel-pop,
+  .ar-menu-title {
+    animation: none;
+  }
+}
+
+/* ===== CREATIVE PAGE TRANSITIONS (v2 — orange curtain sweep) ===== */
+
+/* No `overflow: hidden` here: it turns the wrapper into a scroll
+   container, which kills `position: sticky` on the header. The
+   curtain is `position: fixed`, so it never needed clipping. */
+.page-transition-wrapper {
+  position: relative;
+}
+
+/* v2: a full-viewport orange curtain that sweeps across on page change.
+   Two layers: a solid orange wash + a diagonal stripe pattern that
+   gives a sense of motion. The curtain covers the screen during the
+   exit→enter swap, then sweeps away. */
+.page-transition-rail {
+  position: fixed;
+  top: 0;
+  inset-inline: 0;
+  height: 2px;
+  z-index: 200;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.page-transition-rail.is-live {
+  opacity: 1;
+}
+.page-transition-rail::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: #ecd9c6;
+  opacity: 0.55;
+}
+
+.rail-run {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  inset-inline-start: 0;
+  width: 34%;
+  transform: translateX(0);
+}
+.is-live .rail-run {
+  animation: railTravel 0.62s cubic-bezier(0.65, 0, 0.2, 1) both;
+}
+
+.rail-seg {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(249, 115, 22, 0) 0%, #f97316 55%, #ea580c 100%);
+}
+.rail-dot {
+  position: absolute;
+  inset-inline-end: 0;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  margin-top: -3px;
+  border-radius: 999px;
+  background: #ea580c;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.22);
+}
+
+@keyframes railTravel {
+  0% { transform: translateX(-40%); opacity: 0; }
+  12% { opacity: 1; }
+  88% { opacity: 1; }
+  100% { transform: translateX(340%); opacity: 0; }
+}
+
+/* v2: Creative curtain overlay — a full-screen orange wash that sweeps
+   in from the inline-start (right in RTL) during exit, holds briefly,
+   then sweeps away during enter. Gives a dramatic "page turn" feel. */
+.page-transition-curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 199;
+  pointer-events: none;
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 50%, #f59e0b 100%);
+  transform: translateX(100%);
+  opacity: 0;
+}
+.page-transition-curtain.is-exit {
+  animation: curtainSweepIn 0.22s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+.page-transition-curtain.is-enter {
+  animation: curtainSweepOut 0.32s cubic-bezier(0, 0, 0.2, 1) forwards;
+}
+/* A subtle logo/spinner centred on the curtain during the swap */
+.page-transition-curtain::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  opacity: 0;
+  animation: curtainSpinner 0.5s ease 0.1s forwards;
+}
+@keyframes curtainSweepIn {
+  0% { transform: translateX(100%); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+@keyframes curtainSweepOut {
+  0% { transform: translateX(0); opacity: 1; }
+  100% { transform: translateX(-100%); opacity: 0; }
+}
+@keyframes curtainSpinner {
+  0% { opacity: 0; transform: rotate(0deg); }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; transform: rotate(360deg); }
+}
+
+/* Content transitions */
+.page-transition-content {
+  position: relative;
+  z-index: 1;
+}
+
+.content-exit {
+  animation: contentExit 0.22s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+.content-enter {
+  animation: contentEnter 0.32s cubic-bezier(0, 0, 0.2, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .is-live .rail-run { animation: none; }
+  .page-transition-curtain.is-exit,
+  .page-transition-curtain.is-enter { animation-duration: 0.01ms; }
+  .content-exit,
+  .content-enter { animation-duration: 0.01ms; }
+}
+
+/* Opacity only — deliberately no transform. `.page-transition-content` wraps
+   the whole page, so any transform here would make it the containing block
+   for the fixed mobile action bar and would confine the sticky header,
+   stranding both mid-document for the length of the animation (including on
+   first load, where the enter phase runs). The curtain carries the motion. */
+@keyframes contentExit {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes contentEnter {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* ===== SCROLL PROGRESS BAR ===== */
+
+.scroll-progress-fill {
+  height: 3px;
+  background: linear-gradient(90deg, #F97316, #F59E0B, #F97316);
+  background-size: 200% 100%;
+  animation: scrollProgressShimmer 2s linear infinite;
+  border-radius: 0 2px 2px 0;
+  transition: width 0.1s linear;
+  box-shadow: 0 0 8px rgba(249, 115, 22, 0.4);
+}
+
+@keyframes scrollProgressShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ===== CURSOR GLOW ===== */
+
+.cursor-glow {
+  position: fixed;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  background: radial-gradient(circle, rgba(249, 115, 22, 0.06) 0%, transparent 70%);
+  transform: translate(-50%, -50%);
+  transition: opacity 0.3s ease;
+  will-change: left, top;
+  /* Hidden on mobile — the 400px width can cause horizontal overflow on <400px viewports */
+  display: none;
+}
+@media (min-width: 768px) {
+  .cursor-glow { display: block; }
+}
+.cursor-glow-visible {
+  opacity: 1;
+}
+.cursor-glow-hidden {
+  opacity: 0;
+}
+
+/* ===== SCROLL TO TOP ===== */
+
+.scroll-to-top-btn {
+  position: fixed;
+  bottom: 28px;
+  left: 28px;
+  z-index: 90;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #F97316, #EA580C);
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(20px) scale(0.8);
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 8px 24px rgba(249, 115, 22, 0.3);
+  pointer-events: none;
+}
+.scroll-to-top-btn:hover {
+  transform: translateY(-2px) scale(1.08);
+  box-shadow: 0 12px 32px rgba(249, 115, 22, 0.4);
+}
+.scroll-to-top-btn:active {
+  transform: translateY(0) scale(0.95);
+}
+.scroll-to-top-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+/* Below md the floating tab bar owns the bottom of the screen, so the
+   button rides above it rather than through it. */
+@media (max-width: 767px) {
+  .scroll-to-top-btn {
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 6.25rem);
+    left: 20px;
+    width: 44px;
+    height: 44px;
+  }
+}
+
+/* ===== RIPPLE EFFECT ===== */
+
+.ripple-effect {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.35);
+  transform: translate(-50%, -50%) scale(0);
+  animation: rippleExpand 0.6s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes rippleExpand {
+  to {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
+}
+
+/* ===== ENHANCED HOVER EFFECTS ===== */
+
+/* Interactive card hover with glow border */
+[data-tilt] {
+  transition: transform 0.15s ease-out;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* Magnetic buttons */
+[data-magnetic] {
+  will-change: transform;
+}
+
+/* Link underline animation */
+.link-underline-anim {
+  position: relative;
+}
+.link-underline-anim::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  right: 0;
+  width: 0;
+  height: 2px;
+  background: #F97316;
+  border-radius: 1px;
+  transition: width 0.3s cubic-bezier(0.2, 0, 0, 1);
+}
+.link-underline-anim:hover::after {
+  width: 100%;
+}
+
+/* Button press effect */
+.btn-press {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.btn-press:active {
+  transform: scale(0.96);
+}
+
+/* Card spotlight on hover */
+.card-spotlight {
+  position: relative;
+  overflow: hidden;
+}
+.card-spotlight::before {
+  content: '';
+  position: absolute;
+  top: var(--mouse-y, 50%);
+  left: var(--mouse-x, 50%);
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(249, 115, 22, 0.08) 0%, transparent 70%);
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+.card-spotlight:hover::before {
+  opacity: 1;
+}
+
+/* Text gradient hover */
+.text-gradient-hover {
+  background: linear-gradient(135deg, #111827, #F97316);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transition: background-position 0.4s ease;
+}
+.text-gradient-hover:hover {
+  background-position: 100% 100%;
+}
+
+/* Smooth image zoom on hover */
+.img-zoom-hover {
+  overflow: hidden;
+  border-radius: inherit;
+}
+.img-zoom-hover img {
+  transition: transform 0.6s cubic-bezier(0.2, 0, 0, 1);
+}
+.img-zoom-hover:hover img {
+  transform: scale(1.08);
+}
+
+/* Subtle float on hover */
+.hover-float {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+}
+.hover-float:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px -8px rgba(0,0,0,0.1), 0 0 0 1px rgba(249, 115, 22, 0.05);
+}
+
+/* Border glow on hover */
+.hover-border-glow {
+  position: relative;
+  transition: box-shadow 0.3s ease;
+}
+.hover-border-glow:hover {
+  box-shadow: 0 0 0 1px rgba(249, 115, 22, 0.3), 0 4px 16px rgba(249, 115, 22, 0.08);
+}
+
+/* ===== SECTION REVEAL ANIMATIONS ===== */
+
+.section-reveal {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.section-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger children reveal */
+.stagger-reveal > * {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.stagger-reveal.revealed > *:nth-child(1) { transition-delay: 0ms; opacity: 1; transform: translateY(0); }
+.stagger-reveal.revealed > *:nth-child(2) { transition-delay: 60ms; opacity: 1; transform: translateY(0); }
+.stagger-reveal.revealed > *:nth-child(3) { transition-delay: 120ms; opacity: 1; transform: translateY(0); }
+.stagger-reveal.revealed > *:nth-child(4) { transition-delay: 180ms; opacity: 1; transform: translateY(0); }
+.stagger-reveal.revealed > *:nth-child(5) { transition-delay: 240ms; opacity: 1; transform: translateY(0); }
+.stagger-reveal.revealed > *:nth-child(6) { transition-delay: 300ms; opacity: 1; transform: translateY(0); }
+.stagger-reveal.revealed > *:nth-child(7) { transition-delay: 360ms; opacity: 1; transform: translateY(0); }
+.stagger-reveal.revealed > *:nth-child(8) { transition-delay: 420ms; opacity: 1; transform: translateY(0); }
+.stagger-reveal.revealed > *:nth-child(9) { transition-delay: 480ms; opacity: 1; transform: translateY(0); }
+.stagger-reveal.revealed > *:nth-child(10) { transition-delay: 540ms; opacity: 1; transform: translateY(0); }
+
+/* ===== SMOOTH SCROLL BEHAVIOR ===== */
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* ===== SELECTION COLOR ===== */
+
+::selection {
+  background: rgba(249, 115, 22, 0.2);
+  color: inherit;
+}
+
+/* ===== FOCUS VISIBLE ===== */
+
+:focus-visible {
+  outline: 2px solid #F97316;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+
+
+.bg-orange-600 {
+  text-shadow: none;
+  color: rgba(79, 91, 108, 1);
+  box-shadow: none;
+}
+.bg-orange-500 {
+  color: rgb(255, 255, 255);
+}
+.submenu-enter {
+  direction: ltr;
+  text-align: right;
+}
+
+.block.w-7.h-\[3px\].rounded-full.bg-orange-400.mb-2.mr-auto {
+  float: right;
+  display: block;
+  background: transparent;
+  border-bottom: 3px solid #e9b896;
+  margin-right: -3px;
+}
+
+.stage canvas {
+  z-index: -1;
+}
+/* ===== DRAG SCROLL ===== */
+.dragging {
+  cursor: grabbing !important;
+  user-select: none;
+  -webkit-user-select: none;
+  scroll-snap-type: none !important;
+}
+.dragging * {
+  pointer-events: none !important;
+  user-select: none !important;
+}
