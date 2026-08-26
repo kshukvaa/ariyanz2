@@ -121,6 +121,16 @@ function ExpertHeader({
   );
 }
 
+/* Steppers used to index into a literal '۱۲۳۴', which returns
+   undefined once a wizard has more than four steps — the case
+   wizard has five. */
+const FA_DIGITS = '۰۱۲۳۴۵۶۷۸۹';
+const faNum = (n: number) =>
+  String(n)
+    .split('')
+    .map((d) => FA_DIGITS[Number(d)])
+    .join('');
+
 /* ── Horizontal stepper ───────────────────────────────────────── */
 
 export function Stepper({ steps, current }: { steps: string[]; current: number }) {
@@ -147,7 +157,7 @@ export function Stepper({ steps, current }: { steps: string[]; current: number }
                   color: on || done ? '#ffffff' : T.muted,
                 }}
               >
-                {done ? <Icon name="lucide:check" size={14} style={{ backgroundColor: '#ffffff' }} /> : '۱۲۳۴'[i]}
+                {done ? <Icon name="lucide:check" size={14} style={{ backgroundColor: '#ffffff' }} /> : faNum(n)}
               </span>
               <span
                 className="mt-2 block text-[10.5px] whitespace-nowrap"
@@ -189,7 +199,7 @@ export function RailSteps({ title, steps, current }: { title: string; steps: str
                     color: done || on ? '#ffffff' : T.muted,
                   }}
                 >
-                  {done ? <Icon name="lucide:check" size={11} style={{ backgroundColor: '#ffffff' }} /> : '۱۲۳۴'[i]}
+                  {done ? <Icon name="lucide:check" size={11} style={{ backgroundColor: '#ffffff' }} /> : faNum(n)}
                 </span>
                 {i < all.length - 1 && (
                   <span className="w-[2px] h-6" style={{ backgroundColor: done ? '#1c8a4e' : T.border }} />
@@ -389,6 +399,8 @@ export default function CounselWizard({
   headerRail,
   rail,
   footer,
+  onNext,
+  onBack,
   children,
 }: {
   lead: string;
@@ -400,8 +412,14 @@ export default function CounselWizard({
   rail: React.ReactNode;
   footer: {
     next: { label: string; icon: string };
-    back: { label: string; icon: string; href: string };
+    /* href for «back to the advisor's profile»; omitted when back
+       means «the previous step», which onBack handles. */
+    back: { label: string; icon: string; href?: string };
   };
+  /* Multi-step wizards pass these so the footer walks the steps
+     instead of navigating away. */
+  onNext?: () => void;
+  onBack?: () => void;
   children: React.ReactNode;
 }) {
   return (
@@ -424,6 +442,7 @@ export default function CounselWizard({
 
             <div className="flex items-center justify-between gap-3 flex-wrap">
               <button
+                onClick={onNext}
                 className="flex items-center gap-2 px-10 py-3.5 text-[12.5px] font-extrabold text-white transition-opacity hover:opacity-90"
                 style={{ borderRadius: R.md, backgroundColor: T.primary }}
               >
@@ -431,14 +450,25 @@ export default function CounselWizard({
                 <Icon name={footer.next.icon} size={14} style={{ backgroundColor: '#ffffff' }} />
               </button>
 
-              <Link
-                href={footer.back.href}
-                className="flex items-center gap-2 px-7 py-3.5 text-[12px] font-bold bg-white"
-                style={{ borderRadius: R.md, border: `1px solid ${T.primary}`, color: T.primary }}
-              >
-                {footer.back.label}
-                <Icon name={footer.back.icon} size={14} style={{ backgroundColor: T.primary }} />
-              </Link>
+              {footer.back.href ? (
+                <Link
+                  href={footer.back.href}
+                  className="flex items-center gap-2 px-7 py-3.5 text-[12px] font-bold bg-white"
+                  style={{ borderRadius: R.md, border: `1px solid ${T.primary}`, color: T.primary }}
+                >
+                  {footer.back.label}
+                  <Icon name={footer.back.icon} size={14} style={{ backgroundColor: T.primary }} />
+                </Link>
+              ) : (
+                <button
+                  onClick={onBack}
+                  className="flex items-center gap-2 px-7 py-3.5 text-[12px] font-bold bg-white"
+                  style={{ borderRadius: R.md, border: `1px solid ${T.primary}`, color: T.primary }}
+                >
+                  {footer.back.label}
+                  <Icon name={footer.back.icon} size={14} style={{ backgroundColor: T.primary }} />
+                </button>
+              )}
             </div>
           </main>
         </div>

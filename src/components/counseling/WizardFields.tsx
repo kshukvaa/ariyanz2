@@ -37,7 +37,7 @@ export interface FieldSpec {
   /* «chips» is the icon-tile picker the case wizard uses for
      حوزه پرونده; «radio» and «checks» are the plain option lists
      underneath it. */
-  kind?: 'text' | 'select' | 'rich' | 'chips' | 'radio' | 'checks';
+  kind?: 'text' | 'select' | 'rich' | 'chips' | 'radio' | 'checks' | 'date';
   /* Rich fields draw a counter under the box when set. */
   limit?: number;
   options?: FieldOption[];
@@ -49,8 +49,30 @@ export function Field({ spec }: { spec: FieldSpec }) {
     <span className="block text-right text-[11.5px] font-bold" style={{ color: T.ink }}>
       {spec.label}
       {spec.required && <span style={{ color: T.danger }}> *</span>}
+      {spec.hint && (
+        <span className="mr-1 text-[9.5px] font-normal" style={{ color: T.muted }}>
+          {spec.hint}
+        </span>
+      )}
     </span>
   );
+
+  if (spec.kind === 'date') {
+    return (
+      <label className="block">
+        {label}
+        <span
+          className="mt-2 flex items-center gap-2 px-3.5 py-3"
+          style={{ borderRadius: R.md, border: `1px solid ${T.border}` }}
+        >
+          <Icon name="lucide:calendar" size={13} style={{ backgroundColor: T.primary }} />
+          <span className="flex-1 text-right text-[11.5px]" style={{ color: spec.value ? T.ink : T.muted }} dir="ltr">
+            {spec.value ?? spec.placeholder}
+          </span>
+        </span>
+      </label>
+    );
+  }
 
   if (spec.kind === 'select') {
     return (
