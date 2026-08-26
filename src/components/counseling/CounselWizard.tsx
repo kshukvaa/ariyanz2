@@ -216,11 +216,15 @@ export function AgentPanel({
   title,
   bubble,
   chips,
+  chipsTitle,
   placeholder = 'سوال خود را بنویسید.',
 }: {
   title: string;
   bubble: string;
   chips: string[];
+  /* The case wizard heads its chip list «کارهای پیشنهادی»; the
+     other wizards run the chips straight under the bubble. */
+  chipsTitle?: string;
   placeholder?: string;
 }) {
   return (
@@ -243,6 +247,12 @@ export function AgentPanel({
           className="w-16 h-16 object-contain shrink-0"
         />
       </div>
+
+      {chipsTitle && (
+        <h3 className="mt-4 text-right text-[12px] font-extrabold" style={{ color: T.ink }}>
+          {chipsTitle}
+        </h3>
+      )}
 
       <ul className="mt-3 space-y-2">
         {chips.map((c) => (

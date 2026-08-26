@@ -71,6 +71,7 @@ export default function CaseClient() {
           <AgentPanel
             title={caseWizard.agent.title}
             bubble={caseWizard.agent.bubble}
+            chipsTitle={caseWizard.agent.chipsTitle}
             chips={caseWizard.agent.chips}
             placeholder={caseWizard.agent.placeholder}
           />
@@ -91,6 +92,19 @@ export default function CaseClient() {
         <div className="mt-4 space-y-4">
           {caseWizard.step1.fields.map((f) => (
             <Field key={f.label} spec={f} />
+          ))}
+        </div>
+
+        {/* The three-up row the mockup draws under the description. */}
+        <div className="mt-5 grid gap-4 md:grid-cols-3">
+          {caseWizard.step1.columns.map((c) => (
+            <div
+              key={c.label}
+              className="p-4 self-start"
+              style={{ borderRadius: R.md, border: `1px solid ${T.border}` }}
+            >
+              <Field spec={c} />
+            </div>
           ))}
         </div>
       </WizardCard>

@@ -386,7 +386,10 @@ export const ask = {
 
 export const caseWizard = {
   lead: 'درخواست بررسی پرونده تخصصی با',
-  steps: ['تعریف پرونده', 'اطلاعات و مدارک', 'تعیین دامنه و هزینه', 'پرداخت و ارجاع'],
+  /* «page 1» draws four circles but «page 2» and «page 3» draw
+     five — and page 3 IS the «بررسی آریاز» step, so the five-step
+     rail is the later, correct one. */
+  steps: ['تعریف پرونده', 'اطلاعات و مدارک', 'بررسی آریاز', 'تعیین دامنه و هزینه', 'پرداخت و ارجاع'],
   pillOverride: 'در دسترس برای پرونده',
   fields: {
     title: 'تخصص‌ها',
@@ -406,27 +409,94 @@ export const caseWizard = {
     more: 'اطلاعات بیشتر',
   },
   notice: 'هزینه بررسی پرونده پس از ارزیابی حجم مدارک، پیچیدگی موضوع و دامنه خدمت مشخص می‌شود.',
+  /* «page 1» numbers six groups; the last three sit side by side
+     in a three-column row under the description box. */
   step1: {
     title: '۱. پرونده شما درباره چیست؟',
     icon: 'lucide:file-text',
     fields: [
-      { label: 'عنوان پرونده', required: true, placeholder: 'عنوان پرونده را وارد کنید...' },
-      { label: 'شرح وضعیت فعلی پرونده', required: true, kind: 'rich' as const, placeholder: 'وضعیت پرونده را با جزئیات بنویسید...' },
+      {
+        label: 'عنوان پرونده',
+        required: true,
+        placeholder: 'مثال: بررسی پرونده خاتمه همکاری مدیر فروش',
+      },
+      {
+        label: 'حوزه پرونده',
+        required: true,
+        kind: 'chips' as const,
+        options: [
+          { label: 'روابط کار', icon: 'lucide:user-round', checked: true },
+          { label: 'خاتمه اداره کار', icon: 'lucide:file-text' },
+          { label: 'دعاوی اداره کار', icon: 'lucide:scale' },
+          { label: 'آیین‌نامه‌ها', icon: 'lucide:book-open' },
+          { label: 'بیمه و تأمین اجتماعی', icon: 'lucide:shield' },
+          { label: 'سایر', icon: 'lucide:ellipsis' },
+        ],
+      },
+      {
+        label: '۲. مسئله را از ابتدا برای مشاور توضیح دهید',
+        required: true,
+        kind: 'rich' as const,
+        limit: 2000,
+        placeholder:
+          'لطفاً جزئیات کامل موضوع را بنویسید: شرح اتفاقات، طرف‌های پرونده، تاریخ‌ها، اقدامات انجام‌شده و هر نکته‌ای که مشاور باید بداند.',
+      },
+    ],
+    /* The three-up row. */
+    columns: [
+      {
+        label: '۳. الان پرونده در چه وضعیتی است؟',
+        kind: 'radio' as const,
+        options: [
+          { label: 'هنوز اقدامی نشده', checked: true },
+          { label: 'اقدام داخلی انجام شده' },
+          { label: 'مکاتبه / اخطار انجام شده' },
+          { label: 'پرونده در مرجع قانونی مطرح شده' },
+          { label: 'رأی صادر شده' },
+          { label: 'در مرحله اعتراض هستیم' },
+        ],
+      },
+      {
+        label: '۴. از مشاور چه انتظاری دارید؟',
+        hint: '(می‌توانید چند مورد انتخاب کنید)',
+        kind: 'checks' as const,
+        options: [
+          { label: 'بررسی کامل پرونده', checked: true },
+          { label: 'تشخیص ریسک‌ها', checked: true },
+          { label: 'بررسی مستندات', checked: true },
+          { label: 'ارائه نظر تخصصی', checked: true },
+          { label: 'پیشنهاد اقدام بعدی', checked: true },
+          { label: 'تنظیم پاسخ / لایحه / مستند' },
+          { label: 'همراهی تا تعیین تکلیف پرونده' },
+        ],
+      },
+      {
+        label: '۵. میزان فوریت پرونده',
+        kind: 'radio' as const,
+        options: [
+          { label: 'عادی', checked: true },
+          { label: 'فوری' },
+          { label: 'بسیار فوری' },
+        ],
+      },
     ],
   },
   agent: {
     title: 'آریاز در تشکیل پرونده همراه شماست',
     bubble: 'مسئله را برایم توضیح دهید: کمک می‌کنم پرونده را طوری تنظیم کنید که مشاور سریع‌تر و دقیق‌تر بتواند وضعیت را بررسی کند.',
+    chipsTitle: 'کارهای پیشنهادی',
     chips: [
-      'پرونده‌ام از چه نوعی است؟',
-      'چه مدارکی لازم دارم؟',
-      'هزینه بررسی چقدر می‌شود؟',
-      'چقدر طول می‌کشد؟',
+      'از کجا شروع کنم؟',
+      'این موضوع پرونده تخصصی محسوب می‌شود؟',
+      'شرح پرونده‌ام را مرتب کن',
+      'چه اطلاعاتی را باید بنویسم؟',
+      'چه مدارکی احتمالاً لازم می‌شود؟',
+      'از مشاور چه خدمتی بخواهم؟',
     ],
     placeholder: 'مسئله خود را بنویسید.',
   },
   footer: {
-    next: { label: 'تأیید و ادامه', icon: 'lucide:arrow-left' },
+    next: { label: 'ثبت اطلاعات اولیه و ادامه به مدارک', icon: 'lucide:arrow-left' },
     back: { label: 'بازگشت به پروفایل مشاور', icon: 'lucide:arrow-right', href: '/counseling/experts/amir-hosseini' },
   },
 };
