@@ -1837,6 +1837,10 @@ export const footerColumns = [
       { label: 'ابزارهای رایگان', href: '/library', icon: 'lucide:gift' },
       { label: 'ایجنت‌های هوشمند', href: '/agents', icon: 'lucide:bot' },
       { label: 'مقالات', href: '/articles', icon: 'lucide:file-pen-line' },
+      { label: 'درباره ما', href: '/about', icon: 'lucide:info' },
+      { label: 'اخبار و اطلاعیه‌ها', href: '/news', icon: 'lucide:newspaper' },
+      { label: 'همکاری با آریاز', href: '/collaborate', icon: 'lucide:handshake' },
+      { label: 'فرصت‌های شغلی', href: '/careers', icon: 'lucide:briefcase' },
     ],
   },
   {
@@ -1851,11 +1855,11 @@ export const footerColumns = [
   {
     title: 'پشتیبانی و قوانین',
     links: [
-      { label: 'تماس با ما', href: '/support', icon: 'lucide:headphones' },
-      { label: 'سوالات متداول', href: '/support', icon: 'lucide:circle-help' },
-      { label: 'استعلام گواهینامه', href: '/support', icon: 'lucide:file-text' },
-      { label: 'قوانین و مقررات', href: '/laws', icon: 'lucide:scale' },
-      { label: 'حریم خصوصی', href: '/laws', icon: 'lucide:shield-check' },
+      { label: 'تماس با ما', href: '/contact', icon: 'lucide:headphones' },
+      { label: 'سوالات متداول', href: '/faq', icon: 'lucide:circle-help' },
+      { label: 'استعلام گواهینامه', href: '/verify', icon: 'lucide:file-text' },
+      { label: 'قوانین و مقررات', href: '/terms', icon: 'lucide:scale' },
+      { label: 'حریم خصوصی', href: '/privacy', icon: 'lucide:shield-check' },
     ],
   },
 ];
