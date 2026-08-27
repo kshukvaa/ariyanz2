@@ -280,11 +280,11 @@ export default function Logo3D({
         });
       };
 
-      /** t = 0 shows Latin, t = 1 shows Persian. */
-      const pose = (t: number, A: Anim) => {
-        const cl = (v: number) => Math.max(0, Math.min(1, v));
-        const W = span || 3;
-
+      /* Puts both lockups back to rest. Every transition displaces, rotates
+         or rescales the groups (and `scatter` the individual parts), so any
+         driver that wants a clean mark has to run this first — the scroll
+         drive included, which is why it lives outside `pose`. */
+      const neutral = () => {
         root.rotation.set(0, 0, 0);
         root.position.y = 0;
         en.position.set(0, 0, 0);
@@ -295,6 +295,14 @@ export default function Logo3D({
         fa.scale.set(k, k, 1);
         en.children.forEach((m) => m.position.copy(m.userData.base));
         fa.children.forEach((m) => m.position.copy(m.userData.base));
+      };
+
+      /** t = 0 shows Latin, t = 1 shows Persian. */
+      const pose = (t: number, A: Anim) => {
+        const cl = (v: number) => Math.max(0, Math.min(1, v));
+        const W = span || 3;
+
+        neutral();
 
         let oe = 1 - cl(t * 2);
         let of = cl((t - 0.5) * 2);
@@ -388,6 +396,12 @@ export default function Logo3D({
         const t0 = performance.now();
         const dur = 1250;
         const step = () => {
+          /* The scroll drive has taken over — abandon this transition rather
+             than fight it for the same transforms. */
+          if (scrolled) {
+            busy = false;
+            return;
+          }
           const p = Math.min(1, (performance.now() - t0) / dur);
           const e = p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
           pose(from + (to - from) * e, A);
@@ -440,6 +454,12 @@ export default function Logo3D({
             spinTarget = Math.round(spinTarget / Math.PI) * Math.PI;
             settleAt = 0;
           }
+          /* Clear whatever pose the last timed transition left behind before
+             applying the spin. Without this the mark keeps a stale offset —
+             `slide` parks a lockup a full width off-centre, `scatter` leaves
+             its parts thrown apart — and the scroll spin then rotates that
+             displaced group, swinging it out of the header entirely. */
+          neutral();
           spinCur += (spinTarget - spinCur) * 0.12;
           root.rotation.y = spinCur;
           /* Nearest half turn decides the language; even = Latin, odd = Persian. */

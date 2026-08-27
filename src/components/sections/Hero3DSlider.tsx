@@ -1492,15 +1492,19 @@ export default function Hero3DSlider() {
           --r: 18px;
 
           position: relative;
-          max-width: 1320px;
-          margin: 0 auto;
+          /* Full-bleed: the hero is the page's opening band, so its
+             background runs edge to edge rather than sitting as a 1320px
+             card with gutters either side. The inner columns stay readable
+             on ultrawide displays via the padding below, which grows with
+             the viewport instead of pinning the content to the edges. */
+          width: 100%;
           min-height: clamp(560px, 78vh, 780px);
           display: grid;
           /* dir=rtl: track 1 is the RIGHT column (copy), track 2 is the LEFT (3D stage) */
           grid-template-columns: 0.92fr 1.08fr;
           align-items: center;
           gap: 24px;
-          padding: 48px 56px;
+          padding: 48px clamp(56px, 6vw, 180px);
           overflow: hidden;
           color: var(--ink);
           background: radial-gradient(120% 90% at 18% 30%, #ffffff 0%, #eef2f9 45%, #e9eef7 100%);

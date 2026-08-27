@@ -16,13 +16,19 @@ import {
 
 const NAVY = '#16305B';
 
-export default function Footer() {
+/* The conversion banner is a homepage closer, not site furniture: it is the
+   last pitch after the landing page has made its case. On an interior page —
+   a policy page, a case file, a job posting — it repeats an ask the reader
+   has already passed, so it is opt-in and the homepage is the only caller
+   that asks for it. */
+export default function Footer({ showCta = false }: { showCta?: boolean }) {
   return (
     <footer className="bg-white pb-20 md:pb-0">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-10">
         {/* Conversion banner */}
         {/* Artwork sits left, copy right — order-1 takes the right-hand
             column under RTL. */}
+        {showCta && (
         <div className="bg-[#F7F8FA] rounded-3xl px-6 md:px-10 py-8 mb-6 grid lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] gap-8 items-center">
           <div className="order-2">
             {slotImages[footerCta.slot] ? (
@@ -68,6 +74,7 @@ export default function Footer() {
             </div>
           </div>
         </div>
+        )}
 
         {/* Main footer panel */}
         <div className="bg-[#0F2650] rounded-3xl text-white overflow-hidden">

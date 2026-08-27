@@ -96,7 +96,7 @@ export default function Home() {
       {/* Back-to-top is the orange button in InteractiveProvider — one
           control for both breakpoints. */}
       {/* Footer — shared, untouched */}
-      <Footer />
+      <Footer showCta />
     </div>
   );
 }
